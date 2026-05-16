@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
 import { create } from "zustand";
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe } from "@stripe/stripe-js"
 import type {
   AddCustomerCartItemBody,
   AppliedPromo,
@@ -14,7 +14,6 @@ import type {
 import {
   addCustomerCartItem,
   applyCustomerPromo,
-  confirmCheckout,
   createCheckoutSession,
   decreaseCustomerCartItem,
   getCheckoutData,
@@ -23,7 +22,7 @@ import {
   removeCustomerCartItem,
   syncCustomerCart,
 } from "./api";
- import toast from "react-hot-toast";
+import toast from "react-hot-toast";
 
 type AddCartItemInput = AddCustomerCartItemBody & {
   title: string;
@@ -32,19 +31,11 @@ type AddCartItemInput = AddCustomerCartItemBody & {
   finalPrice: number;
 };
 
-// ✅ Razorpay args hate, Stripe ke liye name/email same hai
-// type StripeArgs = {
-//   isSignedIn: boolean;
-//   name: string;
-//   email: string;
-//   onSuccess: () => void;
-// };
-
-
 
 type StripeArgs = {
   isSignedIn: boolean;
-  onSuccess: () => void; // ab sirf ye chahiye
+
+
 };
 type PointsArgs = {
   isSignedIn: boolean;
@@ -67,8 +58,8 @@ type CustomerCartAndCheckoutStore = {
   setCart: (cart: CustomerCartResponse) => void;
   loadCart: (isSignedIn: boolean) => Promise<void>;
   addItem: (item: AddCartItemInput, isSignedIn: boolean) => Promise<void>;
-  increase: (item: CustomerCartItemIdentifier, isSignedIn: boolean) => Promise<void>;
-  decrease: (item: CustomerCartItemIdentifier, isSignedIn: boolean) => Promise<void>;
+  increase: (item: CustomerCartItemIdentifier, isSignedIn: boolean) => Promise<void>
+  decrease: (item: CustomerCartItemIdentifier, isSignedIn: boolean) => Promise<void>
   remove: (item: CustomerCartItemIdentifier, isSignedIn: boolean) => Promise<void>;
   setPromoInput: (value: string) => void;
   clearPromo: () => void;
@@ -105,11 +96,11 @@ function readGuestItems(): GuestCartItem[] {
     const items = JSON.parse(
       window.localStorage.getItem(GUEST_CART_KEY) || "[]"
     );
-    return Array.isArray(items)
-      ? items.filter(
-          (item) => item?.productId && Number(item?.quantity) > 0
-        )
-      : [];
+    // return Array.isArray(items)
+    //   ? items.filter((item) => item?.productId && Number(item?.quantity) > 0)
+    //   : [];
+
+    return Array.isArray(items) ? items : [];
   } catch {
     return [];
   }
@@ -127,6 +118,12 @@ function clearGuestItems() {
 
 function getGuestResponse(): CustomerCartResponse {
   const items = readGuestItems();
+
+  console.log("final", {
+    items,
+    totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
+  });
+  
   return {
     items,
     totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
@@ -144,63 +141,194 @@ function getGuestSyncPayload(): SyncCustomerCartBody {
   };
 }
 
+// function isSameItem(
+//   item: CustomerCartItemIdentifier,
+//   target: CustomerCartItemIdentifier
+// ) {
+//   return (
+//     item.productId === target.productId &&
+//     (item.color || "") === (target.color || "") &&
+//     (item.size || "") === (target.size || "")
+//   );
+// }
+
+
 function isSameItem(
   item: CustomerCartItemIdentifier,
   target: CustomerCartItemIdentifier
 ) {
   return (
-    item.productId === target.productId &&
-    (item.color || "") === (target.color || "") &&
-    (item.size || "") === (target.size || "")
+    String(item.productId) === String(target.productId) &&
+    String(item.color || "") === String(target.color || "") &&
+    String(item.size || "") === String(target.size || "")
   );
 }
+ 
+ 
+
+
+// function addGuestItem(item: Omit<GuestCartItem, "quantity">) {
+//   const items = readGuestItems();
+//   console.log("read guestitems returned value",items);
+  
+//   const index = items.findIndex((cartItem) => isSameItem(cartItem, item));
+
+//   console.log("findindex return value", index);
+  
+
+//   if (index >= 0) {
+//     items[index] = { ...items[index], quantity: items[index].quantity + 1 };
+//   } else {
+//     items.push({ ...item, quantity: 1 });
+//   }
+
+//   writeGuestItems(items);
+//   return getGuestResponse();
+// }
+
 
 function addGuestItem(item: Omit<GuestCartItem, "quantity">) {
   const items = readGuestItems();
-  const index = items.findIndex((cartItem) => isSameItem(cartItem, item));
 
-  if (index >= 0) {
-    items[index] = { ...items[index], quantity: items[index].quantity + 1 };
-  } else {
-    items.push({ ...item, quantity: 1 });
+  // const index = items.findIndex((cartItem) =>
+  //   isSameItem(cartItem, item)
+  // );
+  const index = items.findIndex(
+  (cartItem) =>cartItem.productId === item.productId &&cartItem.color === item.color && cartItem.size === item.size
+);
+
+  // SAME PRODUCT
+  if (index !== -1) {
+
+    // MAX LIMIT
+    if (items[index].quantity >= 5) {
+      toast.error("Max 5 quantity allowed");
+      return getGuestResponse();
+    }
+
+    items[index] = {
+      ...items[index],
+      quantity: items[index].quantity + 1,
+    };
   }
 
-  writeGuestItems(items);
+  // NEW PRODUCT
+  else {
+    items.push({
+      ...item,
+      quantity: 1,
+    });
+  }
+
+localStorage.setItem(GUEST_CART_KEY,JSON.stringify(items));
+
+  toast.success("Added to cart");
+
   return getGuestResponse();
 }
+
+
+
+
+
+// function increaseGuestItem(item: CustomerCartItemIdentifier) {
+//   const items = readGuestItems().map((cartItem) =>
+//     isSameItem(cartItem, item)
+//       ? { ...cartItem, quantity: cartItem.quantity + 1 }
+//       : cartItem
+//   );
+//   writeGuestItems(items);
+//   return getGuestResponse();
+// }
+
 
 function increaseGuestItem(item: CustomerCartItemIdentifier) {
-  const items = readGuestItems().map((cartItem) =>
-    isSameItem(cartItem, item)
-      ? { ...cartItem, quantity: cartItem.quantity + 1 }
-      : cartItem
-  );
+
+  let isUpdated = false;
+
+  const items = readGuestItems().map((cartItem) => {
+
+    // Different item
+    if (!isSameItem(cartItem, item)) {
+      return cartItem;
+    }
+
+    // Max limit
+    if (cartItem.quantity >= 5) {
+      toast.error("Max 5 quantity allowed");
+      return cartItem;
+    }
+
+    isUpdated = true;
+
+    return {
+      ...cartItem,
+      quantity: cartItem.quantity + 1,
+    };
+  });
+
   writeGuestItems(items);
+
+  // Success toast only if updated
+  if (isUpdated) {
+    toast.success("Cart updated45");
+  }
+
   return getGuestResponse();
 }
 
+
+
+
+ 
+ 
+// function decreaseGuestItem(item: CustomerCartItemIdentifier) {
+//   const items = readGuestItems()
+//     .map((cartItem) =>
+//       isSameItem(cartItem, item)
+//         ? { ...cartItem, quantity: cartItem.quantity - 1 }
+//         : cartItem
+//     )
+//     .filter((cartItem) => cartItem.quantity > 0);
+//   writeGuestItems(items);
+//   return getGuestResponse();
+// }
+
 function decreaseGuestItem(item: CustomerCartItemIdentifier) {
+
   const items = readGuestItems()
     .map((cartItem) =>
       isSameItem(cartItem, item)
-        ? { ...cartItem, quantity: cartItem.quantity - 1 }
+        ? {
+            ...cartItem,
+            quantity: cartItem.quantity - 1,
+          }
         : cartItem
     )
     .filter((cartItem) => cartItem.quantity > 0);
+
   writeGuestItems(items);
+
+  toast.success("Cart updated");
+
   return getGuestResponse();
 }
+
+ 
 
 function removeGuestItem(item: CustomerCartItemIdentifier) {
   const items = readGuestItems().filter(
     (cartItem) => !isSameItem(cartItem, item)
   );
-  writeGuestItems(items);
+  localStorage.setItem(GUEST_CART_KEY,JSON.stringify(items));
+
   return getGuestResponse();
 }
 
-// ─── Store ────────────────────────────────────────────────────────────────────
+ 
 
+
+ 
 export const useCustomerCartAndCheckoutStore =
   create<CustomerCartAndCheckoutStore>((set, get) => ({
     cart: emptyCart,
@@ -217,25 +345,25 @@ export const useCustomerCartAndCheckoutStore =
         if (isSignedIn) {
           const guestPayload = getGuestSyncPayload();
           console.log("your ar login");
-          
+
 
           if (guestPayload.items.length) {
             const syncedCart = await syncCustomerCart(guestPayload);
             clearGuestItems();
             set({ cart: syncedCart ?? emptyCart });
             console.log("s");
-            
+
           }
 
           const response = await getCheckoutData();
           console.log(response);
-          
+
           const cart = response?.cart ?? emptyCart;
           const addresses = response?.addresses?.items ?? [];
           const defaultAddress =
             addresses.find((item) => item.isDefault) || addresses[0] || null;
-            console.log(defaultAddress);
-            
+          console.log(defaultAddress);
+
 
           set({
             loading: false,
@@ -272,63 +400,64 @@ export const useCustomerCartAndCheckoutStore =
             color: item.color,
             size: item.size,
           });
-          console.log(response,"sssssssssssssss");
-          
+          console.log(response, "sssssssssssssss");
+
           set({ cart: response ?? emptyCart });
-        } else {
+        } 
+        
+        else {
           set({
             cart: addGuestItem({
               productId: item.productId,
+              color: item.color,
+              size: item.size,
               title: item.title,
               brand: item.brand,
-              color: item.color,
+
               image: item.image,
               finalPrice: item.finalPrice,
-              size: item.size,
+
             }),
           });
+          
         }
-        toast.success("Added to cart");}
-      // } catch {
-      //   toast.error("Failed to add in cart");
-      // }
 
-catch (error) {
-  if (error instanceof Error) {
-    toast.error(error.message);
-  } else {
-    toast.error("Failed to add in cart");
-  }
-}
+        // toast.success("Added to cart2");
+      }
+
+
+      catch (error) {
+        if (error instanceof Error) {
+          toast.error(error.message);
+        } else {
+          toast.error("Failed to add in cart");
+        }
+      }
     },
+
+
+
+
+ 
 
     increase: async (item, isSignedIn) => {
       try {
-        const response = isSignedIn
-          ? await increaseCustomerCartItem(item)
-          : increaseGuestItem(item);
+        const response = isSignedIn ? await increaseCustomerCartItem(item) : increaseGuestItem(item);
         set({ cart: response ?? emptyCart });
         toast.success("Cart updated");
-      } 
-      
-      // catch {
-      //   toast.error("Failed to update cart");
-      // }
-
+      }
       catch (error) {
-  if (error instanceof Error) {
-    toast.error(error.message);
-  } else {
-    toast.error("Failed to add in cart");
-  }
-}
+        if (error instanceof Error) {
+          toast.error(error.message);
+        } else {
+          toast.error("Failed to add in cart");
+        }
+      }
     },
 
     decrease: async (item, isSignedIn) => {
       try {
-        const response = isSignedIn
-          ? await decreaseCustomerCartItem(item)
-          : decreaseGuestItem(item);
+        const response = isSignedIn ? await decreaseCustomerCartItem(item)  : decreaseGuestItem(item);
         set({ cart: response ?? emptyCart });
         toast.success("Cart updated");
       } catch {
@@ -338,9 +467,7 @@ catch (error) {
 
     remove: async (item, isSignedIn) => {
       try {
-        const response = isSignedIn
-          ? await removeCustomerCartItem(item)
-          : removeGuestItem(item);
+        const response = isSignedIn? await removeCustomerCartItem(item): removeGuestItem(item);
         set({ cart: response ?? emptyCart });
         toast.success("Cart item removed");
       } catch {
@@ -365,7 +492,7 @@ catch (error) {
       }
 
       try {
-        set({ promoLoading: true });
+        set({ promoLoading: true })
         const response = await applyCustomerPromo({
           code: promoInput.trim(),
           orderValue: subtotal,
@@ -386,91 +513,32 @@ catch (error) {
 
     clear: () => set({ cart: emptyCart, isOpen: false, ...defaultUiState }),
 
-    // ✅ Razorpay hata ke Stripe
-    // startStripeCheckout: async ({ isSignedIn, name, email, onSuccess }) => {
-    //   const { selectedAddressId, appliedPromo, cart } = get();
 
-    //   if (!isSignedIn) { toast.error("Sign in to checkout"); return; }
-    //   if (!selectedAddressId) { toast.error("Add a default address from profile section"); return; }
-    //   if (!cart.items.length) { toast.error("Your cart is empty"); return; }
+    startStripeCheckout: async ({ isSignedIn }) => {
+      const { selectedAddressId, appliedPromo, cart } = get();
 
-    //   try {
-    //     set({ checkoutLoading: true });
+      if (!isSignedIn) { toast.error("Sign in to checkout"); return; }
+      if (!selectedAddressId) { toast.error("Add a default address"); return; }
+      if (!cart.items.length) { toast.error("Cart is empty"); return; }
 
-    //     const session = await createCheckoutSession({
-    //       addressId: selectedAddressId,
-    //       promoCode: appliedPromo?.code || undefined,
-    //     });
+      try {
+        set({ checkoutLoading: true });
 
-    //     if (!session.stripe?.clientSecret || !session.order._id) {
-    //       throw new Error("Invalid checkout session");
-    //     }
+        const session = await createCheckoutSession({
+          addressId: selectedAddressId,
+          promoCode: appliedPromo?.code || undefined,
+        });
 
-    //     // Stripe load karo
-    //     const stripe = await loadStripe(session.stripe.publishableKey);
+        if (!session.url) throw new Error("No redirect URL");
 
-    //     if (!stripe) throw new Error("Stripe failed to load");
+        // 👇 Stripe hosted page pe redirect
+        window.location.href = session.url;
 
-    //     // Payment confirm karo
-    //     const { error, paymentIntent } = await stripe.confirmCardPayment(
-    //       session.stripe.clientSecret,
-    //       {
-    //         payment_method: {
-    //           card: { token: "tok_visa" }, // test mode mein test token
-    //           billing_details: { name, email },
-    //         },
-    //       }
-    //     );
-
-    //     if (error) {
-    //       set({ checkoutLoading: false });
-    //       toast.error(error.message || "Payment failed");
-    //       return;
-    //     }
-
-    //     if (paymentIntent?.status === "succeeded") {
-    //       const confirmed = await confirmCheckout({
-    //         orderId: session.order._id,
-    //         paymentIntentId: paymentIntent.id,
-    //       });
-
-    //       if (!confirmed._id) throw new Error("Order confirmation failed");
-
-    //       set({ cart: emptyCart, isOpen: false, ...defaultUiState });
-    //       toast.success("Payment successful");
-    //       onSuccess();
-    //     }
-    //   } catch {
-    //     set({ checkoutLoading: false });
-    //     toast.error("Unable to start checkout");
-    //   }
-    // },
-
-    startStripeCheckout: async ({ isSignedIn, onSuccess }) => {
-  const { selectedAddressId, appliedPromo, cart } = get();
-
-  if (!isSignedIn) { toast.error("Sign in to checkout"); return; }
-  if (!selectedAddressId) { toast.error("Add a default address"); return; }
-  if (!cart.items.length) { toast.error("Cart is empty"); return; }
-
-  try {
-    set({ checkoutLoading: true });
-
-    const session = await createCheckoutSession({
-      addressId: selectedAddressId,
-      promoCode: appliedPromo?.code || undefined,
-    });
-
-    if (!session.url) throw new Error("No redirect URL");
-
-    // 👇 Stripe hosted page pe redirect
-    window.location.href = session.url;
-
-  } catch {
-    set({ checkoutLoading: false });
-    toast.error("Unable to start checkout");
-  }
-},
+      } catch {
+        set({ checkoutLoading: false });
+        toast.error("Unable to start checkout");
+      }
+    },
 
     startPointsCheckout: async ({ isSignedIn, onSuccess }) => {
       const { selectedAddressId, appliedPromo, points, cart } = get();

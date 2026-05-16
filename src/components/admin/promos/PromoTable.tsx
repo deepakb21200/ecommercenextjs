@@ -25,9 +25,9 @@
 // }: PromoTableProps) {
 //   return (
 //     <div className="overflow-x-auto border rounded-xl bg-white">
-      
+
 //       <table className="w-full text-sm">
-        
+
 //         {/* HEADER */}
 //         <thead className="bg-gray-50 border-b">
 //           <tr className="text-left text-gray-600">
@@ -366,7 +366,7 @@ export default function PromoTable({ promos, loading, onDelete, onEdit, deleting
                 <td className="px-4 py-3.5 text-right">
                   <button
                     onClick={() => onEdit(promo)}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 opacity-0 shadow-sm transition group-hover:opacity-100 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm transition hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600"
                   >
                     <FiEdit2 className="h-3 w-3" />
                     Edit
@@ -378,7 +378,7 @@ export default function PromoTable({ promos, loading, onDelete, onEdit, deleting
                   <button
                     disabled={deletingPromoId === promo._id}
                     onClick={() => onDelete(promo._id)}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-600 opacity-0 transition group-hover:opacity-100 hover:bg-rose-100 disabled:opacity-40"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-600 transition hover:bg-rose-100 disabled:opacity-40"
                   >
                     {deletingPromoId === promo._id ? (
                       <div className="h-3 w-3 animate-spin rounded-full border border-rose-300 border-t-rose-600" />

@@ -10,6 +10,10 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+
+
+
+
 export async function DELETE(
   _req: NextRequest,
   { params }: { params: { id: string } }
@@ -17,21 +21,20 @@ export async function DELETE(
   try {
     await connectDB();
 
-    const banner = await Banner.findById(params.id);
+    const { id } = await params; // ← await add karo
+
+    const banner = await Banner.findById(id); // params.id ki jagah id
 
     if (!banner) {
       return NextResponse.json({ error: "Banner not found" }, { status: 404 });
     }
 
-    // Delete from Cloudinary
     if (banner.imagePublicId) {
       await cloudinary.uploader.destroy(banner.imagePublicId);
     }
 
-    // Delete from DB
-    await Banner.findByIdAndDelete(params.id);
+    await Banner.findByIdAndDelete(id); // params.id ki jagah id
 
-    // Return updated list
     const banners = await Banner.find().sort({ createdAt: -1 }).lean();
 
     return NextResponse.json({

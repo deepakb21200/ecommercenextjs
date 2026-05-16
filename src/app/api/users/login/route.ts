@@ -8,6 +8,7 @@ import { UserModel } from "@/models/User";
 
 export async function POST(req: Request) {
   await connectDB();
+ 
 
   const { username, password } = await req.json();
 
@@ -42,6 +43,10 @@ export async function POST(req: Request) {
     role: user.role,
     token,
   });
+
+
+
+  console.log("token hia ", token )
 
   res.cookies.set("token", token, {
     httpOnly: true,

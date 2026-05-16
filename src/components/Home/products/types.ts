@@ -13,6 +13,11 @@ export type ProductImage = {
   isCover: boolean;
 };
 
+type ColorOption = {
+  name: string;
+  hex: string;
+};
+
 export type CustomerProduct = {
   _id: string;
   title: string;
@@ -21,7 +26,8 @@ export type CustomerProduct = {
   brand: string;
   stock: number;
   images: ProductImage[];
-  colors: string[];
+  // colors: string[];
+  colors: ColorOption[];
   sizes: ProductSize[];
   price: number;
   salePercentage: number;

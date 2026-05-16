@@ -43,6 +43,9 @@ export async function deleteAdminBanner(id: string) {
     method: "DELETE",
     credentials: "include",
   });
+
+  console.log(res);
+  
  
   if (!res.ok) throw new Error("Failed to delete banner");
  

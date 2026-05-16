@@ -43,33 +43,55 @@ function requireAdmin(req: NextRequest) {
 
 async function getAllPromos() {
   const promos = await PromoModel.find().sort({ createdAt: -1 });
+  // console.log(typeof promos[0],"dssd");
+  
   return promos.map((p) => p.toObject());
 }
 
 export async function GET(req: NextRequest) {
   await connectDB();
 
-  const auth = requireAdmin(req);
-  if (auth.error) return NextResponse.json({ message: auth.error }, { status: auth.status });
+  // const auth = requireAdmin(req);
+  // if (auth.error) return NextResponse.json({ message: auth.error }, { status: auth.status });
 
   const items = await getAllPromos();
   return NextResponse.json({ items });
 }
 
+// export async function POST(req: NextRequest) {
+//   await connectDB();
+
+//   // const auth = requireAdmin(req);
+//   // if (auth.error) return NextResponse.json({ message: auth.error }, { status: auth.status });
+
+//   const body = await req.json();
+//   const parsed = parsePromoPayload(body);
+//   if (parsed.error) return NextResponse.json({ message: parsed.error }, { status: parsed.status });
+
+//   const existing = await PromoModel.findOne({ code: parsed.data!.code });
+//   if (existing) return NextResponse.json({ message: "Promo code already exists" }, { status: 400 });
+
+//   await PromoModel.create(parsed.data);
+
+//   return NextResponse.json({ items: await getAllPromos() });
+// }
+
+
+
 export async function POST(req: NextRequest) {
   await connectDB();
-
-  const auth = requireAdmin(req);
-  if (auth.error) return NextResponse.json({ message: auth.error }, { status: auth.status });
-
   const body = await req.json();
+  
   const parsed = parsePromoPayload(body);
   if (parsed.error) return NextResponse.json({ message: parsed.error }, { status: parsed.status });
 
-  const existing = await PromoModel.findOne({ code: parsed.data!.code });
+  // Ab TypeScript ko pata hai parsed.data exist karta hai
+  const data = parsed.data!;
+
+  const existing = await PromoModel.findOne({ code: data.code });
   if (existing) return NextResponse.json({ message: "Promo code already exists" }, { status: 400 });
 
-  await PromoModel.create(parsed.data);
+  await PromoModel.create(data);
 
   return NextResponse.json({ items: await getAllPromos() });
 }

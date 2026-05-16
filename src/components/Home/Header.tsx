@@ -1,460 +1,5 @@
 
-// import Link from "next/link";
-// import { useState } from "react";
-// import {
-//   RiSearchLine,
-//   RiShoppingCartLine,
-//   RiHeartLine,
-//   RiUserLine,
-//   RiMenuLine,
-//   RiCloseLine,
-//   RiPhoneLine,
-//   RiMailLine,
-//   RiMapPinLine,
- 
-//   RiArrowDownSLine,
- 
- 
- 
-//   RiArrowRightLine,
- 
-//   RiStarLine,
-// } from "react-icons/ri";
 
-
-
-// // ─── TYPES ───────────────────────────────────────────
-// type NavItem = {
-//   label: string;
-//   href: string;
-//   children?: { label: string; href: string }[];
-// };
-
-// // ─── DATA ────────────────────────────────────────────
-// const NAV_ITEMS: NavItem[] = [
-//   { label: "Home", href: "/" },
-//   {
-//     label: "Men",
-//     href: "/men",
-//     children: [
-//       { label: "T-Shirts", href: "/men/tshirts" },
-//       { label: "Shirts", href: "/men/shirts" },
-//       { label: "Jeans", href: "/men/jeans" },
-//       { label: "Jackets", href: "/men/jackets" },
-//       { label: "Footwear", href: "/men/footwear" },
-//       { label: "Accessories", href: "/men/accessories" },
-//     ],
-//   },
-//   {
-//     label: "Women",
-//     href: "/women",
-//     children: [
-//       { label: "Tops", href: "/women/tops" },
-//       { label: "Dresses", href: "/women/dresses" },
-//       { label: "Kurtas", href: "/women/kurtas" },
-//       { label: "Jeans", href: "/women/jeans" },
-//       { label: "Footwear", href: "/women/footwear" },
-//       { label: "Handbags", href: "/women/handbags" },
-//     ],
-//   },
-//   {
-//     label: "Kids",
-//     href: "/kids",
-//     children: [
-//       { label: "Boys", href: "/kids/boys" },
-//       { label: "Girls", href: "/kids/girls" },
-//       { label: "Infants", href: "/kids/infants" },
-//     ],
-//   },
-//   { label: "Sale", href: "/sale" },
-//   { label: "New Arrivals", href: "/new-arrivals" },
-// ];
-
-
-
-// // ─── HEADER ──────────────────────────────────────────
-// export function Header() {
-//   const [mobileOpen, setMobileOpen] = useState(false);
-//   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-//   const [searchOpen, setSearchOpen] = useState(false);
-
-//   return (
-//     <>
-//       <style>{`
-//         :root {
-//           --purple: #6936F5;
-//           --dark: #36344D;
-//           --grey: #727586;
-//           --red: #AE202C;
-//           --gold: #F7B551;
-//         }
-
-//         .header-nav-link {
-//           position: relative;
-//           font-size: 0.8125rem;
-//           font-weight: 600;
-//           letter-spacing: 0.06em;
-//           text-transform: uppercase;
-//           color: var(--dark);
-//           padding: 0.25rem 0;
-//           transition: color 0.2s;
-//         }
-
-//         .header-nav-link::after {
-//           content: '';
-//           position: absolute;
-//           bottom: -2px;
-//           left: 0;
-//           width: 0;
-//           height: 2px;
-//           background: var(--purple);
-//           transition: width 0.25s ease;
-//         }
-
-//         .header-nav-link:hover { color: var(--purple); }
-//         .header-nav-link:hover::after { width: 100%; }
-//         .header-nav-link.sale { color: var(--red); }
-//         .header-nav-link.new { color: var(--purple); }
-
-//         .dropdown {
-//           position: absolute;
-//           top: calc(100% + 12px);
-//           left: 50%;
-//           transform: translateX(-50%);
-//           background: #fff;
-//           border: 1px solid #eee;
-//           border-top: 3px solid var(--purple);
-//           box-shadow: 0 20px 60px rgba(105,54,245,0.12);
-//           border-radius: 0 0 12px 12px;
-//           padding: 1.25rem;
-//           min-width: 200px;
-//           display: grid;
-//           gap: 0.125rem;
-//           z-index: 100;
-//           animation: dropDown 0.18s ease;
-//         }
-
-//         @keyframes dropDown {
-//           from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
-//           to   { opacity: 1; transform: translateX(-50%) translateY(0); }
-//         }
-
-//         .dropdown a {
-//           display: flex;
-//           align-items: center;
-//           gap: 0.5rem;
-//           padding: 0.45rem 0.75rem;
-//           border-radius: 6px;
-//           font-size: 0.8125rem;
-//           color: var(--dark);
-//           font-weight: 500;
-//           transition: all 0.15s;
-//         }
-
-//         .dropdown a:hover {
-//           background: #f3eefe;
-//           color: var(--purple);
-//           padding-left: 1rem;
-//         }
-
-//         .icon-btn {
-//           position: relative;
-//           display: flex;
-//           align-items: center;
-//           justify-content: center;
-//           width: 2.25rem;
-//           height: 2.25rem;
-//           border-radius: 50%;
-//           color: var(--dark);
-//           transition: all 0.2s;
-//         }
-
-//         .icon-btn:hover {
-//           background: #f3eefe;
-//           color: var(--purple);
-//         }
-
-//         .cart-badge {
-//           position: absolute;
-//           top: -3px;
-//           right: -3px;
-//           background: var(--red);
-//           color: #fff;
-//           font-size: 0.6rem;
-//           font-weight: 700;
-//           width: 1.1rem;
-//           height: 1.1rem;
-//           border-radius: 50%;
-//           display: flex;
-//           align-items: center;
-//           justify-content: center;
-//           border: 2px solid #fff;
-//         }
-
-//         .topbar {
-//           background: var(--dark);
-//           color: #fff;
-//           font-size: 0.72rem;
-//           padding: 0.45rem 0;
-//           letter-spacing: 0.04em;
-//         }
-
-//         .search-overlay {
-//           position: fixed;
-//           inset: 0;
-//           background: rgba(54,52,77,0.7);
-//           backdrop-filter: blur(4px);
-//           z-index: 200;
-//           display: flex;
-//           align-items: flex-start;
-//           padding-top: 5rem;
-//           animation: fadeIn 0.2s ease;
-//         }
-
-//         @keyframes fadeIn {
-//           from { opacity: 0; }
-//           to { opacity: 1; }
-//         }
-
-//         .search-box {
-//           width: 100%;
-//           max-width: 680px;
-//           margin: 0 auto;
-//           background: #fff;
-//           border-radius: 16px;
-//           padding: 1.5rem;
-//           box-shadow: 0 40px 80px rgba(0,0,0,0.2);
-//         }
-
-//         .search-input {
-//           width: 100%;
-//           border: none;
-//           border-bottom: 2px solid var(--purple);
-//           padding: 0.75rem 0.5rem;
-//           font-size: 1.25rem;
-//           color: var(--dark);
-//           outline: none;
-//           font-weight: 500;
-//         }
-
-//         .mobile-menu {
-//           position: fixed;
-//           inset: 0;
-//           z-index: 300;
-//           background: #fff;
-//           overflow-y: auto;
-//           animation: slideIn 0.25s ease;
-//         }
-
-//         @keyframes slideIn {
-//           from { transform: translateX(-100%); }
-//           to   { transform: translateX(0); }
-//         }
-
-//         .promo-bar {
-//           background: linear-gradient(90deg, var(--purple), #8b5cf6);
-//           color: #fff;
-//           text-align: center;
-//           font-size: 0.78rem;
-//           font-weight: 600;
-//           padding: 0.5rem;
-//           letter-spacing: 0.08em;
-//         }
-//       `}</style>
-
-//       {/* Promo Bar */}
-//       <div className="promo-bar">
-//         🎉 USE CODE <span style={{ color: "var(--gold)", margin: "0 4px" }}>STYLE20</span>
-//         FOR 20% OFF YOUR FIRST ORDER &nbsp;·&nbsp; FREE SHIPPING ABOVE ₹999
-//       </div>
-
-//       {/* Top Bar */}
-//       <div className="topbar">
-//         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-//           <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
-//             <span style={{ display: "flex", alignItems: "center", gap: "0.35rem", opacity: 0.8 }}>
-//               <RiPhoneLine /> +91 98765 43210
-//             </span>
-//             <span style={{ display: "flex", alignItems: "center", gap: "0.35rem", opacity: 0.8 }}>
-//               <RiMailLine /> support@store.com
-//             </span>
-//           </div>
-//           <div style={{ display: "flex", alignItems: "center", gap: "1.25rem" }}>
-//             <Link href="/track" style={{ color: "#fff", opacity: 0.8, fontSize: "0.72rem" }}>Track Order</Link>
-//             <Link href="/store-locator" style={{ display: "flex", alignItems: "center", gap: "0.3rem", color: "#fff", opacity: 0.8, fontSize: "0.72rem" }}>
-//               <RiMapPinLine /> Find Store
-//             </Link>
-//             <span style={{ opacity: 0.4 }}>|</span>
-//             <Link href="/login" style={{ color: "var(--gold)", fontSize: "0.72rem", fontWeight: 700 }}>Sign In</Link>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Main Header */}
-//       <header style={{
-//         background: "#fff",
-//         borderBottom: "1px solid #efefef",
-//         position: "sticky",
-//         top: 0,
-//         zIndex: 90,
-//         boxShadow: "0 2px 20px rgba(105,54,245,0.06)"
-//       }}>
-//         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 1.5rem", display: "flex", alignItems: "center", gap: "2rem", height: "4.5rem" }}>
-
-//           {/* Mobile Menu Toggle */}
-//           <button
-//             className="icon-btn"
-//             style={{ display: "none" }}
-//             onClick={() => setMobileOpen(true)}
-//             id="mobile-toggle"
-//           >
-//             <RiMenuLine size={20} />
-//           </button>
-
-//           {/* Logo */}
-//           <Link href="/" style={{ textDecoration: "none", flexShrink: 0 }}>
-//             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-//               <div style={{
-//                 width: 36, height: 36, borderRadius: 10,
-//                 background: "var(--purple)",
-//                 display: "flex", alignItems: "center", justifyContent: "center"
-//               }}>
-//                 <RiStarLine color="#fff" size={20} />
-//               </div>
-//               <div>
-//                 <div style={{ fontWeight: 900, fontSize: "1.2rem", color: "var(--dark)", letterSpacing: "-0.02em", lineHeight: 1 }}>
-//                   VELVET
-//                 </div>
-//                 <div style={{ fontSize: "0.55rem", letterSpacing: "0.25em", color: "var(--grey)", fontWeight: 600 }}>
-//                   FASHION STORE
-//                 </div>
-//               </div>
-//             </div>
-//           </Link>
-
-//           {/* Nav */}
-//           <nav style={{ display: "flex", alignItems: "center", gap: "1.75rem", flex: 1, justifyContent: "center" }}>
-//             {NAV_ITEMS.map((item) => (
-//               <div
-//                 key={item.label}
-//                 style={{ position: "relative" }}
-//                 onMouseEnter={() => setActiveDropdown(item.label)}
-//                 onMouseLeave={() => setActiveDropdown(null)}
-//               >
-//                 <Link
-//                   href={item.href}
-//                   className={`header-nav-link ${item.label === "Sale" ? "sale" : ""} ${item.label === "New Arrivals" ? "new" : ""}`}
-//                   style={{ display: "flex", alignItems: "center", gap: "0.2rem" }}
-//                 >
-//                   {item.label}
-//                   {item.children && <RiArrowDownSLine size={14} style={{ opacity: 0.6 }} />}
-//                 </Link>
-
-//                 {item.children && activeDropdown === item.label && (
-//                   <div className="dropdown">
-//                     {item.children.map((child) => (
-//                       <Link key={child.label} href={child.href}>
-//                         <RiArrowRightLine size={12} style={{ opacity: 0.4 }} />
-//                         {child.label}
-//                       </Link>
-//                     ))}
-//                   </div>
-//                 )}
-//               </div>
-//             ))}
-//           </nav>
-
-//           {/* Actions */}
-//           <div style={{ display: "flex", alignItems: "center", gap: "0.25rem", flexShrink: 0 }}>
-//             <button className="icon-btn" onClick={() => setSearchOpen(true)}>
-//               <RiSearchLine size={19} />
-//             </button>
-//             <button className="icon-btn">
-//               <RiUserLine size={19} />
-//             </button>
-//             <button className="icon-btn">
-//               <RiHeartLine size={19} />
-//             </button>
-//             <button className="icon-btn" style={{ marginLeft: "0.25rem" }}>
-//               <RiShoppingCartLine size={19} />
-//               <span className="cart-badge">3</span>
-//             </button>
-//           </div>
-//         </div>
-//       </header>
-
-//       {/* Search Overlay */}
-//       {searchOpen && (
-//         <div className="search-overlay" onClick={() => setSearchOpen(false)}>
-//           <div className="search-box" onClick={(e) => e.stopPropagation()}>
-//             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
-//               <span style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--grey)", textTransform: "uppercase" }}>
-//                 Search Products
-//               </span>
-//               <button onClick={() => setSearchOpen(false)} style={{ color: "var(--grey)" }}>
-//                 <RiCloseLine size={20} />
-//               </button>
-//             </div>
-//             <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-//               <RiSearchLine size={20} style={{ color: "var(--purple)", flexShrink: 0 }} />
-//               <input
-//                 autoFocus
-//                 className="search-input"
-//                 placeholder="Search for clothes, brands..."
-//               />
-//             </div>
-//             <div style={{ marginTop: "1.25rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-//               {["Kurtas", "Jeans", "Dresses", "Sneakers", "Jackets"].map((tag) => (
-//                 <span key={tag} style={{
-//                   padding: "0.35rem 0.85rem",
-//                   border: "1px solid #e5e5f0",
-//                   borderRadius: 999,
-//                   fontSize: "0.78rem",
-//                   color: "var(--dark)",
-//                   cursor: "pointer",
-//                   transition: "all 0.15s",
-//                 }}>
-//                   {tag}
-//                 </span>
-//               ))}
-//             </div>
-//           </div>
-//         </div>
-//       )}
-
-//       {/* Mobile Menu */}
-//       {mobileOpen && (
-//         <div className="mobile-menu">
-//           <div style={{ padding: "1rem 1.25rem", borderBottom: "1px solid #f0f0f0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-//             <span style={{ fontWeight: 900, fontSize: "1.1rem", color: "var(--dark)" }}>VELVET</span>
-//             <button onClick={() => setMobileOpen(false)}>
-//               <RiCloseLine size={24} style={{ color: "var(--dark)" }} />
-//             </button>
-//           </div>
-//           <nav style={{ padding: "1rem" }}>
-//             {NAV_ITEMS.map((item) => (
-//               <Link
-//                 key={item.label}
-//                 href={item.href}
-//                 onClick={() => setMobileOpen(false)}
-//                 style={{
-//                   display: "flex", alignItems: "center", justifyContent: "space-between",
-//                   padding: "0.85rem 0.75rem",
-//                   borderBottom: "1px solid #f5f5f5",
-//                   color: item.label === "Sale" ? "var(--red)" : "var(--dark)",
-//                   fontWeight: 600, fontSize: "0.95rem",
-//                 }}
-//               >
-//                 {item.label}
-//                 <RiArrowRightLine size={16} style={{ opacity: 0.4 }} />
-//               </Link>
-//             ))}
-//           </nav>
-//         </div>
-//       )}
-//     </>
-//   );
-// }
 
 
 
@@ -463,424 +8,244 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
 import {
-  RiSearchLine,
-  RiShoppingCartLine,
-  RiHeartLine,
-  RiUserLine,
-  RiMenuLine,
-  RiCloseLine,
-  RiPhoneLine,
-  RiMailLine,
-  RiMapPinLine,
-  RiArrowDownSLine,
-  RiArrowRightLine,
-  RiStarLine,
-  RiLogoutBoxLine,
-  RiFileListLine,
-} from "react-icons/ri";
+  FaHeart,
+ 
+  FaSearch,
+  FaShoppingBag,
+  FaUser,
+  FaClipboardList,
+  FaTimes,
+} from "react-icons/fa";
 
 import { useAuthStore } from "../user/store/api";
 import { useCustomerWishlistStore } from "@/store/home/wishlist/store";
 import { useCustomerProfileStore } from "@/store/home/profile/store";
 import { useCustomerCartAndCheckoutStore } from "@/store/home/cartAndCheckout/store";
 import { useCustomerOrdersStore } from "@/store/home/orders/store";
+
 import CustomerCartAndCheckoutDrawer from "./customerCart/CustomerCartAndCheckoutDrawer";
 import CustomerWishlistDialog from "./wishlist/CustomerWishList";
 import CustomerProfileDialog from "./profile/CustomerProfileDialog";
 import CustomerOrdersDialog from "./orders/CustomerOrdersDiaolog";
+import { FaMarsAndVenus } from "react-icons/fa6";
 
-// ─── TYPES ───────────────────────────────────────────
-type NavItem = {
-  label: string;
-  href: string;
-  children?: { label: string; href: string }[];
-};
-
-// ─── DATA ────────────────────────────────────────────
-const NAV_ITEMS: NavItem[] = [
-  { label: "Home", href: "/" },
-  {
-    label: "Men", href: "/men",
-    children: [
-      { label: "T-Shirts", href: "/men/tshirts" },
-      { label: "Shirts", href: "/men/shirts" },
-      { label: "Jeans", href: "/men/jeans" },
-      { label: "Jackets", href: "/men/jackets" },
-      { label: "Footwear", href: "/men/footwear" },
-      { label: "Accessories", href: "/men/accessories" },
-    ],
-  },
-  {
-    label: "Women", href: "/women",
-    children: [
-      { label: "Tops", href: "/women/tops" },
-      { label: "Dresses", href: "/women/dresses" },
-      { label: "Kurtas", href: "/women/kurtas" },
-      { label: "Jeans", href: "/women/jeans" },
-      { label: "Footwear", href: "/women/footwear" },
-      { label: "Handbags", href: "/women/handbags" },
-    ],
-  },
-  {
-    label: "Kids", href: "/kids",
-    children: [
-      { label: "Boys", href: "/kids/boys" },
-      { label: "Girls", href: "/kids/girls" },
-      { label: "Infants", href: "/kids/infants" },
-    ],
-  },
-  { label: "Sale", href: "/sale" },
-  { label: "New Arrivals", href: "/new-arrivals" },
+const NAV_ITEMS = [
+  "Home",
+  "Shop",
+  "Men",
+  "Women",
+  "Kids",
 ];
 
-export function Header() {
+function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
 
-  // ── Auth ──
   const { user, logout } = useAuthStore();
-  const isSignedIn = !!user;
 
-  // ── Stores ──
-  const { items: wishlistItems, loadWishlist, clear: clearWishlist, setOpen: setWishlistOpen } =
-    useCustomerWishlistStore((state) => state);
-  const { openProfile, clear: clearProfile } = useCustomerProfileStore((state) => state);
-  const { setOpen, cart, loadCart } = useCustomerCartAndCheckoutStore((state) => state);
-  const { openOrders } = useCustomerOrdersStore((state) => state);
+  const isSignedIn = Boolean(user);
 
-  // ── Effects ──
+  const {
+    items: wishlistItems,
+    loadWishlist,
+    clear: clearWishlist,
+    setOpen: setWishlistOpen,
+  } = useCustomerWishlistStore((state) => state);
+
+  const {
+    openProfile,
+    clear: clearProfile,
+  } = useCustomerProfileStore((state) => state);
+
+  const {
+    setOpen,
+     cart,
+    loadCart,
+  } = useCustomerCartAndCheckoutStore((state) => state);
+
+  const {
+    openOrders,
+  } = useCustomerOrdersStore((state) => state);
+
   useEffect(() => {
     void loadCart(isSignedIn);
+
     if (!isSignedIn) {
       clearWishlist();
       clearProfile();
       return;
     }
+
     void loadWishlist();
   }, [isSignedIn]);
 
   return (
     <>
-      <style>{`
-        :root {
-          --purple: #6936F5;
-          --dark: #36344D;
-          --grey: #727586;
-          --red: #AE202C;
-          --gold: #F7B551;
-        }
-        .header-nav-link {
-          position: relative;
-          font-size: 0.8125rem;
-          font-weight: 600;
-          letter-spacing: 0.06em;
-          text-transform: uppercase;
-          color: var(--dark);
-          padding: 0.25rem 0;
-          transition: color 0.2s;
-        }
-        .header-nav-link::after {
-          content: '';
-          position: absolute;
-          bottom: -2px;
-          left: 0;
-          width: 0;
-          height: 2px;
-          background: var(--purple);
-          transition: width 0.25s ease;
-        }
-        .header-nav-link:hover { color: var(--purple); }
-        .header-nav-link:hover::after { width: 100%; }
-        .header-nav-link.sale { color: var(--red); }
-        .header-nav-link.new { color: var(--purple); }
-        .dropdown {
-          position: absolute;
-          top: calc(100% + 12px);
-          left: 50%;
-          transform: translateX(-50%);
-          background: #fff;
-          border: 1px solid #eee;
-          border-top: 3px solid var(--purple);
-          box-shadow: 0 20px 60px rgba(105,54,245,0.12);
-          border-radius: 0 0 12px 12px;
-          padding: 1.25rem;
-          min-width: 200px;
-          display: grid;
-          gap: 0.125rem;
-          z-index: 100;
-          animation: dropDown 0.18s ease;
-        }
-        @keyframes dropDown {
-          from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
-          to   { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-        .dropdown a {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          padding: 0.45rem 0.75rem;
-          border-radius: 6px;
-          font-size: 0.8125rem;
-          color: var(--dark);
-          font-weight: 500;
-          transition: all 0.15s;
-        }
-        .dropdown a:hover {
-          background: #f3eefe;
-          color: var(--purple);
-          padding-left: 1rem;
-        }
-        .icon-btn {
-          position: relative;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 2.25rem;
-          height: 2.25rem;
-          border-radius: 50%;
-          color: var(--dark);
-          transition: all 0.2s;
-        }
-        .icon-btn:hover { background: #f3eefe; color: var(--purple); }
-        .cart-badge {
-          position: absolute;
-          top: -3px;
-          right: -3px;
-          background: var(--red);
-          color: #fff;
-          font-size: 0.6rem;
-          font-weight: 700;
-          width: 1.1rem;
-          height: 1.1rem;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border: 2px solid #fff;
-        }
-        .topbar {
-          background: var(--dark);
-          color: #fff;
-          font-size: 0.72rem;
-          padding: 0.45rem 0;
-          letter-spacing: 0.04em;
-        }
-        .search-overlay {
-          position: fixed;
-          inset: 0;
-          background: rgba(54,52,77,0.7);
-          backdrop-filter: blur(4px);
-          z-index: 200;
-          display: flex;
-          align-items: flex-start;
-          padding-top: 5rem;
-          animation: fadeIn 0.2s ease;
-        }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .search-box {
-          width: 100%;
-          max-width: 680px;
-          margin: 0 auto;
-          background: #fff;
-          border-radius: 16px;
-          padding: 1.5rem;
-          box-shadow: 0 40px 80px rgba(0,0,0,0.2);
-        }
-        .search-input {
-          width: 100%;
-          border: none;
-          border-bottom: 2px solid var(--purple);
-          padding: 0.75rem 0.5rem;
-          font-size: 1.25rem;
-          color: var(--dark);
-          outline: none;
-          font-weight: 500;
-        }
-        .mobile-menu {
-          position: fixed;
-          inset: 0;
-          z-index: 300;
-          background: #fff;
-          overflow-y: auto;
-          animation: slideIn 0.25s ease;
-        }
-        @keyframes slideIn {
-          from { transform: translateX(-100%); }
-          to   { transform: translateX(0); }
-        }
-        .promo-bar {
-          background: linear-gradient(90deg, var(--purple), #8b5cf6);
-          color: #fff;
-          text-align: center;
-          font-size: 0.78rem;
-          font-weight: 600;
-          padding: 0.5rem;
-          letter-spacing: 0.08em;
-        }
-      `}</style>
-
-      {/* Promo Bar */}
-      <div className="promo-bar">
-        🎉 USE CODE <span style={{ color: "var(--gold)", margin: "0 4px" }}>STYLE20</span>
-        FOR 20% OFF YOUR FIRST ORDER &nbsp;·&nbsp; FREE SHIPPING ABOVE ₹999
-      </div>
-
-      {/* Top Bar */}
-      {/* <div className="topbar">
-        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
-            <span style={{ display: "flex", alignItems: "center", gap: "0.35rem", opacity: 0.8 }}>
-              <RiPhoneLine /> +91 98765 43210
-            </span>
-            <span style={{ display: "flex", alignItems: "center", gap: "0.35rem", opacity: 0.8 }}>
-              <RiMailLine /> support@store.com
-            </span>
+      {/* Header */}
+      <header
+        className="sticky top-0 z-50 flex h-[68px] items-center justify-between border-b border-[#e7e0d7] bg-[rgba(255,252,248,0.92)] px-4 md:px-8 backdrop-blur-xl"
+      >
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-3">
+          <div
+            className="flex h-9 w-9 items-center justify-center rounded-[10px] text-white"
+            style={{
+              background:
+                "linear-gradient(135deg,hsl(174,62%,38%),hsl(190,60%,45%),hsl(200,55%,50%))",
+            }}
+          >
+            V
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "1.25rem" }}>
-            <Link href="/track" style={{ color: "#fff", opacity: 0.8, fontSize: "0.72rem" }}>Track Order</Link>
-            <Link href="/store-locator" style={{ display: "flex", alignItems: "center", gap: "0.3rem", color: "#fff", opacity: 0.8, fontSize: "0.72rem" }}>
-              <RiMapPinLine /> Find Store
+
+          <div>
+            <h2 className="text-[22px] font-semibold tracking-[-0.02em] text-[#222831]">
+              VELVET
+            </h2>
+
+            <p className="text-[8px] uppercase tracking-[0.25em] text-[#6b7280]">
+              Fashion Store
+            </p>
+          </div>
+        </Link>
+
+        {/* Desktop Nav */}
+        <nav className="hidden items-center gap-1 md:flex">
+          {NAV_ITEMS.map((item) => (
+            <Link
+              key={item}
+              href="/"
+              className="rounded-lg px-4 py-2 text-[13px] font-medium text-[#6b7280] transition hover:bg-[#f3eee6] hover:text-[#222831]"
+            >
+              {item}
             </Link>
-            <span style={{ opacity: 0.4 }}>|</span>
-            {isSignedIn ? (
-              <button
-                onClick={logout}
-                style={{ color: "var(--gold)", fontSize: "0.72rem", fontWeight: 700, display: "flex", alignItems: "center", gap: "0.3rem" }}
-              >
-                <RiLogoutBoxLine size={12} /> Logout
-              </button>
-            ) : (
-              <Link href="/login" style={{ color: "var(--gold)", fontSize: "0.72rem", fontWeight: 700 }}>Sign In</Link>
-            )}
-          </div>
-        </div>
-      </div> */}
+          ))}
 
-      {/* Main Header */}
-      <header style={{
-        background: "#fff",
-        borderBottom: "1px solid #efefef",
-        position: "sticky",
-        top: 0,
-        zIndex: 90,
-        boxShadow: "0 2px 20px rgba(105,54,245,0.06)"
-      }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 1.5rem", display: "flex", alignItems: "center", gap: "2rem", height: "4.5rem" }}>
+          <Link
+            href="/"
+            className="rounded-lg px-4 py-2 text-[13px] font-semibold text-[#f97316]"
+          >
+            Sale 🔥
+          </Link>
+        </nav>
 
-          {/* Mobile Menu Toggle */}
-          <button className="icon-btn" onClick={() => setMobileOpen(true)}>
-            <RiMenuLine size={20} />
+        {/* Actions */}
+        <div className="flex items-center gap-2">
+          {/* Search */}
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="flex h-10 w-10 items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3eee6]"
+          >
+            <FaSearch size={16} />
           </button>
 
-          {/* Logo */}
-          <Link href="/" style={{ textDecoration: "none", flexShrink: 0 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <div style={{ width: 36, height: 36, borderRadius: 10, background: "var(--purple)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <RiStarLine color="#fff" size={20} />
-              </div>
-              <div>
-                <div style={{ fontWeight: 900, fontSize: "1.2rem", color: "var(--dark)", letterSpacing: "-0.02em", lineHeight: 1 }}>VELVET</div>
-                <div style={{ fontSize: "0.55rem", letterSpacing: "0.25em", color: "var(--grey)", fontWeight: 600 }}>FASHION STORE</div>
-              </div>
-            </div>
-          </Link>
-
-          {/* Desktop Nav */}
-          <nav style={{ display: "flex", alignItems: "center", gap: "1.75rem", flex: 1, justifyContent: "center" }}>
-            {NAV_ITEMS.map((item) => (
-              <div
-                key={item.label}
-                style={{ position: "relative" }}
-                onMouseEnter={() => setActiveDropdown(item.label)}
-                onMouseLeave={() => setActiveDropdown(null)}
+          {/* Signed In Actions */}
+          {isSignedIn ? (
+            <>
+              {/* Profile */}
+              <button
+                onClick={openProfile}
+                className="flex h-10 w-10 items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3eee6]"
               >
-                <Link
-                  href={item.href}
-                  className={`header-nav-link ${item.label === "Sale" ? "sale" : ""} ${item.label === "New Arrivals" ? "new" : ""}`}
-                  style={{ display: "flex", alignItems: "center", gap: "0.2rem" }}
-                >
-                  {item.label}
-                  {item.children && <RiArrowDownSLine size={14} style={{ opacity: 0.6 }} />}
-                </Link>
-                {item.children && activeDropdown === item.label && (
-                  <div className="dropdown">
-                    {item.children.map((child) => (
-                      <Link key={child.label} href={child.href}>
-                        <RiArrowRightLine size={12} style={{ opacity: 0.4 }} />
-                        {child.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </nav>
-
-          {/* Actions */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.25rem", flexShrink: 0 }}>
-            {/* Search */}
-            <button className="icon-btn" onClick={() => setSearchOpen(true)}>
-              <RiSearchLine size={19} />
-            </button>
-
-            {/* Profile — only if signed in */}
-            {isSignedIn && (
-              <button className="icon-btn" onClick={openProfile}>
-                <RiUserLine size={19} />
+                <FaUser size={15} />
               </button>
-            )}
 
-            {/* Orders — only if signed in */}
-            {isSignedIn && (
-              <button className="icon-btn" onClick={openOrders}>
-                <RiFileListLine size={19} />
+              {/* Orders */}
+              <button
+                onClick={openOrders}
+                className="flex h-10 w-10 items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3eee6]"
+              >
+                <FaClipboardList size={15} />
               </button>
-            )}
 
-            {/* Wishlist — only if signed in */}
-            {isSignedIn && (
-              <button className="icon-btn" onClick={() => setWishlistOpen(true)}>
-                <RiHeartLine size={19} />
+                {/* Wishlist */}
+              <button
+                onClick={() => setWishlistOpen(true)}
+                className="relative flex h-10 w-10 items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3eee6]"
+              >
+                <FaHeart size={16} />
+
                 {wishlistItems.length > 0 && (
-                  <span className="cart-badge">{wishlistItems.length}</span>
+                  <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-[#f97316] text-[9px] font-bold text-white">
+                    {wishlistItems.length}
+                  </span>
                 )}
               </button>
-            )}
 
-            {/* Cart — always visible */}
-            <button className="icon-btn" style={{ marginLeft: "0.25rem" }} onClick={() => setOpen(true)}>
-              <RiShoppingCartLine size={19} />
-              {(cart?.items?.length || 0) > 0 && (
-                <span className="cart-badge">{cart?.items?.length || 0}</span>
-              )}
-            </button>
-          </div>
+              
+            </>
+          ) : (
+            <>
+            <Link
+              href="/login"
+              className="rounded-full bg-[#24998a] px-5 py-2 text-[13px] font-medium text-white transition hover:bg-[#1f8276]"
+            >
+              Sign In
+            </Link>
+          
+              </>
+          )}
+
+          {/* Cart */}
+          <button
+            onClick={() => setOpen(true)}
+            className="relative flex h-10 w-10 items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3eee6]"
+          >
+            <FaShoppingBag size={16} />
+
+            {(cart?.items?.length || 0) > 0 && (
+              <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-[#f97316] text-[9px] font-bold text-white">
+                {cart?.items?.length || 0}
+              </span>
+            )}
+          </button>
+
+          {/* Mobile Menu */}
+          <button
+            onClick={() => setMobileOpen(true)}
+            className="flex h-10 w-10 items-center justify-center rounded-full md:hidden"
+          >
+            <FaMarsAndVenus />
+          </button>
         </div>
       </header>
 
       {/* Search Overlay */}
       {searchOpen && (
-        <div className="search-overlay" onClick={() => setSearchOpen(false)}>
-          <div className="search-box" onClick={(e) => e.stopPropagation()}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
-              <span style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", color: "var(--grey)", textTransform: "uppercase" }}>
+        <div className="fixed inset-0 z-[100] bg-black/40 backdrop-blur-sm">
+          <div className="mx-auto mt-24 w-[92%] max-w-2xl rounded-2xl bg-white p-6 shadow-2xl">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-[#6b7280]">
                 Search Products
-              </span>
-              <button onClick={() => setSearchOpen(false)} style={{ color: "var(--grey)" }}>
-                <RiCloseLine size={20} />
+              </h3>
+
+              <button
+                onClick={() => setSearchOpen(false)}
+                className="text-[#6b7280]"
+              >
+                <FaTimes />
               </button>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-              <RiSearchLine size={20} style={{ color: "var(--purple)", flexShrink: 0 }} />
-              <input autoFocus className="search-input" placeholder="Search for clothes, brands..." />
+
+            <div className="flex items-center gap-3 border-b border-[#d6d3d1] pb-3">
+              <FaSearch className="text-[#24998a]" />
+
+              <input
+                autoFocus
+                placeholder="Search for products..."
+                className="w-full border-none bg-transparent text-[15px] outline-none"
+              />
             </div>
-            <div style={{ marginTop: "1.25rem", display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-              {["Kurtas", "Jeans", "Dresses", "Sneakers", "Jackets"].map((tag) => (
-                <span key={tag} style={{ padding: "0.35rem 0.85rem", border: "1px solid #e5e5f0", borderRadius: 999, fontSize: "0.78rem", color: "var(--dark)", cursor: "pointer" }}>
+
+            <div className="mt-5 flex flex-wrap gap-2">
+              {["Jackets", "Shoes", "T-Shirts", "Dresses", "Watches"].map((tag) => (
+                <button
+                  key={tag}
+                  className="rounded-full border border-[#e7e0d7] px-4 py-2 text-[12px] text-[#6b7280] transition hover:bg-[#f3eee6]"
+                >
                   {tag}
-                </span>
+                </button>
               ))}
             </div>
           </div>
@@ -889,70 +254,122 @@ export function Header() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="mobile-menu">
-          <div style={{ padding: "1rem 1.25rem", borderBottom: "1px solid #f0f0f0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <span style={{ fontWeight: 900, fontSize: "1.1rem", color: "var(--dark)" }}>VELVET</span>
+        
+        <div className="fixed inset-0 z-[120] bg-white md:hidden">
+          {/* Top */}
+          <div className="flex items-center justify-between border-b border-[#ece7df] px-5 py-4">
+            <h2 className="text-xl font-semibold text-[#222831]">
+              VELVET
+            </h2>
+
             <button onClick={() => setMobileOpen(false)}>
-              <RiCloseLine size={24} style={{ color: "var(--dark)" }} />
+              <FaTimes size={20} />
             </button>
           </div>
 
-          <nav style={{ padding: "1rem" }}>
+          {/* Nav */}
+          <div className="flex flex-col px-4 py-3">
             {NAV_ITEMS.map((item) => (
               <Link
-                key={item.label}
-                href={item.href}
+                key={item}
+                href="/"
                 onClick={() => setMobileOpen(false)}
-                style={{
-                  display: "flex", alignItems: "center", justifyContent: "space-between",
-                  padding: "0.85rem 0.75rem",
-                  borderBottom: "1px solid #f5f5f5",
-                  color: item.label === "Sale" ? "var(--red)" : "var(--dark)",
-                  fontWeight: 600, fontSize: "0.95rem",
-                }}
+                className="border-b border-[#f1ece5] py-4 text-[15px] font-medium text-[#374151]"
               >
-                {item.label}
-                <RiArrowRightLine size={16} style={{ opacity: 0.4 }} />
+                {item}
               </Link>
             ))}
-          </nav>
 
-          {/* Mobile — auth actions */}
-          <div style={{ padding: "1rem", borderTop: "1px solid #f0f0f0", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+            <Link
+              href="/"
+              className="border-b border-[#f1ece5] py-4 text-[15px] font-semibold text-[#f97316]"
+            >
+              Sale 🔥
+            </Link>
+          </div>
+
+          {/* Bottom Actions */}
+          <div className="mt-4 flex flex-col gap-3 px-4 border-4! border-red-700!">
+            
             {isSignedIn ? (
               <>
-                <button onClick={() => { openProfile(); setMobileOpen(false); }} style={{ textAlign: "left", fontWeight: 600, color: "var(--dark)", fontSize: "0.95rem" }}>
-                  My Account
+                <button
+                  onClick={() => {
+                    openProfile();
+                    setMobileOpen(false);
+                  }}
+                  className="rounded-xl border border-[#ece7df] px-4 py-3 text-left text-sm font-medium"
+                >
+                  My Profile
                 </button>
-                <button onClick={() => { openOrders(); setMobileOpen(false); }} style={{ textAlign: "left", fontWeight: 600, color: "var(--dark)", fontSize: "0.95rem" }}>
+
+                <button
+                  onClick={() => {
+                    openOrders();
+                    setMobileOpen(false);
+                  }}
+                  className="rounded-xl border border-[#ece7df] px-4 py-3 text-left text-sm font-medium"
+                >
                   My Orders
                 </button>
-                <button onClick={() => { setWishlistOpen(true); setMobileOpen(false); }} style={{ textAlign: "left", fontWeight: 600, color: "var(--dark)", fontSize: "0.95rem" }}>
+
+                    <button
+                  onClick={() => {
+                    setWishlistOpen(true);
+                    setMobileOpen(false);
+                  }}
+                  className="rounded-xl border border-[#ece7df] px-4 py-3 text-left text-sm font-medium"
+                >
                   Wishlist ({wishlistItems.length})
                 </button>
-                <button onClick={logout} style={{ textAlign: "left", fontWeight: 600, color: "var(--red)", fontSize: "0.95rem" }}>
+
+              
+
+              
+
+                <button
+                  onClick={() => void logout()}
+                  className="rounded-xl bg-red-500 px-4 py-3 text-left text-sm font-medium text-white"
+                >
                   Logout
                 </button>
               </>
-            ) : (
-              <Link href="/login" onClick={() => setMobileOpen(false)} style={{ fontWeight: 700, color: "var(--purple)", fontSize: "0.95rem" }}>
+            ) 
+            : (
+            <>
+              <Link
+                href="/login"
+                className="rounded-xl bg-[#24998a] px-4 py-3 text-center text-sm font-medium text-white"
+              >
                 Sign In
               </Link>
+
+              
+            </>
             )}
-            <button onClick={() => { setOpen(true); setMobileOpen(false); }} style={{ textAlign: "left", fontWeight: 600, color: "var(--dark)", fontSize: "0.95rem" }}>
-              Cart ({cart?.items?.length || 0})
-            </button>
           </div>
         </div>
       )}
 
-      {/* Dialogs — only if signed in */}
+      {/* Dialogs / Drawers */}
       {isSignedIn && <CustomerWishlistDialog />}
       {isSignedIn && <CustomerProfileDialog />}
       {isSignedIn && <CustomerOrdersDialog />}
 
-      {/* Cart drawer — always rendered */}
+
+
+
+
       <CustomerCartAndCheckoutDrawer />
     </>
   );
 }
+
+
+export default  Header
+
+
+
+
+
+

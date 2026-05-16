@@ -47,10 +47,8 @@ export async function getCustomerProducts(
   return res.json();
 }
 
-// ================= PRODUCT DETAILS =================
-export async function getCustomerProductDetails(
-  productId: string
-): Promise<CustomerProductDetailsResponse> {
+// ================= PRODUCT DETAILS ================= //  done 
+export async function getCustomerProductDetails(productId: string): Promise<CustomerProductDetailsResponse> {
   console.log("prossss",productId);
   
   const res = await fetch(`${BASE_URL}/products/${productId}`, {
@@ -58,7 +56,6 @@ export async function getCustomerProductDetails(
     credentials: "include",
   });
 
-  console.log(res,"sdfffffffff");
   
 
   if (!res.ok) {

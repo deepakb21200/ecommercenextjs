@@ -9,6 +9,27 @@
 
 
 // next.config.js
+
+
+// const nextConfig = {
+//   images: {
+//     remotePatterns: [
+//       {
+//         protocol: "https",
+//         hostname: "res.cloudinary.com",
+//       },
+//     ],
+//   },
+// };
+
+// module.exports = nextConfig;
+
+
+
+
+
+
+
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -18,6 +39,8 @@ const nextConfig = {
       },
     ],
   },
+
+  allowedDevOrigins: ["easiness-sixfold-viscous.ngrok-free.dev"], // 👈 ye add karo
 };
 
 module.exports = nextConfig;

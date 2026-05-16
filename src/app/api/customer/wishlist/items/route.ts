@@ -79,7 +79,9 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const data = await getWishlistResponse(auth.decoded.id);
+    const data = await getWishlistResponse(auth.decoded.id)
+
+    
     return NextResponse.json({ status: "success", data });
 
   } catch (err: any) {

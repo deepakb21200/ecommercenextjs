@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { CustomerNavbar } from "@/components/Home/HomeNavbar";
  
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "@/Provider/Providers";
-import { Header } from "@/components/Home/Header";
+ 
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,7 +35,7 @@ export default function RootLayout({
     
      
      <AuthProvider>
-      {/* <Header/> */}
+ 
         {children}
              <Toaster/>
      </AuthProvider>

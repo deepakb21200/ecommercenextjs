@@ -7,6 +7,9 @@ const BASE_URL = "/api/admin";
 export async function extractAdminOrders() {
   const res = await fetch(`${BASE_URL}/orders`);
 
+  console.log("extarct admin orders", res);
+  
+
   if (!res.ok) {
     throw new Error("Failed to fetch orders");
   }

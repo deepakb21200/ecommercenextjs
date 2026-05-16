@@ -1,7 +1,8 @@
-import LoginPage from '@/components/Login'
+ 
+import Categories from '@/components/Home/Categories/Categories'
 import { StoreHome } from '@/components/Home/Home'
 
-import SignupPage from '@/components/Home/SignUp'
+ 
 
 
 function page() {
@@ -10,8 +11,9 @@ function page() {
     <>
   
       <StoreHome/>
-          <LoginPage/>
-          <SignupPage/>
+      <Categories/>
+
+
     </>
   )
 }

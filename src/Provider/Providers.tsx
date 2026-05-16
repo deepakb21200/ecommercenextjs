@@ -1,26 +1,32 @@
 // components/AuthProvider.tsx
-"use client";
+// "use client";
 
-import { useAuthStore } from "@/components/user/store/api";
+// import { useAuthStore } from "@/components/user/store/api";
 
-import { useEffect } from "react";
+// import { useEffect } from "react";
  
 
-// export default function AuthProvider({ children }: { children: React.ReactNode }) {
-//   const hydrate = useAuthStore((state) => state.hydrate);
+ 
 
+// export function AuthProvider({ children }: { children: React.ReactNode }) {
 //   useEffect(() => {
-//     useAuthStore.persist.rehydrate(); // localStorage se restore
-//     void hydrate();                   // server se fresh user fetch
-//   }, [hydrate]);
+//     useAuthStore.persist.rehydrate(); // 👈 manually hydrate on mount
+//   }, []);
 
 //   return <>{children}</>;
 // }
 
 
+
+
+"use client";
+
+import { useAuthStore } from "@/components/user/store/api";
+import { useEffect } from "react";
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    useAuthStore.persist.rehydrate(); // 👈 manually hydrate on mount
+    useAuthStore.persist.rehydrate();
   }, []);
 
   return <>{children}</>;

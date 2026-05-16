@@ -54,7 +54,10 @@ export default function AdminSettings() {
     if (!confirmed) return;
     try {
       setDeletingId(id);
+            console.log(id);
       const res = await deleteAdminBanner(id);
+
+      
       setItems(res.items || []);
     } finally {
       setDeletingId("");
@@ -70,19 +73,6 @@ export default function AdminSettings() {
   return (
     <div className=" bg-slate-50 p-4 sm:p-6 lg:p-8">
       <div className="mx-auto   space-y-6">
-
-        {/* Page Header */}
-        {/* <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-slate-400">Configuration</p>
-          <div className="mt-1 flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600">
-              <RiImageLine className="text-sm text-white" />
-            </div>
-            <h1 className="text-2xl font-semibold text-slate-800">Settings</h1>
-          </div>
-          <p className="mt-0.5 text-sm text-slate-400">Manage your store banners</p>
-        </div> */}
-
         <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
 
           {/* Upload Card */}

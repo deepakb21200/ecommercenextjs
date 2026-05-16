@@ -1,10 +1,12 @@
+
+
+
 // import { NextRequest, NextResponse } from "next/server";
 // import jwt from "jsonwebtoken";
 // import { CartModel } from "@/models/Cart";
- 
 // import { ProductModel } from "@/models/Product";
 // import { connectDB } from "@/lib/connectDB";
-//  //ye bhi claude ko  ko dikahna hai
+
 // type ProductPreview = {
 //   _id: string;
 //   title: string;
@@ -23,7 +25,11 @@
 
 // function getAuthUser(req: NextRequest) {
 //   const token = req.cookies.get("token")?.value;
-//   if (!token) return { error: "Unauthorized", status: 401 };
+//   if (!token) {
+//     console.log("thatis", token);
+
+//     return { error: "Unauthorized", status: 401 };
+//   }
 //   try {
 //     const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
 //     return { decoded };
@@ -40,19 +46,32 @@
 //   const finalPrice = product.salePercentage
 //     ? Math.round(product.price - (product.price * product.salePercentage) / 100)
 //     : product.price;
-//   return { productId: String(product._id), title: product.title, brand: product.brand, image, finalPrice };
+//   return {
+//     productId: String(product._id),
+//     title: product.title,
+//     brand: product.brand,
+//     image,
+//     finalPrice,
+//   };
 // }
 
 // async function getCartResponse(userId: string) {
 //   const cart = await CartModel.findOne({ user: userId }).populate(
-//     "items.product", "title brand price salePercentage images"
+//     "items.product",
+//     "title brand price salePercentage images"
 //   );
-// //   const cartItems = (cart?.items || []) as CartPreviewItem[];
-  
-// const cartItems = (cart?.items || []) as unknown as CartPreviewItem[];
+
+//   const cartItems = (cart?.items || []) as unknown as CartPreviewItem[];
 //   const items = cartItems.flatMap((cartItem) => {
 //     if (!cartItem.product) return [];
-//     return [{ ...formatProduct(cartItem.product), quantity: cartItem.quantity, color: cartItem.color, size: cartItem.size }];
+//     return [
+//       {
+//         ...formatProduct(cartItem.product),
+//         quantity: cartItem.quantity,
+//         color: cartItem.color,
+//         size: cartItem.size,
+//       },
+//     ];
 //   });
 //   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
 //   return { items, totalQuantity };
@@ -72,7 +91,10 @@
 
 //   const auth = getAuthUser(req);
 //   if (auth.error) {
-//     return NextResponse.json({ status: "error", message: auth.error }, { status: auth.status });
+//     return NextResponse.json(
+//       { status: "error", message: auth.error },
+//       { status: auth.status }
+//     );
 //   }
 
 //   try {
@@ -82,38 +104,82 @@
 //     const colorValue = String(body.color || "").trim();
 //     const sizeValue = String(body.size || "").trim();
 
+//     console.log(sizeValue,"ssize vlaue");
+    
+
 //     if (!productId) {
-//       return NextResponse.json({ status: "error", message: "Product id is required" }, { status: 400 });
+//       return NextResponse.json(
+//         { status: "error", message: "Product id is required" },
+//         { status: 400 }
+//       );
 //     }
 
 //     if (isNaN(quantity) || quantity < 1) {
-//       return NextResponse.json({ status: "error", message: "Quantity must be at least 1" }, { status: 400 });
+//       return NextResponse.json(
+//         { status: "error", message: "Quantity must be at least 1" },
+//         { status: 400 }
+//       );
 //     }
 
-//     const product = await ProductModel.findOne({ _id: productId, status: "active" });
+//     const product = await ProductModel.findOne({
+//       _id: productId,
+//       status: "active",
+//     });
 
 //     if (!product) {
-//       return NextResponse.json({ status: "error", message: "Product not found" }, { status: 404 });
+//       return NextResponse.json(
+//         { status: "error", message: "Product not found" },
+//         { status: 404 }
+//       );
 //     }
 
 //     // color/size validation
 //     let color: string | undefined;
 //     let size: string | undefined;
 
+
+
 //     if (product.colors.length > 0) {
-//       if (!colorValue) return NextResponse.json({ status: "error", message: "Color is required" }, { status: 400 });
-//       if (!product.colors.includes(colorValue)) return NextResponse.json({ status: "error", message: "Selected color is invalid" }, { status: 400 });
+//       if (!colorValue)
+//         return NextResponse.json(
+//           { status: "error", message: "Color is required" },
+//           { status: 400 }
+//         );
+
+//       const isValidColor = product.colors.some(
+//         (item: any) => item.name === colorValue
+//       );
+
+//       if (!isValidColor)
+//         return NextResponse.json(
+//           { status: "error", message: "Selected color is invalid" },
+//           { status: 400 }
+//         );
+
 //       color = colorValue;
 //     }
 
 //     if (product.sizes.length > 0) {
-//       if (!sizeValue) return NextResponse.json({ status: "error", message: "Size is required" }, { status: 400 });
-//       if (!product.sizes.includes(sizeValue as any)) return NextResponse.json({ status: "error", message: "Selected size is invalid" }, { status: 400 });
+//       if (!sizeValue)
+//         return NextResponse.json(
+//           { status: "error", message: "Size is required" },
+//           { status: 400 }
+//         );
+//       if (!product.sizes.includes(sizeValue as any))
+//         return NextResponse.json(
+//           { status: "error", message: "Selected size is invalid" },
+//           { status: 400 }
+//         );
 //       size = sizeValue;
 //     }
+   
+
 
 //     if (quantity > product.stock) {
-//       return NextResponse.json({ status: "error", message: "Quantity is more than the stock" }, { status: 400 });
+//       return NextResponse.json(
+//         { status: "error", message: "Quantity is more than the stock" },
+//         { status: 400 }
+//       );
 //     }
 
 //     let cart = await CartModel.findOne({ user: auth.decoded.id });
@@ -122,6 +188,34 @@
 //       cart = await CartModel.create({ user: auth.decoded.id, items: [] });
 //     }
 
+//     // ✅ FIX — same product ke sab colors+sizes milake total check
+//     const totalAlreadyInCart = cart.items
+//       .filter((item: any) => String(item.product) === String(product._id))
+//       .reduce((sum: number, item: any) => sum + item.quantity, 0);
+
+//     if (totalAlreadyInCart + quantity > product.stock) {
+//       return NextResponse.json(
+//         {
+//           status: "error",
+//           message: `Only ${product.stock - totalAlreadyInCart} items left in stocky`,
+//         },
+//         { status: 400 }
+//       );
+//     }
+//     const MAX_PER_PRODUCT = 5;
+//     // ✅ MAX LIMIT CHECK (NEW)
+//     if (totalAlreadyInCart + quantity > MAX_PER_PRODUCT) {
+//       return NextResponse.json(
+//         {
+//           status: "error",
+//           message: `Maximum ${MAX_PER_PRODUCT} items allowed per product`,
+//         },
+//         { status: 400 }
+//       );
+//     }
+
+
+
 //     const itemIndex = cart.items.findIndex((item: any) =>
 //       isSameCartItem(item, String(product._id), color, size)
 //     );
@@ -129,11 +223,14 @@
 //     if (itemIndex >= 0) {
 //       const nextQuantity = cart.items[itemIndex].quantity + quantity;
 //       if (nextQuantity > product.stock) {
-//         return NextResponse.json({ status: "error", message: "Quantity is more than the stock" }, { status: 400 });
+//         return NextResponse.json(
+//           { status: "error", message: "Quantity is more than the stock" },
+//           { status: 400 }
+//         );
 //       }
 //       cart.items[itemIndex].quantity = nextQuantity;
 //     } else {
-//       cart.items.push({ product: product._id, quantity, color, size });
+//       cart.items.push({ product: product._id, quantity, color, size } );
 //     }
 
 //     await cart.save();
@@ -141,9 +238,20 @@
 //     const data = await getCartResponse(auth.decoded.id);
 //     return NextResponse.json({ status: "success", data });
 //   } catch (err: any) {
-//     return NextResponse.json({ status: "error", message: err.message || "Something went wrong" }, { status: 500 });
+//     return NextResponse.json(
+//       { status: "error", message: err.message || "Something went wrong" },
+//       { status: 500 }
+//     );
 //   }
 // }
+
+
+
+
+
+
+
+
 
 
 
@@ -176,7 +284,7 @@ function getAuthUser(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   if (!token) {
     console.log("thatis", token);
-    
+
     return { error: "Unauthorized", status: 401 };
   }
   try {
@@ -226,7 +334,7 @@ async function getCartResponse(userId: string) {
   return { items, totalQuantity };
 }
 
-function isSameCartItem( item: any,productId: string,color?: string,size?: string) {
+function isSameCartItem(item: any, productId: string, color?: string, size?: string) {
   return (
     String(item.product) === productId &&
     (item.color || "") === (color || "") &&
@@ -234,6 +342,7 @@ function isSameCartItem( item: any,productId: string,color?: string,size?: strin
   );
 }
 
+// POST /api/customer/cart/items
 // POST /api/customer/cart/items
 export async function POST(req: NextRequest) {
   await connectDB();
@@ -248,11 +357,15 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
+
     const productId = String(body.productId || "").trim();
     const quantity = Number(body.quantity || 1);
     const colorValue = String(body.color || "").trim();
     const sizeValue = String(body.size || "").trim();
 
+    // ===============================
+    // BASIC VALIDATION
+    // ===============================
     if (!productId) {
       return NextResponse.json(
         { status: "error", message: "Product id is required" },
@@ -267,6 +380,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // ===============================
+    // GET PRODUCT
+    // ===============================
     const product = await ProductModel.findOne({
       _id: productId,
       status: "active",
@@ -279,106 +395,168 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // color/size validation
+    // ===============================
+    // COLOR / SIZE VALIDATION
+    // ===============================
     let color: string | undefined;
     let size: string | undefined;
 
     if (product.colors.length > 0) {
-      if (!colorValue)
+      if (!colorValue) {
         return NextResponse.json(
           { status: "error", message: "Color is required" },
           { status: 400 }
         );
-      if (!product.colors.includes(colorValue))
+      }
+
+      const isValidColor = product.colors.some(
+        (item: any) => item.name === colorValue
+      );
+
+      if (!isValidColor) {
         return NextResponse.json(
           { status: "error", message: "Selected color is invalid" },
           { status: 400 }
         );
+      }
+
       color = colorValue;
     }
 
     if (product.sizes.length > 0) {
-      if (!sizeValue)
+      if (!sizeValue) {
         return NextResponse.json(
           { status: "error", message: "Size is required" },
           { status: 400 }
         );
-      if (!product.sizes.includes(sizeValue as any))
+      }
+
+      if (!product.sizes.includes(sizeValue as any)) {
         return NextResponse.json(
           { status: "error", message: "Selected size is invalid" },
           { status: 400 }
         );
+      }
+
       size = sizeValue;
     }
-console.log(quantity, "quantiyt");
-console.log(product.stock, "product.stock");
 
-
+    // ===============================
+    // STOCK VALIDATION
+    // ===============================
     if (quantity > product.stock) {
-      return NextResponse.json(
-        { status: "error", message: "Quantity is more than the stock" },
-        { status: 400 }
-      );
-    }
-
-    let cart = await CartModel.findOne({ user: auth.decoded.id });
-
-    if (!cart) {
-      cart = await CartModel.create({ user: auth.decoded.id, items: [] });
-    }
-
-    // ✅ FIX — same product ke sab colors+sizes milake total check
-    const totalAlreadyInCart = cart.items
-      .filter((item: any) => String(item.product) === String(product._id))
-      .reduce((sum: number, item: any) => sum + item.quantity, 0);
-
-    if (totalAlreadyInCart + quantity > product.stock) {
       return NextResponse.json(
         {
           status: "error",
-          message: `Only ${product.stock - totalAlreadyInCart} items left in stocky`,
+          message: `Only ${product.stock} items available in stock`,
         },
         { status: 400 }
       );
     }
-const MAX_PER_PRODUCT = 5;
-    // ✅ MAX LIMIT CHECK (NEW)
-if (totalAlreadyInCart + quantity > MAX_PER_PRODUCT) {
-  return NextResponse.json(
-    {
-      status: "error",
-      message: `Maximum ${MAX_PER_PRODUCT} items allowed per product`,
-    },
-    { status: 400 }
-  );
-}
 
+    // ===============================
+    // FIND OR CREATE CART
+    // ===============================
+    let cart = await CartModel.findOne({
+      user: auth.decoded.id,
+    });
 
-
-    const itemIndex = cart.items.findIndex((item: any) =>
-      isSameCartItem(item, String(product._id), color, size)
-    );
-
-    if (itemIndex >= 0) {
-      const nextQuantity = cart.items[itemIndex].quantity + quantity;
-      if (nextQuantity > product.stock) {
-        return NextResponse.json(
-          { status: "error", message: "Quantity is more than the stock" },
-          { status: 400 }
-        );
-      }
-      cart.items[itemIndex].quantity = nextQuantity;
-    } else {
-      cart.items.push({ product: product._id, quantity, color, size });
+    if (!cart) {
+      cart = await CartModel.create({
+        user: auth.decoded.id,
+        items: [],
+      });
     }
 
+    // ===============================
+    // FIND SAME VARIANT
+    // (same product + same color + same size)
+    // ===============================
+    const itemIndex = cart.items.findIndex((item: any) =>
+      isSameCartItem(
+        item,
+        String(product._id),
+        color,
+        size
+      )
+    );
+
+    // Existing quantity for this exact variant
+    const existingVariantQty =
+      itemIndex >= 0
+        ? cart.items[itemIndex].quantity
+        : 0;
+
+    // Quantity after add
+    const nextQuantity =
+      existingVariantQty + quantity;
+
+    // ===============================
+    // MAX 5 PER VARIANT
+    // ===============================
+    const MAX_PER_VARIANT = 5;
+
+    if (nextQuantity > MAX_PER_VARIANT) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: `Maximum ${MAX_PER_VARIANT} items allowed for this variant`,
+        },
+        { status: 400 }
+      );
+    }
+
+    // ===============================
+    // STOCK CHECK FOR THIS VARIANT
+    // ===============================
+    if (nextQuantity > product.stock) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: `Only ${product.stock} items available in stock`,
+        },
+        { status: 400 }
+      );
+    }
+
+    // ===============================
+    // UPDATE OR INSERT ITEM
+    // ===============================
+    if (itemIndex >= 0) {
+      cart.items[itemIndex].quantity =
+        nextQuantity;
+    } else {
+      cart.items.push({
+        product: product._id,
+        quantity,
+        color,
+        size,
+      });
+    }
+
+    // ===============================
+    // SAVE CART
+    // ===============================
     await cart.save();
 
-    const data = await getCartResponse(auth.decoded.id);
-    return NextResponse.json({ status: "success", data });
+    // ===============================
+    // RETURN UPDATED CART
+    // ===============================
+    const data = await getCartResponse(
+      auth.decoded.id
+    );
+
+    return NextResponse.json({
+      status: "success",
+      data,
+    });
   } catch (err: any) {
     return NextResponse.json(
-      { status: "error", message: err.message || "Something went wrong" },
+      {
+        status: "error",
+        message:
+          err.message || "Something went wrong",
+      },
       { status: 500 }
     );
   }

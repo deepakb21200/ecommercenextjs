@@ -78,8 +78,8 @@ export async function DELETE(
 ) {
   await connectDB();
 
-  const auth = requireAdmin(req);
-  if (auth.error) return NextResponse.json({ message: auth.error }, { status: auth.status });
+  // const auth = requireAdmin(req);
+  // if (auth.error) return NextResponse.json({ message: auth.error }, { status: auth.status });
 
   const { id } = await params;
 

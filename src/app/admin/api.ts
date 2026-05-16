@@ -21,5 +21,8 @@ export async function getAdminDashboardLite(): Promise<AdminDashboardLite> {
     throw new Error("Failed to fetch dashboard");
   }
 
+  console.log(res);
+  
+
   return res.json();
 }

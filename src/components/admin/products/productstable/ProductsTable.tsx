@@ -2,7 +2,7 @@
 
 // import { Product } from "./types";
 
- 
+
 
 // type Props = {
 //   products: Product[];
@@ -14,7 +14,7 @@
 //   return (
 //     <div className="overflow-x-auto">
 //       <table className="w-full text-sm border">
-        
+
 //         <thead className="bg-gray-100">
 //           <tr>
 //             <th className="p-2 text-left">Image</th>
@@ -47,7 +47,7 @@
 
 //               return (
 //                 <tr key={p._id} className="border-t">
-                  
+
 //                   <td className="p-2">
 //                     {cover && (
 //                       <img
@@ -234,14 +234,17 @@
 
 import { FiEdit2, FiPackage } from "react-icons/fi";
 import { Product } from "./types";
-
+import { useRouter } from "next/navigation";
 type Props = {
   products: Product[];
   loading: boolean;
-  onEdit: (product: Product) => void;
+
 };
 
-export function ProductsTable({ products, loading, onEdit }: Props) {
+
+
+export function ProductsTable({ products, loading, }: Props) {
+  const router = useRouter();
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
@@ -283,6 +286,8 @@ export function ProductsTable({ products, loading, onEdit }: Props) {
           ) : (
             products.map((p) => {
               const cover = p.images?.find((img) => img.isCover) ?? p.images?.[0];
+
+
               return (
                 <tr key={p._id} className="group transition-colors hover:bg-slate-50">
 
@@ -319,11 +324,10 @@ export function ProductsTable({ products, loading, onEdit }: Props) {
 
                   {/* Status */}
                   <td className="px-4 py-3.5">
-                    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
-                      p.status === "active"
+                    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${p.status === "active"
                         ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200"
                         : "bg-slate-100 text-slate-500 ring-1 ring-slate-200"
-                    }`}>
+                      }`}>
                       <span className={`h-1.5 w-1.5 rounded-full ${p.status === "active" ? "bg-emerald-500" : "bg-slate-400"}`} />
                       {p.status}
                     </span>
@@ -338,9 +342,17 @@ export function ProductsTable({ products, loading, onEdit }: Props) {
 
                   {/* Edit */}
                   <td className="px-4 py-3.5 text-right">
-                    <button
-                      onClick={() => onEdit(p)}
+                    {/* <button
+                      // onClick={() => onEdit(p)}
+                      onClick={() => router.push(`/admin/products/edit-product/${p._id}`)}
                       className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 opacity-0 shadow-sm transition group-hover:opacity-100 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600"
+                    >
+                      <FiEdit2 className="h-3 w-3" />
+                      Edit
+                    </button> */}
+                    <button
+                      onClick={() => router.push(`/admin/products/edit-product/${p._id}`)}
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm transition hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600"
                     >
                       <FiEdit2 className="h-3 w-3" />
                       Edit

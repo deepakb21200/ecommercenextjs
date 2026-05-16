@@ -2,7 +2,7 @@ import { create } from "zustand";
 import type { CustomerWishlistItem } from "./types";
 import toast from "react-hot-toast";
 import { getCustomerWishlist, removeCustomerWishlistItem } from "./api";
-//2
+
 type CustomerWishlistStore = {
   items: CustomerWishlistItem[];
   isOpen: boolean;
@@ -20,12 +20,12 @@ export const useCustomerWishlistStore = create<CustomerWishlistStore>(
     setOpen: (value) => set({ isOpen: value }),
     setItems: (items) => set({ items }),
     clear: () => set({ items: [], isOpen: false }),
-
+//  const { isOpen, setOpen, items, removeItem } = useCustomerWishlistStore();
     loadWishlist: async () => {
       try {
         const response = await getCustomerWishlist();
-        console.log("wish", response);
-        
+        console.log("wisheee", response);
+
         set({ items: response.items ?? [] });
       } catch {
         set({ items: [] });

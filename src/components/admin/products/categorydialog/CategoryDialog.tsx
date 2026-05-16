@@ -2,7 +2,7 @@
 
 // import { useState } from "react";
 // import { Category } from "../productstable/types";
- 
+
 
 // type Props = {
 //   open: boolean;
@@ -36,7 +36,7 @@
 //   return (
 //     <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
 //       <div className="bg-white p-6 rounded-xl w-[400px] space-y-4">
-        
+
 //         <h2 className="text-lg font-semibold">Categories</h2>
 
 //         <div className="flex gap-2">
@@ -203,8 +203,16 @@ export function CategoryDialog({ open, onOpenChange, categories, onSaved }: Prop
   const handleAdd = async () => {
     if (!name.trim()) return;
     setSaving(true);
+    // await fetch("/api/admin/categories", {
+    //   method: "POST",
+    //   body: JSON.stringify({ name }),
+    // });
+
+    // ✅ Fix
     await fetch("/api/admin/categories", {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ name }),
     });
     setName("");

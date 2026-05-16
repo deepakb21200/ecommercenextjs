@@ -1,21 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-
 import { ProductModel } from "@/models/Product";
 import "@/models/Category";
 import { connectDB } from "@/lib/connectDB";
-export async function GET(
-  req: NextRequest,
-{ params }: { params: Promise<{ id: string }> }
-  // { params }: { params: { id: string } }
-) {
+
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   await connectDB();
 
   const { id } = await params;
-  // const { id } =  params;
+
 
   const product = await ProductModel.findOne({ _id: id, status: "active" })
     .populate("category", "name");
-// console.log(product);
+
 
   if (!product) return NextResponse.json({ message: "Product not found" }, { status: 404 });
 
@@ -28,8 +24,18 @@ export async function GET(
     .sort({ createdAt: -1 })
     .limit(4);
 
-// console.log("idproduct",product);
-//     console.log("re",relatedProducts);
-    
-  return NextResponse.json({ product, relatedProducts });
+
+  // return NextResponse.json({ product, relatedProducts });
+  // route.ts mein product format karte waqt
+  return NextResponse.json({
+    product: {
+      ...product.toObject(),
+      images: [...product.images].sort((a, b) => {
+        if (a.isCover) return -1;
+        if (b.isCover) return 1;
+        return 0;
+      }),
+    },
+    relatedProducts,
+  });
 }

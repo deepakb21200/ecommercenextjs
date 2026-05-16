@@ -24,8 +24,8 @@ const BANNER_FOLDER = "ecommerce-monster-video/banners";
 export async function GET(req: NextRequest) {
   await connectDB();
 
-  const auth = requireAdmin(req);
-  if (auth.error) return NextResponse.json({ message: auth.error }, { status: auth.status });
+  // const auth = requireAdmin(req);
+  // if (auth.error) return NextResponse.json({ message: auth.error }, { status: auth.status });
 
   const items = await Banner.find().sort({ createdAt: -1 });
 

@@ -12,7 +12,7 @@ type Props = {
 export function SizeSelector({ selectedSizes, onToggle }: Props) {
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-semibold">Sizes</h3>
+      {/* <h3 className="text-sm font-semibold">Sizes</h3> */}
 
       <div className="grid grid-cols-4 gap-2">
         {SIZE_OPTIONS.map((size) => {
@@ -22,6 +22,7 @@ export function SizeSelector({ selectedSizes, onToggle }: Props) {
             <button
               key={size}
               onClick={() => onToggle(size)}
+                type="button"
               className={`py-2 rounded-lg text-sm border transition
                 ${
                   active
@@ -37,3 +38,11 @@ export function SizeSelector({ selectedSizes, onToggle }: Props) {
     </div>
   );
 }
+
+
+
+
+
+//try t his
+
+ 
