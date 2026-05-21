@@ -1,28 +1,162 @@
+// import { NextResponse } from "next/server";
+
+// import { CategoryModel } from "@/models/Category";
+// import { connectDB } from "@/lib/connectDB";
+
+
+
+// // ✅ UPDATE category
+// export async function PUT(
+//   req: Request,
+//   { params }: { params: { id: string } }
+// ) {
+//   await connectDB();
+
+//   const body = await req.json();
+
+//   const updated = await CategoryModel.findByIdAndUpdate(
+//     params.id,
+//     { name: body.name },
+//     { new: true }
+//   );
+
+//   if (!updated) {
+//     return NextResponse.json({ message: "Category not found" }, { status: 404 });
+//   }
+
+//   return NextResponse.json(updated);
+// }
+
+
+
+
+
+
+
+
+
+// /api/admin/categories/[id]/route.ts
 import { NextResponse } from "next/server";
- 
-import { CategoryModel } from "@/models/Category";
 import { connectDB } from "@/lib/connectDB";
- 
- 
+import { CategoryModel } from "@/models/Category";
+import { deleteFromCloudinary, uploadSingleBufferToCloudinary } from "@/utils/cloudinary";
 
 // ✅ UPDATE category
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   await connectDB();
 
-  const body = await req.json();
+  try {
+    const { id } = await params;
 
-  const updated = await CategoryModel.findByIdAndUpdate(
-    params.id,
-    { name: body.name },
-    { new: true }
-  );
+    const formData = await req.formData();
 
-  if (!updated) {
-    return NextResponse.json({ message: "Category not found" }, { status: 404 });
+    const name = String(formData.get("name") || "").trim();
+    const file = formData.get("image") as File | null;
+
+    if (!name) {
+      return NextResponse.json(
+        { message: "Name is required" },
+        { status: 400 }
+      );
+    }
+
+    const category = await CategoryModel.findById(id);
+
+    if (!category) {
+      return NextResponse.json(
+        { message: "Category not found" },
+        { status: 404 }
+      );
+    }
+
+    const exists = await CategoryModel.findOne({
+      _id: { $ne: id },
+      name: { $regex: new RegExp(`^${name}$`, "i") },
+    });
+
+    if (exists) {
+      return NextResponse.json(
+        { message: "Category already exists" },
+        { status: 400 }
+      );
+    }
+
+    let image = category.image;
+
+    // Upload new image if provided
+    if (file && file.size > 0) {
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      const uploaded = await uploadSingleBufferToCloudinary(
+        buffer,
+        "ecommerce-monster-video/categories"
+      );
+
+      // Delete old image from Cloudinary
+      if (category.imagePublicId) {
+        await deleteFromCloudinary(category.imagePublicId);
+      }
+
+      image = uploaded.url;
+      category.imagePublicId = uploaded.publicId;
+    }
+
+    category.name = name;
+    category.image = image;
+
+    await category.save();
+
+    return NextResponse.json(category);
+  } catch (error: any) {
+    return NextResponse.json(
+      {
+        message: error.message || "Something went wrong",
+      },
+      { status: 500 }
+    );
   }
+}
 
-  return NextResponse.json(updated);
+// ✅ DELETE category + Cloudinary image
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  await connectDB();
+
+  try {
+    const { id } = await params;
+
+    const category = await CategoryModel.findById(id);
+
+    if (!category) {
+      return NextResponse.json(
+        { message: "Category not found" },
+        { status: 404 }
+      );
+    }
+
+    // Delete image from Cloudinary
+    if (category.imagePublicId) {
+      await deleteFromCloudinary(category.imagePublicId);
+    }
+
+    // Delete category from MongoDB
+    await CategoryModel.findByIdAndDelete(id);
+
+    return NextResponse.json({
+      message: "Category deleted successfully",
+    });
+  } catch (error: any) {
+    return NextResponse.json(
+      {
+        message: error.message || "Something went wrong",
+      },
+      { status: 500 }
+    );
+  }
 }

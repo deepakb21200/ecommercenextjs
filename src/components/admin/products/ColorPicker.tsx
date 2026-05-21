@@ -1,134 +1,4 @@
-
-
-// "use client";
-
-// import { useState } from "react";
-// import { FaTimes } from "react-icons/fa";
-// import namer from "color-namer";
-
-// type Props = {
-//   colors: string[];
-//   setColors: React.Dispatch<React.SetStateAction<string[]>>;
-// };
-
-// export function ColorPicker({ colors, setColors }: Props) {
-//   const [color, setColor] = useState("#111111");
-
-//   // edit mode
-//   const [editingColor, setEditingColor] = useState<string | null>(null);
-
-//   // const getColorName = (hex: string) => {
-//   //   return namer(hex).basic[0].name;
-//   // };
-
-// const getColorName = (hex: string) => {
-//   return namer(hex).html[0]?.name || hex;
-// };
-
-//  const handleAddOrUpdate = () => {
-//   // UPDATE EXISTING COLOR
-//   if (editingColor) {
-//     setColors((prev) =>
-//       prev.map((c) => (c === editingColor ? color : c))
-//     );
-
-//     setEditingColor(null);
-
-//     // reset color picker
-//     setColor("#111111");
-
-//     return;
-//   }
-
-//   // ADD NEW COLOR
-//   if (colors.includes(color)) return;
-
-//   setColors((prev) => [...prev, color]);
-
-//   // optional reset after add too
-//   setColor("#111111");
-// };
-
-//   const handleRemove = (value: string) => {
-//     setColors((prev) => prev.filter((c) => c !== value));
-
-//     // if deleting selected editing color
-//     if (editingColor === value) {
-//       setEditingColor(null);
-//       setColor("#111111");
-//     }
-//   };
-
-//   const handleSelectForEdit = (value: string) => {
-//     setEditingColor(value);
-//     setColor(value);
-//   };
-
-//   return (
-//     <div className="space-y-4">
-//       {/* COLOR PICKER */}
-//       <div className="flex items-center gap-3">
-//         <input
-//           type="color"
-//           value={color}
-//           onChange={(e) => setColor(e.target.value)}
-//           className="h-11 w-16 rounded cursor-pointer border"
-//         />
-
-//         <button
-//           onClick={handleAddOrUpdate}
-//           type="button"
-//           className="px-4 py-2 text-sm bg-gray-900 text-white rounded-lg hover:bg-black"
-//         >
-//           {editingColor ? "Update Color" : "Add Color"}
-//         </button>
-//       </div>
-
-//       {/* COLORS */}
-//       <div className="flex flex-wrap gap-2">
-//         {colors.map((c) => (
-//           <div
-//             key={c}
-//             className={`flex items-center gap-2 px-3 py-2 rounded-full border transition ${
-//               editingColor === c
-//                 ? "border-black bg-gray-100"
-//                 : "border-gray-200"
-//             }`}
-//           >
-//             {/* EDIT BUTTON */}
-//             <button
-//               type="button"
-//               onClick={() => handleSelectForEdit(c)}
-//               className="flex items-center gap-2"
-//             >
-//               <span
-//                 className="h-5 w-5 rounded-full border"
-//                 style={{ background: c }}
-//               />
-
-//               <span className="text-sm font-medium">
-//                 {getColorName(c)}
-//               </span>
-//             </button>
-
-//             {/* REMOVE */}
-//             <button
-//               type="button"
-//               onClick={() => handleRemove(c)}
-//               className="text-gray-500 hover:text-red-500"
-//             >
-//               <FaTimes className="text-xs" />
-//             </button>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }
-
-// // 245 158 11
-
-  
+ 
 
 "use client";
 
@@ -213,7 +83,7 @@ console.log(colors);
     <div className="space-y-4">
 
       {/* INPUT */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 flex-wrap">
 
         <input
           type="color"
@@ -233,7 +103,7 @@ console.log(colors);
         <button
           onClick={handleAddOrUpdate}
           type="button"
-          className="px-4 py-2 text-sm bg-black text-white rounded-lg"
+          className="px-4 py-2 text-sm  bg-gradient-to-r from-violet-600 to-cyan-500 text-white rounded-lg"
         >
           {editingColor ? "Update" : "Add"}
         </button>

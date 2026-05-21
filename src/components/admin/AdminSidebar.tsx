@@ -1,120 +1,37 @@
-// "use client";
-
-// import Link from "next/link";
-// import { usePathname } from "next/navigation";
-// import {
-//   FaTachometerAlt,
-//   FaBoxOpen,
-//   FaTags,
-//   FaShoppingCart,
-//   FaCog,
-//   FaStore,
-// } from "react-icons/fa";
-
-// type AdminNavItem = {
-//   label: string;
-//   href: string;
-//   icon: any;
-// };
-
-// const items: AdminNavItem[] = [
-//   { label: "Dashboard", href: "/admin", icon: FaTachometerAlt },
-//   { label: "Products", href: "/admin/products", icon: FaBoxOpen },
-//   { label: "Coupons", href: "/admin/coupons", icon: FaTags },
-//   { label: "Orders", href: "/admin/orders", icon: FaShoppingCart },
-//   { label: "Settings", href: "/admin/settings", icon: FaCog },
-// ];
-
-// function SidebarNav() {
-//   const pathname = usePathname();
-
-//   return (
-//     <nav className="mt-4 flex flex-col gap-1 px-3">
-//       {items.map((item) => {
-//         const Icon = item.icon;
-
-//         const isActive =
-//           item.href === "/admin"
-//             ? pathname === "/admin"
-//             : pathname.startsWith(item.href);
-
-//         return (
-//           <Link
-//             key={item.label}
-//             href={item.href}
-//             className={`flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium transition-all
-//               ${
-//                 isActive
-//                   ? "bg-blue-600 text-white shadow"
-//                   : "text-gray-600 hover:bg-gray-100"
-//               }`}
-//           >
-//             <Icon className="text-lg" />
-//             {item.label}
-//           </Link>
-//         );
-//       })}
-//     </nav>
-//   );
-// }
-
-// export function AdminSidebar() {
-//   return (
-//     <aside className="hidden w-64 bg-white border-r shadow-sm lg:flex flex-col">
-//       {/* Brand */}
-//       <div className="flex items-center gap-3 px-5 py-4 border-b">
-//         <FaStore className="text-2xl text-blue-600" />
-//         <span className="text-xl font-bold text-gray-800">
-//           E-Shopify
-//         </span>
-//       </div>
-
-//       {/* Nav */}
-//       <div className="flex-1 overflow-y-auto">
-//         <SidebarNav />
-//       </div>
-//     </aside>
-//   );
-// }
-
-
-
-
-
 
 
 "use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
-  FaTachometerAlt,
-  FaBoxOpen,
-  FaTags,
-  FaShoppingCart,
-  FaCog,
-  FaStore,
-} from "react-icons/fa";
+  HiOutlineSquares2X2,
+  HiOutlineShoppingBag,
+  HiOutlineTicket,
+  HiOutlineShoppingCart,
+  HiOutlineCog6Tooth,
+  HiOutlineBars3,
+  HiOutlineXMark,
+} from "react-icons/hi2";
+import { PiStorefrontBold } from "react-icons/pi";
 
-type AdminNavItem = {
-  label: string;
-  href: string;
-  icon: any;
-};
+type AdminNavItem = { label: string; href: string; icon: any };
 
 const items: AdminNavItem[] = [
-  { label: "Dashboard", href: "/admin", icon: FaTachometerAlt },
-  { label: "Products", href: "/admin/products", icon: FaBoxOpen },
-  { label: "Coupons", href: "/admin/coupons", icon: FaTags },
-  { label: "Orders", href: "/admin/orders", icon: FaShoppingCart },
-  { label: "Settings", href: "/admin/settings", icon: FaCog },
+  { label: "Dashboard", href: "/admin", icon: HiOutlineSquares2X2 },
+  { label: "Products", href: "/admin/products", icon: HiOutlineShoppingBag },
+  { label: "Coupons", href: "/admin/coupons", icon: HiOutlineTicket },
+  { label: "Orders", href: "/admin/orders", icon: HiOutlineShoppingCart },
+  { label: "Settings", href: "/admin/settings", icon: HiOutlineCog6Tooth },
 ];
 
-function SidebarNav() {
+// function SidebarNav() {
+function SidebarNav({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
 
   return (
-    <nav className="mt-2 flex flex-col gap-0.5 px-3">
+    <nav className="mt-5 flex flex-col gap-2 px-4">
       {items.map((item) => {
         const Icon = item.icon;
         const isActive =
@@ -124,21 +41,30 @@ function SidebarNav() {
 
         return (
           <Link
-            key={item.label}
+            key={item.href}
             href={item.href}
-            className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
+              onClick={onClose}
+            className={`group relative flex items-center gap-3 overflow-hidden rounded-2xl px-4 py-3 text-sm font-medium transition-colors duration-150 ${
               isActive
-                ? "bg-indigo-50 text-indigo-700"
-                : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
+                ? "bg-gradient-to-r from-violet-600/20 to-cyan-500/20 text-white border border-violet-500/30 shadow-lg shadow-violet-500/10"
+                : "text-zinc-400 hover:bg-white/5 hover:text-white border border-transparent"
             }`}
           >
-            <span className={`text-base ${isActive ? "text-indigo-500" : "text-slate-400"}`}>
-              <Icon />
-            </span>
-            {item.label}
             {isActive && (
-              <span className="ml-auto h-1.5 w-1.5 rounded-full bg-indigo-500" />
+              <div className="absolute left-0 top-0 h-full w-1 rounded-r-full bg-gradient-to-b from-violet-500 to-cyan-400" />
             )}
+
+            <div
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors duration-150 ${
+                isActive
+                  ? "bg-gradient-to-br from-violet-500 to-cyan-500 text-white shadow-md"
+                  : "bg-white/5 text-zinc-400 group-hover:bg-white/10 group-hover:text-white"
+              }`}
+            >
+              <Icon className="text-lg" />
+            </div>
+
+            <span>{item.label}</span>
           </Link>
         );
       })}
@@ -146,34 +72,92 @@ function SidebarNav() {
   );
 }
 
-export function AdminSidebar() {
+function SidebarContent({ onClose }: { onClose: () => void }) {
   return (
-    <aside className="hidden w-60 flex-col border-r border-slate-100 bg-white lg:flex">
+    <div className="flex h-full flex-col">
 
-      {/* Brand */}
-      <div className="flex items-center gap-2.5 border-b border-slate-100 px-5 py-4">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600">
-          <FaStore className="text-sm text-white" />
+      {/* BRAND */}
+      <div className="flex items-center justify-between border-b border-white/10 px-6 py-6">
+        
+        <div className="flex items-center gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-cyan-500 shadow-xl shadow-violet-500/20">
+            <PiStorefrontBold className="text-xl text-white" />
+          </div>
+
+          <div>
+            <h2 className="text-lg font-bold tracking-wide text-white">
+              Velvet
+            </h2>
+            <p className="text-xs text-zinc-400">
+              Ecommerce Admin
+            </p>
+          </div>
         </div>
-        <span className="text-base font-semibold text-slate-800">E-Shopify</span>
+
+        {/* CROSS ICON (NOW ALWAYS VISIBLE) */}
+        <button
+          onClick={onClose}
+          className="flex h-9 w-9 items-center justify-center rounded-xl text-zinc-400 hover:bg-white/10
+           hover:text-white transition-colors xl:hidden"
+        >
+          <HiOutlineXMark className="text-xl" />
+        </button>
       </div>
 
-      {/* Section label */}
-      <div className="px-5 pt-5 pb-1">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-400">
-          Main Menu
-        </p>
-      </div>
-
-      {/* Nav */}
+      {/* NAV */}
       <div className="flex-1 overflow-y-auto">
-        <SidebarNav />
+      
+        <SidebarNav onClose={onClose} />
       </div>
 
-      {/* Footer */}
-      <div className="border-t border-slate-100 px-5 py-4">
-        <p className="text-[11px] text-slate-400">v1.0.0 · Admin Panel</p>
+      {/* FOOTER */}
+      <div className="border-t border-white/10 px-6 py-5">
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-md">
+          <p className="text-sm font-medium text-white">
+            Velvet Store
+          </p>
+          <p className="mt-1 text-xs text-zinc-400">
+            Premium Ecommerce Dashboard
+          </p>
+        </div>
       </div>
-    </aside>
+
+    </div>
+  );
+}
+ 
+
+
+
+
+
+
+export function AdminSidebar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  return (
+    <>
+      {/* BURGER BUTTON (ONLY MOBILE) */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="xl:hidden fixed left-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-xl bg-[#0A0F1C] border border-white/10 text-zinc-400 hover:text-white transition-colors"
+      >
+        <HiOutlineBars3 className="text-xl" />
+      </button>
+
+      {/* MOBILE SIDEBAR */}
+      <div
+        className={`xl:hidden fixed left-0 top-0 z-50 h-full w-[280px] bg-[#0A0F1C] transition-transform duration-300 ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <SidebarContent onClose={() => setMobileOpen(false)} />
+      </div>
+
+      {/* DESKTOP SIDEBAR (ALWAYS VISIBLE) */}
+      <div className="hidden xl:flex fixed left-0 top-0 h-full w-[280px] bg-[#0A0F1C] border-r border-white/10">
+        <SidebarContent onClose={() => {}} />
+      </div>
+    </>
   );
 }

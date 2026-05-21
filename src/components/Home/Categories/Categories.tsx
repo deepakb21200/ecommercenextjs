@@ -11,11 +11,25 @@ const categories = [
     image:
       "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=500&q=80",
   },
+  // {
+  //   title: "Kids",
+  //   count: "32 Products",
+  //   image:
+  //     "https://images.unsplash.com/photo-1471286174890-9c112ffca5b4?w=500&h=700&fit=crop",
+  // },
   {
-    title: "Kids",
+    title: "Others",
     count: "32 Products",
     image:
-      "https://images.unsplash.com/photo-1471286174890-9c112ffca5b4?w=500&h=700&fit=crop",
+      // "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=500&q=80",
+      // "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=500&q=80"
+      // "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80",
+      //  "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=500&q=80",
+      // "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=500&q=80",
+      // "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=500&q=80",
+      //  "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=500&q=80",
+      // "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=500&q=80",
+        "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=500&q=80",
   },
 ];
 

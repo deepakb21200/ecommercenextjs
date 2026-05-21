@@ -4,8 +4,8 @@
 
 "use client";
  
+import { Commonloader } from "@/components/admin/Loader";
 import { useAuthStore } from "@/components/user/store/api";
-import { useCustomerCartAndCheckoutStore } from "@/store/home/cartAndCheckout/store";
 import { useCustomerProfileStore } from "@/store/home/profile/store";
 import {
   RiUserLine,
@@ -13,7 +13,7 @@ import {
   RiAddLine,
   RiPencilLine,
   RiDeleteBin6Line,
-  RiStarLine,
+  
   RiCheckboxCircleLine,
   RiCloseLine,
 } from "react-icons/ri";
@@ -31,19 +31,31 @@ function CustomerProfileDialog() {
     saveForm,
     removeAddress,
     items,
+      loading,
     form,
   } = useCustomerProfileStore();
 
-  const { points } = useCustomerCartAndCheckoutStore((state) => state);
+  
   const { user } = useAuthStore();
 
   const showForm = mode !== "none";
 
   if (!isOpen) return null;
 
+  if (loading) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl max-h-[92vh] flex flex-col overflow-hidden">
+      <div className="w-full max-w-5xl h-[43vh] bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <Commonloader />
+      </div>
+    </div>
+  );
+}
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+     
+        <div className="w-full max-w-5xl h-[43vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border-4 border-red-400">
 
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
@@ -73,10 +85,11 @@ function CustomerProfileDialog() {
                 <p className="text-sm text-gray-400">{user?.email}</p>
               </div>
             </div>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-yellow-200 bg-yellow-50 px-3 py-1 text-sm font-medium text-yellow-700">
-              <RiStarLine className="text-sm" />
-              {points} Points
-            </span>
+
+
+
+
+            
           </div>
 
           {/* Grid */}

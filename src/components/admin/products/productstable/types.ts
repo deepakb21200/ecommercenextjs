@@ -3,6 +3,7 @@ export type Category = {
   name: string;
   createdAt?: string;
   updatedAt?: string;
+  image?:string
 };
 
 export type ProductImage = {

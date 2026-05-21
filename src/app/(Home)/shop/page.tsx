@@ -10,6 +10,8 @@ import {
     RiFireLine, RiGridFill, RiListCheck, RiSparklingLine,
 } from "react-icons/ri";
 import { formatPrice } from "@/config/constants";
+import ProductCard from "@/components/admin/products/productstable/ProductCard";
+import Products from "@/components/Home/ProductCarfs";
 
 
 
@@ -252,7 +254,10 @@ export default function ShopPage() {
     };
 
 
+    useEffect(() => {
+        console.log("products", products);
 
+    }, [products])
 
     const clearFilters = () => applyFilter({
         sort: "newest", onSale: false,
@@ -595,13 +600,13 @@ export default function ShopPage() {
 
                         ) : (
                             <div className={`grid gap-4 grid-cols-2 ${gridCols === 4 ? "sm:grid-cols-3 xl:grid-cols-4" : "sm:grid-cols-2 xl:grid-cols-3"}`}>
-                                {products.map((product) => (
+                                {/* {products.map((product) => (
                                     <Link
                                         key={product._id}
                                         href={`/collection/${product._id}`}
                                         className="group flex flex-col overflow-hidden rounded-2xl transition-all duration-300 bg-white border border-[hsl(40,20%,88%)] hover:-translate-y-1 hover:shadow-lg"
                                     >
-                                        {/* Image */}
+                              
                                         <div className="aspect-[4/5] overflow-hidden relative bg-[hsl(40,20%,95%)]">
                                             {product.image ? (
                                                 <img
@@ -635,8 +640,7 @@ export default function ShopPage() {
                                                 </div>
                                             )}
                                         </div>
-
-                                        {/* Info */}
+ 
                                         <div className="flex flex-1 flex-col gap-1.5 p-4">
                                             <p className="text-[10px] font-bold uppercase tracking-widest text-[hsl(174,62%,38%)]">
                                                 {product.brand}
@@ -685,7 +689,13 @@ export default function ShopPage() {
                                             </div>
                                         </div>
                                     </Link>
+                                ))} */}
+                                {products.map((product) => (
+                                    <Products
+                                        key={product._id} product={product} />
                                 ))}
+
+
                             </div>
                         )}
                     </div>

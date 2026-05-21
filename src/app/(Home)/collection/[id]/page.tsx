@@ -10,6 +10,7 @@ import { Commonloader } from "@/components/admin/Loader";
 import { useAuthStore } from "@/components/user/store/api";
 import { useCustomerProductDetailsStore } from "@/store/home/products/store";
 import { useCustomerWishlistStore } from "@/store/home/wishlist/store";
+import Products from "@/components/Home/ProductCarfs";
 
 function CollectionDetails() {
   const params = useParams();
@@ -26,10 +27,21 @@ function CollectionDetails() {
  const isWishlistActive = product? wishlistItems.some((item) => item.productId === product._id): false;
 
   useEffect(() => {
+
+
     void loadProduct(id);
+
+
+    
     return () => { clear(); };
   }, [clear, id, loadProduct]);
 
+
+
+  useEffect(()=>{
+      console.log("product", product);
+        console.log("redalted", relatedProducts);
+  },[relatedProducts, product])
 
 
   useEffect(()=>{
@@ -131,9 +143,11 @@ function CollectionDetails() {
                 Related Products
               </h2>
             </div>
+            {/* <CustomerProductRelatedCard key={item._id} product={item} /> */}
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {relatedProducts.map((item) => (
-                <CustomerProductRelatedCard key={item._id} product={item} />
+              
+               <Products    key={item._id}  product={item}/>
               ))}
             </div>
           </section>

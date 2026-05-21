@@ -38,8 +38,10 @@ export type GuestCartItem = CustomerCartItem;
 export type AppliedPromo = {
   code: string;
   percentage: number;
-  count: number;
+  discount: number;
+  finalTotal: number;
   minimumOrderValue: number;
+  isLoggedIn: boolean;
 };
 
 // ✅ Razorpay hata ke Stripe
@@ -83,7 +85,7 @@ export type CheckoutDataResponse = {
     items: CheckoutAddressOption[];
   };
   subtotal: number;
-  points: number;
+  // points: number;
 };
 
 

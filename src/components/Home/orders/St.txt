@@ -1,0 +1,44 @@
+jab user ne session create kiya to ye mongodb ka hai
+_id
+6a0c62c6c5802b16f750d444
+user
+69ecbd985534f86217d90664
+customerName
+"sohan@123"
+customerEmail
+"sohan@example.com"
+
+items
+Array (1)
+totalItems
+2
+deliveryName
+"Rahul Gupta"
+deliveryAddress
+"S-234 Lajpat Nagar Market, Delhi, 110032"
+promoCode
+"TRY2"
+discountAmount
+349
+totalAmount
+3145
+paymentStatus
+"pending"
+orderStatus
+"placed"
+stripeSessionId
+"cs_test_a1XH4tfxP0l8KHDKLOv50Pv6TkZDu825UR3CeDvrQhnn4wwNZbkFMNXtUh"
+paymentId
+""
+paidAt
+null
+deliveredAt
+null
+expiresAt
+2026-05-19T13:46:54.000+00:00
+createdAt
+2026-05-19T13:16:54.372+00:00
+updatedAt
+2026-05-19T13:16:54.974+00:00
+__v
+0

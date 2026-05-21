@@ -1,3 +1,5 @@
+import { ProductCardProduct } from "../ProductCarfs";
+
 export type ProductSort = "recent" | "price-low" | "price-high";
 
 export type ProductSize = "S" | "M" | "L" | "XL";
@@ -26,7 +28,7 @@ export type CustomerProduct = {
   brand: string;
   stock: number;
   images: ProductImage[];
-  // colors: string[];
+   
   colors: ColorOption[];
   sizes: ProductSize[];
   price: number;
@@ -46,5 +48,6 @@ export type GetCustomerProductsParams = {
 
 export type CustomerProductDetailsResponse = {
   product: CustomerProduct;
-  relatedProducts: CustomerProduct[];
+ 
+  relatedProducts: ProductCardProduct[]
 };

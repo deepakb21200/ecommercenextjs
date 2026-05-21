@@ -11,15 +11,23 @@ export async function getCustomerOrders() {
   return res.json();
 }
 
-export async function returnCustomerOrder(orderId: string) {
-  const res = await fetch(`/api/customer/orders/${orderId}/return`, {
-    method: "PATCH",
+ 
+
+
+
+export async function payCustomerOrder(orderId: string) {
+  const res = await fetch(`/api/customer/orders/${orderId}/pay`, {
+    method: "POST",
     credentials: "include",
   });
 
+  const data = await res.json();
+
   if (!res.ok) {
-    throw new Error("Failed to return order");
+    throw new Error(data?.message || "Failed to create payment session");
   }
 
-  return res.json();
+  return data as {
+    url: string;
+  };
 }

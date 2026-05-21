@@ -17,6 +17,7 @@ type FormMode = "none" | "add" | "edit";
 type CustomerProfileStore = {
   isOpen: boolean;
   items: CustomerAddress[];
+   loading: boolean;
   mode: FormMode;
   editingAddressId: string;
   form: CustomerAddressFormValues;
@@ -38,6 +39,7 @@ type CustomerProfileStore = {
 export const useCustomerProfileStore = create<CustomerProfileStore>(
   (set, get) => ({
     isOpen: false,
+        loading: false,
     items: [],
     mode: "none",
     editingAddressId: "",
@@ -54,10 +56,13 @@ export const useCustomerProfileStore = create<CustomerProfileStore>(
 
     loadAddresses: async () => {
       try {
+           set({ loading: true });
         const response = await getCustomerAddresses();
         set({ items: response?.items ?? [] });
       } catch {
         set({ items: [] });
+      }finally {
+        set({ loading: false });
       }
     },
 

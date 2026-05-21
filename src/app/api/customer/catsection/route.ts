@@ -89,15 +89,15 @@ export async function GET(req: NextRequest) {
     .map((c) => ({ label: c._id, count: c.count }))
     .sort((a, b) => a.label.localeCompare(b.label));
 
-    console.log({
-    products: formattedProducts,
-    filterOptions: {
-      categories: allCategories.map((c: any) => ({ _id: String(c._id), name: c.name })),
-      brands: allBrands,
-      sizes: ["S", "M", "L", "XL"],
-      colors: allColors,
-    },
-  });
+  //   console.log({
+  //   products: formattedProducts,
+  //   filterOptions: {
+  //     categories: allCategories.map((c: any) => ({ _id: String(c._id), name: c.name })),
+  //     brands: allBrands,
+  //     sizes: ["S", "M", "L", "XL"],
+  //     colors: allColors,
+  //   },
+  // });
     
 
   return NextResponse.json({

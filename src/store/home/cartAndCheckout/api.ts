@@ -8,8 +8,7 @@ import type {
   CheckoutConfirmBody,
   CheckoutConfirmResponse,
   CheckoutDataResponse,
-  CheckoutPayWithPointsResponse,
-  CheckoutPointsResponse,
+
   CustomerCartItemIdentifier,
   CustomerCartResponse,
   SyncCustomerCartBody,
@@ -153,24 +152,14 @@ export async function syncCustomerCart(
   return data.data;
 }
 
-// ================= CHECKOUT =================
 
-export async function getCheckoutPoints(): Promise<CheckoutPointsResponse> {
-  const res = await fetch(`${BASE_URL}/checkout/points`, {
-    credentials: "include",
-  });
-
-  if (!res.ok) throw new Error("Failed to fetch points");
-
-  const data = await res.json();
-  return data.data;
-}
 
 export async function getCheckoutData(): Promise<CheckoutDataResponse> {
-  const [cart, addresses, checkoutPoints] = await Promise.all([
+
+    const [cart, addresses] = await Promise.all([
     getCustomerCart(),
     getCustomerAddresses(),
-    getCheckoutPoints(),
+  
   ]);
 
   const safeCart = cart ?? { items: [], totalQuantity: 0 };
@@ -185,43 +174,47 @@ export async function getCheckoutData(): Promise<CheckoutDataResponse> {
     cart: safeCart,
     addresses: safeAddresses,
     subtotal,
-    points: checkoutPoints.points ?? 0,
+ 
   };
 }
 
-// ================= PROMO =================
 
-export async function applyCustomerPromo(body: {
-  code: string;
-  orderValue: number;
-}): Promise<AppliedPromo> {
-  const res = await fetch(`${BASE_URL}/promos/apply`, {
+// ================= PROMO =================
+ 
+ 
+
+
+export type ApplyPromoResponse = {
+  status: "success" | "error";
+  data: AppliedPromo;
+};
+
+export async function applyCustomerPromo(
+  body: { code: string; orderValue: number }
+): Promise<ApplyPromoResponse> {
+  const res = await fetch("/api/customer/promos/apply", {
     method: "POST",
-    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
 
-  if (!res.ok) throw new Error("Failed to apply promo");
-
   const data = await res.json();
-  return data.data;
-}
 
+  if (!res.ok || data.status !== "success") {
+    throw new Error(data.message || "Promo failed");
+  }
+
+  return data;
+}
 // ================= PAYMENT =================
 
 export async function createCheckoutSession(body: {
   addressId: string;
   promoCode?: string;
-}): Promise<{
+}):Promise<{
   url: string;
-  order: {
-    _id: string;
-    totalItems: number;
-    discountAmount: number;
-    totalAmount: number;
-  };
-}> {
+  orderId: string;
+}>{
   const res = await fetch(`${BASE_URL}/checkout/create-session`, {
     method: "POST",
     credentials: "include",
@@ -235,38 +228,8 @@ export async function createCheckoutSession(body: {
   return data.data;
 }
 
-export async function payWithPointsCheckout(body: {
-  addressId: string;
-  promoCode?: string;
-}): Promise<CheckoutPayWithPointsResponse> {
-  const res = await fetch(`${BASE_URL}/checkout/pay-with-points`, {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
 
-  if (!res.ok) throw new Error("Failed to pay with points");
-
-  const data = await res.json();
-  return data.data;
-}
-
-export async function confirmCheckout(
-  body: CheckoutConfirmBody
-): Promise<CheckoutConfirmResponse> {
-  const res = await fetch(`${BASE_URL}/checkout/confirm`, {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-
-  if (!res.ok) throw new Error("Failed to confirm checkout");
-
-  const data = await res.json();
-  return data.data;
-}
+ 
 
 
 

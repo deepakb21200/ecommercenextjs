@@ -75,12 +75,25 @@ export async function POST(req: NextRequest) {
     }))
   );
 
-  return NextResponse.json({
-    items: created.map((item: any) => ({
-      _id: String(item._id),
-      imageUrl: item.imageUrl,
-      imagePublicId: item.imagePublicId,
-      createdAt: item.createdAt.toISOString(),
-    })),
-  });
-}
+//   return NextResponse.json({
+//     items: created.map((item: any) => ({
+//       _id: String(item._id),
+//       imageUrl: item.imageUrl,
+//       imagePublicId: item.imagePublicId,
+//       createdAt: item.createdAt.toISOString(),
+//     })),
+//   });
+// }
+
+
+// Ab — sab banners return karo
+const allBanners = await Banner.find().sort({ createdAt: -1 }).lean();
+
+return NextResponse.json({
+  items: allBanners.map((item) => ({
+    _id: String(item._id),
+    imageUrl: item.imageUrl,
+    imagePublicId: item.imagePublicId,
+    createdAt: (item.createdAt as Date).toISOString(),
+  })),
+})}

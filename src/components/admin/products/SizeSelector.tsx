@@ -1,9 +1,5 @@
 "use client";
-
 import { SIZE_OPTIONS } from "@/config/constants";
-
- 
-
 type Props = {
   selectedSizes: string[];
   onToggle: (size: string) => void;
@@ -11,10 +7,10 @@ type Props = {
 
 export function SizeSelector({ selectedSizes, onToggle }: Props) {
   return (
-    <div className="space-y-3">
-      {/* <h3 className="text-sm font-semibold">Sizes</h3> */}
+    <div className="space-y-3  ">
+   
 
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid sm:grid-cols-4 gap-2  ">
         {SIZE_OPTIONS.map((size) => {
           const active = selectedSizes.includes(size);
 
@@ -42,7 +38,6 @@ export function SizeSelector({ selectedSizes, onToggle }: Props) {
 
 
 
-
-//try t his
+ 
 
  

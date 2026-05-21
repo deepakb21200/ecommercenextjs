@@ -18,7 +18,6 @@ import {
   decreaseCustomerCartItem,
   getCheckoutData,
   increaseCustomerCartItem,
-  payWithPointsCheckout,
   removeCustomerCartItem,
   syncCustomerCart,
 } from "./api";
@@ -37,10 +36,6 @@ type StripeArgs = {
 
 
 };
-type PointsArgs = {
-  isSignedIn: boolean;
-  onSuccess: () => void;
-};
 
 type CustomerCartAndCheckoutStore = {
   cart: CustomerCartResponse;
@@ -50,10 +45,10 @@ type CustomerCartAndCheckoutStore = {
   selectedAddressId: string;
   promoInput: string;
   appliedPromo: AppliedPromo | null;
-  points: number;
+
   promoLoading: boolean;
   checkoutLoading: boolean;
-  pointsCheckoutLoading: boolean;
+
   setOpen: (value: boolean) => void;
   setCart: (cart: CustomerCartResponse) => void;
   loadCart: (isSignedIn: boolean) => Promise<void>;
@@ -65,7 +60,7 @@ type CustomerCartAndCheckoutStore = {
   clearPromo: () => void;
   applyPromo: () => Promise<void>;
   startStripeCheckout: (args: StripeArgs) => Promise<void>; // ✅ renamed
-  startPointsCheckout: (args: PointsArgs) => Promise<void>;
+
   clear: () => void;
 };
 
@@ -80,10 +75,10 @@ const defaultUiState = {
   selectedAddressId: "",
   promoInput: "",
   appliedPromo: null as AppliedPromo | null,
-  points: 0,
+
   promoLoading: false,
   checkoutLoading: false,
-  pointsCheckoutLoading: false,
+
 };
 
 // ─── Guest Cart Helpers ───────────────────────────────────────────────────────
@@ -123,7 +118,7 @@ function getGuestResponse(): CustomerCartResponse {
     items,
     totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
   });
-  
+
   return {
     items,
     totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
@@ -141,17 +136,6 @@ function getGuestSyncPayload(): SyncCustomerCartBody {
   };
 }
 
-// function isSameItem(
-//   item: CustomerCartItemIdentifier,
-//   target: CustomerCartItemIdentifier
-// ) {
-//   return (
-//     item.productId === target.productId &&
-//     (item.color || "") === (target.color || "") &&
-//     (item.size || "") === (target.size || "")
-//   );
-// }
-
 
 function isSameItem(
   item: CustomerCartItemIdentifier,
@@ -163,28 +147,9 @@ function isSameItem(
     String(item.size || "") === String(target.size || "")
   );
 }
- 
- 
 
 
-// function addGuestItem(item: Omit<GuestCartItem, "quantity">) {
-//   const items = readGuestItems();
-//   console.log("read guestitems returned value",items);
-  
-//   const index = items.findIndex((cartItem) => isSameItem(cartItem, item));
 
-//   console.log("findindex return value", index);
-  
-
-//   if (index >= 0) {
-//     items[index] = { ...items[index], quantity: items[index].quantity + 1 };
-//   } else {
-//     items.push({ ...item, quantity: 1 });
-//   }
-
-//   writeGuestItems(items);
-//   return getGuestResponse();
-// }
 
 
 function addGuestItem(item: Omit<GuestCartItem, "quantity">) {
@@ -194,8 +159,8 @@ function addGuestItem(item: Omit<GuestCartItem, "quantity">) {
   //   isSameItem(cartItem, item)
   // );
   const index = items.findIndex(
-  (cartItem) =>cartItem.productId === item.productId &&cartItem.color === item.color && cartItem.size === item.size
-);
+    (cartItem) => cartItem.productId === item.productId && cartItem.color === item.color && cartItem.size === item.size
+  );
 
   // SAME PRODUCT
   if (index !== -1) {
@@ -220,7 +185,7 @@ function addGuestItem(item: Omit<GuestCartItem, "quantity">) {
     });
   }
 
-localStorage.setItem(GUEST_CART_KEY,JSON.stringify(items));
+  localStorage.setItem(GUEST_CART_KEY, JSON.stringify(items));
 
   toast.success("Added to cart");
 
@@ -229,17 +194,6 @@ localStorage.setItem(GUEST_CART_KEY,JSON.stringify(items));
 
 
 
-
-
-// function increaseGuestItem(item: CustomerCartItemIdentifier) {
-//   const items = readGuestItems().map((cartItem) =>
-//     isSameItem(cartItem, item)
-//       ? { ...cartItem, quantity: cartItem.quantity + 1 }
-//       : cartItem
-//   );
-//   writeGuestItems(items);
-//   return getGuestResponse();
-// }
 
 
 function increaseGuestItem(item: CustomerCartItemIdentifier) {
@@ -279,30 +233,15 @@ function increaseGuestItem(item: CustomerCartItemIdentifier) {
 
 
 
-
- 
- 
-// function decreaseGuestItem(item: CustomerCartItemIdentifier) {
-//   const items = readGuestItems()
-//     .map((cartItem) =>
-//       isSameItem(cartItem, item)
-//         ? { ...cartItem, quantity: cartItem.quantity - 1 }
-//         : cartItem
-//     )
-//     .filter((cartItem) => cartItem.quantity > 0);
-//   writeGuestItems(items);
-//   return getGuestResponse();
-// }
-
 function decreaseGuestItem(item: CustomerCartItemIdentifier) {
 
   const items = readGuestItems()
     .map((cartItem) =>
       isSameItem(cartItem, item)
         ? {
-            ...cartItem,
-            quantity: cartItem.quantity - 1,
-          }
+          ...cartItem,
+          quantity: cartItem.quantity - 1,
+        }
         : cartItem
     )
     .filter((cartItem) => cartItem.quantity > 0);
@@ -314,21 +253,21 @@ function decreaseGuestItem(item: CustomerCartItemIdentifier) {
   return getGuestResponse();
 }
 
- 
+
 
 function removeGuestItem(item: CustomerCartItemIdentifier) {
   const items = readGuestItems().filter(
     (cartItem) => !isSameItem(cartItem, item)
   );
-  localStorage.setItem(GUEST_CART_KEY,JSON.stringify(items));
+  localStorage.setItem(GUEST_CART_KEY, JSON.stringify(items));
 
   return getGuestResponse();
 }
 
- 
 
 
- 
+
+
 export const useCustomerCartAndCheckoutStore =
   create<CustomerCartAndCheckoutStore>((set, get) => ({
     cart: emptyCart,
@@ -370,7 +309,7 @@ export const useCustomerCartAndCheckoutStore =
             cart,
             addresses,
             selectedAddressId: defaultAddress?._id ?? "",
-            points: response?.points ?? 0,
+
           });
 
           return;
@@ -381,7 +320,7 @@ export const useCustomerCartAndCheckoutStore =
           cart: getGuestResponse(),
           addresses: [],
           selectedAddressId: "",
-          points: 0,
+
         });
       } catch {
         set({
@@ -403,8 +342,8 @@ export const useCustomerCartAndCheckoutStore =
           console.log(response, "sssssssssssssss");
 
           set({ cart: response ?? emptyCart });
-        } 
-        
+        }
+
         else {
           set({
             cart: addGuestItem({
@@ -419,7 +358,7 @@ export const useCustomerCartAndCheckoutStore =
 
             }),
           });
-          
+
         }
 
         // toast.success("Added to cart2");
@@ -438,12 +377,16 @@ export const useCustomerCartAndCheckoutStore =
 
 
 
- 
+
 
     increase: async (item, isSignedIn) => {
       try {
         const response = isSignedIn ? await increaseCustomerCartItem(item) : increaseGuestItem(item);
-        set({ cart: response ?? emptyCart });
+        set({
+          cart: response ?? emptyCart,
+          appliedPromo: null,
+          promoInput: "",
+        });
         toast.success("Cart updated");
       }
       catch (error) {
@@ -457,8 +400,12 @@ export const useCustomerCartAndCheckoutStore =
 
     decrease: async (item, isSignedIn) => {
       try {
-        const response = isSignedIn ? await decreaseCustomerCartItem(item)  : decreaseGuestItem(item);
-        set({ cart: response ?? emptyCart });
+        const response = isSignedIn ? await decreaseCustomerCartItem(item) : decreaseGuestItem(item);
+        set({
+          cart: response ?? emptyCart,
+          appliedPromo: null,
+          promoInput: "",
+        });
         toast.success("Cart updated");
       } catch {
         toast.error("Failed to update cart");
@@ -467,8 +414,11 @@ export const useCustomerCartAndCheckoutStore =
 
     remove: async (item, isSignedIn) => {
       try {
-        const response = isSignedIn? await removeCustomerCartItem(item): removeGuestItem(item);
-        set({ cart: response ?? emptyCart });
+        const response = isSignedIn ? await removeCustomerCartItem(item) : removeGuestItem(item);
+        set({ cart: response ?? emptyCart ,
+             appliedPromo: null,
+    promoInput: "",
+        });
         toast.success("Cart item removed");
       } catch {
         toast.error("Failed to remove from cart");
@@ -493,22 +443,30 @@ export const useCustomerCartAndCheckoutStore =
 
       try {
         set({ promoLoading: true })
+
+
         const response = await applyCustomerPromo({
           code: promoInput.trim(),
           orderValue: subtotal,
         });
 
-        if (!response?.code) {
-          set({ appliedPromo: null, promoLoading: false });
-          return;
-        }
-
-        set({ appliedPromo: response, promoInput: response.code, promoLoading: false });
+        set({
+          appliedPromo: response.data,
+          promoInput: response.data.code,
+          promoLoading: false,
+        });
         toast.success("Promo successfully applied");
+
+
+
+
       } catch {
-        set({ appliedPromo: null, promoLoading: false });
+        set({ appliedPromo: null});
         toast.error("Unable to apply promo");
       }
+      finally{
+         set({ promoLoading: false })
+      }   
     },
 
     clear: () => set({ cart: emptyCart, isOpen: false, ...defaultUiState }),
@@ -540,45 +498,6 @@ export const useCustomerCartAndCheckoutStore =
       }
     },
 
-    startPointsCheckout: async ({ isSignedIn, onSuccess }) => {
-      const { selectedAddressId, appliedPromo, points, cart } = get();
 
-      const subTotal = cart.items.reduce(
-        (sum, item) => sum + item.finalPrice * item.quantity,
-        0
-      );
-      const discountAmount = appliedPromo
-        ? Math.round((subTotal * appliedPromo.percentage) / 100)
-        : 0;
-      const totalAmount = Math.max(subTotal - discountAmount, 0);
 
-      if (!isSignedIn) { toast.error("Sign in to checkout"); return; }
-      if (!selectedAddressId) { toast.error("Add a default address from profile section"); return; }
-      if (!cart.items.length) { toast.error("Your cart is empty"); return; }
-      if (points < totalAmount) { toast.error("Not enough points"); return; }
-
-      try {
-        set({ pointsCheckoutLoading: true });
-
-        const response = await payWithPointsCheckout({
-          addressId: selectedAddressId,
-          promoCode: appliedPromo?.code || undefined,
-        });
-
-        if (!response._id) throw new Error("Unable to place order");
-
-        set({
-          cart: emptyCart,
-          isOpen: false,
-          ...defaultUiState,
-          points: response.totalPoints ?? Math.max(points - totalAmount, 0),
-        });
-
-        toast.success("Order placed");
-        onSuccess();
-      } catch {
-        set({ pointsCheckoutLoading: false });
-        toast.error("Failed to place order with points");
-      }
-    },
   }));

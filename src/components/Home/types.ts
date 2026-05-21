@@ -1,3 +1,5 @@
+import { ProductCardProduct } from "./ProductCarfs";
+
 export type CustomerHomeBanner = {
   _id: string;
   imageUrl: string;
@@ -9,16 +11,7 @@ export type CustomerHomeCategory = {
   name: string;
 };
 
-export type CustomerHomeProduct = {
-  _id: string;
-  title: string;
-  brand: string;
-  image: string;
-  price: number;
-  finalPrice: number;
-  salePercentage: number;
-  createdAt: string;
-};
+
 
 export type CustomerHomeCoupon = {
   _id: string;
@@ -32,6 +25,6 @@ export type CustomerHomeCoupon = {
 export type CustomerHomeResponse = {
   banners: CustomerHomeBanner[];
   categories: CustomerHomeCategory[];
-  recentProducts: CustomerHomeProduct[];
+  recentProducts: ProductCardProduct[];
   coupons: CustomerHomeCoupon[];
 };

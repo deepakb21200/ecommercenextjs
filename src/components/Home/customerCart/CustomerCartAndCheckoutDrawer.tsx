@@ -2,13 +2,13 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+
 import {
   RiMapPinLine,
   RiCoupon3Line,
   RiCloseLine,
   RiCheckLine,
-  RiStarLine,
+
   RiLockLine,
 } from "react-icons/ri";
 import { useAuthStore } from "@/components/user/store/api";
@@ -26,7 +26,7 @@ function SummaryRow({ label, value }: { label: string; value: string | number })
 }
 
 function CustomerCartAndCheckoutDrawer() {
-  const router = useRouter();
+
 
   const { user } = useAuthStore();
   const isSignedIn = !!user;
@@ -39,15 +39,15 @@ function CustomerCartAndCheckoutDrawer() {
     addresses,
     promoInput,
     appliedPromo,
-    points,
+
     promoLoading,
     checkoutLoading,
-    pointsCheckoutLoading,
+
     setPromoInput,
     clearPromo,
     applyPromo,
     startStripeCheckout,
-    startPointsCheckout,
+
     loading,
     cart,
   } = useCustomerCartAndCheckoutStore((state) => state);
@@ -60,18 +60,23 @@ function CustomerCartAndCheckoutDrawer() {
   const selectedAddress =
     addresses.find((item) => item._id === selectedAddressId) || null;
 
-  const subTotal = cart.items.reduce(
-    (sum, item) => sum + item.finalPrice * item.quantity,
-    0
-  );
-  const discountAmount = appliedPromo
-    ? Math.round((subTotal * appliedPromo.percentage) / 100)
-    : 0;
-  const totalAmount = Math.max(subTotal - discountAmount, 0);
 
+
+    const subTotal = cart.items.reduce(
+  (sum, item) => sum + item.finalPrice * item.quantity,
+  0
+);
+
+// const discountAmount = appliedPromo?.discount ?? 0;
+// const totalAmount = appliedPromo?.finalTotal ?? subTotal;
+const discountAmount = appliedPromo
+  ? Math.round((subTotal * appliedPromo.percentage) / 100)
+  : 0;
+
+const totalAmount = subTotal - discountAmount;
   return (
     <>
-  
+
       {/* Backdrop */}
       <div
         className={`fixed inset-0 z-[998] bg-[hsl(220,20%,15%)]/60 backdrop-blur-sm transition-opacity duration-300
@@ -83,7 +88,7 @@ function CustomerCartAndCheckoutDrawer() {
       <div
         className={`fixed inset-y-0 right-0 z-[999] flex w-full max-w-5xl shadow-2xl transform transition-transform duration-300 ease-in-out
           ${isOpen ? "translate-x-0" : "translate-x-full"}`}
-      > 
+      >
         <div className="grid h-full w-full lg:grid-cols-[1.7fr_1fr] bg-white overflow-hidden">
 
           {/* ── Left: Cart Items ── */}
@@ -180,73 +185,53 @@ function CustomerCartAndCheckoutDrawer() {
               {/* Summary */}
               <section className="rounded-xl border border-[hsl(40,20%,88%)] bg-white p-4 space-y-2.5">
                 <SummaryRow label="Items" value={cart.totalQuantity} />
-                <SummaryRow label="Subtotal" value={formatPrice(subTotal)} />
-                <SummaryRow label="Discount" value={`- ${formatPrice(discountAmount)}`} />
-                {isSignedIn && (
-                  <div className="flex items-center justify-between text-xs text-[hsl(220,10%,45%)] pt-1">
-                    <span className="flex items-center gap-1">
-                      <RiStarLine className="text-[hsl(45,100%,51%)]" />
-                      Points balance
-                    </span>
-                    <span className="font-medium text-[hsl(220,20%,15%)]">{points}</span>
-                  </div>
-                )}
+
+                <SummaryRow
+                  label="Subtotal"
+                  value={formatPrice(subTotal)}
+                />
+
+                <SummaryRow
+                  label="Discount"
+                  value={`- ${formatPrice(discountAmount)}`}
+                />
+
                 <div className="flex items-center justify-between border-t border-[hsl(40,20%,88%)] pt-3 text-base font-semibold text-[hsl(220,20%,15%)]">
                   <span>Total</span>
-                  <span className="text-[hsl(174,62%,38%)]">{formatPrice(totalAmount)}</span>
+                  <span className="text-[hsl(174,62%,38%)]">
+                    {formatPrice(totalAmount)}
+                  </span>
                 </div>
               </section>
+
 
             </div>
 
             {/* Footer Buttons */}
-        
-              <div className="shrink-0 space-y-2 border-t border-[hsl(40,20%,88%)] bg-white px-5 py-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOpen(false);
-                    void startStripeCheckout({
-                      isSignedIn,
-                    });
-                  }}
-                  disabled={
-                    loading ||
-                    !cart.items.length ||
-                    !selectedAddressId ||
-                    checkoutLoading ||
-                    pointsCheckoutLoading
-                  }
-                  className="w-full h-11 rounded-xl bg-[hsl(174,62%,38%)] text-white text-sm font-medium hover:bg-[hsl(174,62%,32%)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                >
-                  {checkoutLoading ? "Processing..." : "Pay with Stripe"}
-                </button>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    void startPointsCheckout({
-                      isSignedIn,
-                      onSuccess: () => router.push("/order-success"),
-                    });
-                  }}
-                  disabled={
-                    !(
-                      isSignedIn &&
-                      Boolean(selectedAddressId) &&
-                      Boolean(cart.items.length) &&
-                      points >= totalAmount &&
-                      !checkoutLoading &&
-                      !pointsCheckoutLoading
-                    )
-                  }
-                  className="w-full h-11 rounded-xl border border-[hsl(40,20%,88%)] bg-white text-sm font-medium text-[hsl(220,20%,15%)] hover:bg-[hsl(40,33%,98%)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-                >
-                  <RiStarLine className="text-[hsl(45,100%,51%)] text-base" />
-                  {pointsCheckoutLoading ? "Processing..." : "Pay with Points"}
-                </button>
-              </div>
-           
+            <div className="shrink-0 space-y-2 border-t border-[hsl(40,20%,88%)] bg-white px-5 py-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  void startStripeCheckout({
+                    isSignedIn,
+                  });
+                }}
+                disabled={
+                  loading ||
+                  !cart.items.length ||
+                  !selectedAddressId ||
+                  checkoutLoading}
+
+                className="w-full h-11 rounded-xl bg-[hsl(174,62%,38%)] text-white text-sm font-medium hover:bg-[hsl(174,62%,32%)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                {checkoutLoading ? "Processing..." : "Pay with Stripe"}
+              </button>
+
+
+            </div>
+
 
           </div>
         </div>

@@ -5,6 +5,7 @@ import { getCustomerWishlist, removeCustomerWishlistItem } from "./api";
 
 type CustomerWishlistStore = {
   items: CustomerWishlistItem[];
+  loading: boolean;
   isOpen: boolean;
   setOpen: (val: boolean) => void;
   setItems: (items: CustomerWishlistItem[]) => void;
@@ -17,12 +18,13 @@ export const useCustomerWishlistStore = create<CustomerWishlistStore>(
   (set) => ({
     items: [],
     isOpen: false,
+     loading: false,
     setOpen: (value) => set({ isOpen: value }),
     setItems: (items) => set({ items }),
     clear: () => set({ items: [], isOpen: false }),
-//  const { isOpen, setOpen, items, removeItem } = useCustomerWishlistStore();
     loadWishlist: async () => {
       try {
+         set({ loading: true });
         const response = await getCustomerWishlist();
         console.log("wisheee", response);
 
@@ -30,11 +32,17 @@ export const useCustomerWishlistStore = create<CustomerWishlistStore>(
       } catch {
         set({ items: [] });
       }
+      finally {
+        set({ loading: false });
+      }
     },
 
     removeItem: async (productId) => {
       try {
         const response = await removeCustomerWishlistItem(productId);
+
+        console.log(response);
+        
         set({ items: response?.items ?? [] });
         toast.success("Removed from wishlist");
       } catch {

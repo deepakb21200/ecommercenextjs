@@ -1,126 +1,25 @@
-// "use client";
-
-// import { useEffect } from "react";
-// import { FaBox, FaLayerGroup, FaRupeeSign, FaShoppingCart, FaUndo } from "react-icons/fa";
-// import { formatPrice } from "@/config/constants";
-// import { Commonloader } from "./Loader";
-// import { useAdminDashboardLiteStore } from "@/app/admin/store";
-
-// const statsItems = [
-//   {
-//     key: "totalProducts",
-//     label: "Products",
-//     icon: FaBox,
-//     color: "text-violet-600",
-//     bg: "bg-violet-50",
-//     border: "border-violet-100",
-//   },
-//   {
-//     key: "totalCategories",
-//     label: "Categories",
-//     icon: FaLayerGroup,
-//     color: "text-sky-600",
-//     bg: "bg-sky-50",
-//     border: "border-sky-100",
-//   },
-//   {
-//     key: "totalSales",
-//     label: "Revenue",
-//     icon: FaRupeeSign,
-//     color: "text-emerald-600",
-//     bg: "bg-emerald-50",
-//     border: "border-emerald-100",
-//   },
-//   {
-//     key: "totalOrders",
-//     label: "Orders",
-//     icon: FaShoppingCart,
-//     color: "text-amber-600",
-//     bg: "bg-amber-50",
-//     border: "border-amber-100",
-//   },
-//   {
-//     key: "totalReturnedOrders",
-//     label: "Returns",
-//     icon: FaUndo,
-//     color: "text-rose-600",
-//     bg: "bg-rose-50",
-//     border: "border-rose-100",
-//   },
-// ] as const;
-
-// export default function AdminDashboard() {
-//   const { stats, loading, fetchDashboard, hasLoaded } = useAdminDashboardLiteStore();
-
-//   useEffect(() => {
-//     if (!hasLoaded) fetchDashboard();
-//   }, [hasLoaded, fetchDashboard]);
-
-//   if (loading) return <Commonloader />;
-
-//   return (
-//     <div className="min-h-screen bg-slate-50 p-4 sm:p-6 lg:p-8">
-//       <div className="mx-auto max-w-7xl space-y-8">
-
-//         {/* Header */}
-//         <div>
-//           <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-slate-400">
-//             Overview
-//           </p>
-//           <h1 className="mt-1 text-2xl font-semibold text-slate-800">Dashboard</h1>
-//           <p className="mt-0.5 text-sm text-slate-400">Track your store performance</p>
-//         </div>
-
-//         {/* Stats grid */}
-//         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-//           {statsItems.map((item) => {
-//             const Icon = item.icon;
-//             const value = stats[item.key];
-
-//             return (
-//               <div
-//                 key={item.key}
-//                 className={`rounded-2xl border ${item.border} bg-white p-5 transition-shadow hover:shadow-md`}
-//               >
-//                 {/* Icon + label */}
-//                 <div className="flex items-center justify-between">
-//                   <div className={`flex h-9 w-9 items-center justify-center rounded-xl ${item.bg}`}>
-//                     <Icon className={`text-base ${item.color}`} />
-//                   </div>
-//                   <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-slate-400">
-//                     {item.label}
-//                   </p>
-//                 </div>
-
-//                 {/* Value */}
-//                 <div className="mt-4">
-//                   <p className={`text-2xl font-semibold ${item.color}`}>
-//                     {item.key === "totalSales" ? formatPrice(value) : value}
-//                   </p>
-//                 </div>
-//               </div>
-//             );
-//           })}
-//         </div>
-
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
 
 "use client";
 
 import { useEffect } from "react";
-import { FaBox, FaLayerGroup, FaRupeeSign, FaShoppingCart, FaUndo } from "react-icons/fa";
+
+import {
+  FaBox,
+  FaLayerGroup,
+  FaRupeeSign,
+  FaShoppingCart,
+  FaUndo,
+} from "react-icons/fa";
+
+import {
+  HiOutlineSparkles,
+  HiOutlineChartBar,
+} from "react-icons/hi2";
+
 import { formatPrice } from "@/config/constants";
+
 import { Commonloader } from "./Loader";
+
 import { useAdminDashboardLiteStore } from "@/app/admin/store";
 
 const statsItems = [
@@ -129,186 +28,234 @@ const statsItems = [
     label: "Total Products",
     sublabel: "Listed in store",
     icon: FaBox,
-    gradient: "linear-gradient(135deg, #7C3AED, #A78BFA)",
-    lightBg: "hsl(258,90%,97%)",
-    accent: "hsl(258,90%,60%)",
-    glow: "rgba(124,58,237,0.15)",
+    gradient: "from-fuchsia-500 to-violet-500",
+    glow: "shadow-fuchsia-500/10",
+    badge: "bg-fuchsia-500/10 text-fuchsia-300 border-fuchsia-500/20",
   },
+
   {
     key: "totalCategories",
     label: "Categories",
-    sublabel: "Product groups",
+    sublabel: "Store collections",
     icon: FaLayerGroup,
-    gradient: "linear-gradient(135deg, #0284C7, #38BDF8)",
-    lightBg: "hsl(200,90%,97%)",
-    accent: "hsl(200,90%,50%)",
-    glow: "rgba(2,132,199,0.15)",
+    gradient: "from-sky-500 to-cyan-500",
+    glow: "shadow-cyan-500/10",
+    badge: "bg-cyan-500/10 text-cyan-300 border-cyan-500/20",
   },
+
   {
     key: "totalSales",
-    label: "Total Revenue",
+    label: "Revenue",
     sublabel: "All time earnings",
     icon: FaRupeeSign,
-    gradient: "linear-gradient(135deg, #059669, #34D399)",
-    lightBg: "hsl(152,60%,97%)",
-    accent: "hsl(152,60%,40%)",
-    glow: "rgba(5,150,105,0.15)",
+    gradient: "from-emerald-500 to-teal-500",
+    glow: "shadow-emerald-500/10",
+    badge: "bg-emerald-500/10 text-emerald-300 border-emerald-500/20",
   },
+
   {
     key: "totalOrders",
-    label: "Orders Placed",
-    sublabel: "Total orders received",
+    label: "Orders",
+    sublabel: "Orders received",
     icon: FaShoppingCart,
-    gradient: "linear-gradient(135deg, #D97706, #FCD34D)",
-    lightBg: "hsl(38,95%,97%)",
-    accent: "hsl(38,95%,50%)",
-    glow: "rgba(217,119,6,0.15)",
+    gradient: "from-amber-500 to-orange-500",
+    glow: "shadow-orange-500/10",
+    badge: "bg-orange-500/10 text-orange-300 border-orange-500/20",
   },
+
   {
     key: "totalReturnedOrders",
     label: "Returns",
     sublabel: "Returned orders",
     icon: FaUndo,
-    gradient: "linear-gradient(135deg, #DC2626, #F87171)",
-    lightBg: "hsl(0,80%,97%)",
-    accent: "hsl(0,80%,58%)",
-    glow: "rgba(220,38,38,0.15)",
+    gradient: "from-rose-500 to-pink-500",
+    glow: "shadow-rose-500/10",
+    badge: "bg-rose-500/10 text-rose-300 border-rose-500/20",
   },
 ] as const;
 
 export default function AdminDashboard() {
-  const { stats, loading, fetchDashboard, hasLoaded } = useAdminDashboardLiteStore();
+  const {
+    stats,
+    loading,
+    fetchDashboard,
+    hasLoaded,
+  } = useAdminDashboardLiteStore();
 
   useEffect(() => {
-    if (!hasLoaded) fetchDashboard();
+    if (!hasLoaded) {
+      fetchDashboard();
+    }
   }, [hasLoaded, fetchDashboard]);
 
-  if (loading) return <Commonloader />;
+  if (loading) {
+    return <Commonloader />;
+  }
 
   return (
-    <div className="min-h-screen p-6 lg:p-10" style={{ background: "hsl(220,20%,97%)" }}>
-      <div className="mx-auto max-w-screen-2xl space-y-10">
+    <div className=" bg-[#060816]    ">
 
-        {/* ── Header ── */}
-        <div
-          className="relative overflow-hidden rounded-3xl px-8 py-10 md:px-12"
-          style={{
-            background: "linear-gradient(135deg, hsl(220,20%,15%) 0%, hsl(230,25%,22%) 100%)",
-          }}
-        >
-          {/* Decorative circles */}
-          <div
-            className="absolute -right-16 -top-16 h-64 w-64 rounded-full opacity-10"
-            style={{ background: "linear-gradient(135deg, #7C3AED, #38BDF8)" }}
-          />
-          <div
-            className="absolute -bottom-10 right-40 h-40 w-40 rounded-full opacity-10"
-            style={{ background: "linear-gradient(135deg, #059669, #FCD34D)" }}
-          />
+      <div className="mx-auto max-w-[1700px] space-y-8  ">
 
-          <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        {/* HERO SECTION */}
+        <div className="relative overflow-hidden rounded-[36px] border border-white/10 bg-gradient-to-br from-[#111827] via-[#0B1120] to-[#111827] px-7 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-12">
+
+          {/* Blur Effects */}
+          <div className="absolute left-[-100px] top-[-100px] h-80 w-80 rounded-full bg-fuchsia-500/20 blur-3xl" />
+
+          <div className="absolute bottom-[-120px] right-[-60px] h-96 w-96 rounded-full bg-cyan-500/20 blur-3xl" />
+
+          <div className="relative z-10 flex flex-col gap-8 xl:flex-row xl:items-center xl:justify-between">
+
+            {/* LEFT */}
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">
-                Admin Panel
+
+              <div className="mb-5 flex items-center gap-4">
+
+                <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-fuchsia-500 via-violet-500 to-cyan-500 shadow-2xl shadow-violet-500/20">
+
+                  <HiOutlineChartBar className="text-3xl text-white" />
+
+                </div>
+
+                <div>
+
+                  <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-400">
+                    Velvet Analytics
+                  </p>
+
+                  <h1 className="mt-1 text-3xl font-black text-white sm:text-4xl xl:text-5xl">
+                    Store Dashboard
+                  </h1>
+
+                </div>
+              </div>
+
+              <p className="max-w-3xl text-sm leading-7 text-zinc-400 sm:text-base">
+                Monitor products, categories, revenue,
+                returns and customer activity through a
+                modern premium analytics dashboard built
+                for real-time store management.
               </p>
-              <h1 className="mt-2 text-3xl font-bold text-white md:text-4xl">
-                Store Dashboard
-              </h1>
-              <p className="mt-1.5 text-sm text-white/50">
-                Real-time overview of your store performance
-              </p>
+
             </div>
 
-            {/* Live badge */}
-            <div
-              className="inline-flex w-fit items-center gap-2.5 rounded-2xl px-5 py-3 text-sm font-medium"
-              style={{
-                background: "rgba(255,255,255,0.07)",
-                border: "1px solid rgba(255,255,255,0.12)",
-                color: "rgba(255,255,255,0.8)",
-                backdropFilter: "blur(10px)",
-              }}
-            >
-              <span
-                className="h-2 w-2 rounded-full animate-pulse"
-                style={{ background: "#34D399" }}
-              />
-              Live Data
+            {/* RIGHT BADGE */}
+            <div className="flex w-fit items-center gap-3 rounded-3xl border border-fuchsia-500/20 bg-fuchsia-500/10 px-6 py-4 backdrop-blur-xl">
+
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-fuchsia-500 to-violet-500">
+                <HiOutlineSparkles className="text-lg text-white" />
+              </div>
+
+              <div>
+                <p className="text-sm font-semibold text-fuchsia-200">
+                  Smart Analytics
+                </p>
+
+                <p className="mt-0.5 text-xs text-fuchsia-300/70">
+                  Live store insights
+                </p>
+              </div>
+
             </div>
+
           </div>
         </div>
 
-        {/* ── Stats Grid ── */}
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {/* TOP INFO BAR */}
+        <div className="flex flex-col gap-4 rounded-[30px] border border-white/10 bg-[#0F172A]/70 p-5 backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between">
+
+          <div>
+
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-zinc-500">
+              Dashboard Overview
+            </p>
+
+            <h2 className="mt-2 text-2xl font-bold text-white">
+              Performance Statistics
+            </h2>
+
+          </div>
+
+          <div className="inline-flex w-fit items-center gap-2 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-5 py-3">
+
+            <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-emerald-400" />
+
+            <span className="text-sm font-medium text-emerald-300">
+              Live Dashboard Data
+            </span>
+
+          </div>
+
+        </div>
+
+        {/* STATS GRID */}
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-5 ">
+
           {statsItems.map((item) => {
             const Icon = item.icon;
+
             const value = stats[item.key];
 
             return (
               <div
                 key={item.key}
-                className="group relative overflow-hidden rounded-3xl p-7 transition-all duration-300 hover:-translate-y-1.5 cursor-default"
-                style={{
-                  background: "#ffffff",
-                  border: "1px solid hsl(220,20%,93%)",
-                  boxShadow: `0 4px 24px ${item.glow}`,
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.boxShadow = `0 12px 40px ${item.glow}`;
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.boxShadow = `0 4px 24px ${item.glow}`;
-                }}
+                className={`group relative overflow-hidden rounded-[30px] border border-white/10 bg-[#111827]/80 p-6 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:${item.glow}`}
               >
-                {/* Top gradient bar */}
+
+                {/* Top Gradient Line */}
                 <div
-                  className="absolute top-0 left-0 right-0 h-1 rounded-t-3xl"
-                  style={{ background: item.gradient }}
+                  className={`absolute left-0 right-0 top-0 h-1 bg-gradient-to-r ${item.gradient}`}
                 />
 
-                {/* Bg glow blob */}
+                {/* Glow */}
                 <div
-                  className="absolute -right-8 -top-8 h-32 w-32 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                  style={{ background: item.lightBg }}
+                  className={`absolute -right-10 -top-10 h-36 w-36 rounded-full bg-gradient-to-br ${item.gradient} opacity-10 blur-3xl`}
                 />
 
-                {/* Icon box */}
-                <div
-                  className="relative mb-6 flex h-14 w-14 items-center justify-center rounded-2xl shadow-md"
-                  style={{ background: item.gradient }}
-                >
-                  <Icon className="text-xl text-white drop-shadow" />
+                {/* Header */}
+                <div className="relative flex items-start justify-between">
+
+                  <div
+                    className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${item.gradient} shadow-xl`}
+                  >
+                    <Icon className="text-xl text-white" />
+                  </div>
+
+                  <div
+                    className={`rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] ${item.badge}`}
+                  >
+                    Live
+                  </div>
+
                 </div>
 
-                {/* Label */}
-                <p
-                  className="relative text-xs font-semibold uppercase tracking-widest"
-                  style={{ color: "hsl(220,10%,55%)" }}
-                >
-                  {item.label}
-                </p>
+                {/* Content */}
+                <div className="relative mt-7">
 
-                {/* Value */}
-                <p
-                  className="relative mt-2.5 text-4xl font-extrabold tracking-tight"
-                  style={{ color: "hsl(220,20%,12%)" }}
-                >
-                  {item.key === "totalSales" ? formatPrice(value) : value}
-                </p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500">
+                    {item.label}
+                  </p>
 
-                {/* Sublabel */}
-                <p
-                  className="relative mt-2 text-xs"
-                  style={{ color: "hsl(220,10%,65%)" }}
-                >
-                  {item.sublabel}
-                </p>
+                  <h3 className="mt-3 text-4xl font-black tracking-tight text-white">
 
-                {/* Bottom accent line on hover */}
+                    {item.key === "totalSales"
+                      ? formatPrice(value)
+                      : value}
+
+                  </h3>
+
+                  <p className="mt-2 text-sm text-zinc-500">
+                    {item.sublabel}
+                  </p>
+
+                </div>
+
+                {/* Bottom Hover Line */}
                 <div
-                  className="absolute bottom-0 left-0 h-[3px] w-0 rounded-b-3xl transition-all duration-500 group-hover:w-full"
-                  style={{ background: item.gradient }}
+                  className={`absolute bottom-0 left-0 h-[3px] w-0 bg-gradient-to-r ${item.gradient} transition-all duration-500 group-hover:w-full`}
                 />
+
               </div>
             );
           })}

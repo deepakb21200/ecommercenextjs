@@ -1,4 +1,4 @@
-
+// BASE_URL}/wishlist/items/${productId}`
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
@@ -22,34 +22,34 @@ function getAuthUser(req: NextRequest) {
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ productId: string }> }
-) {
-  await connectDB();
+// export async function DELETE(
+//   req: NextRequest,
+//   { params }: { params: Promise<{ productId: string }> }
+// ) {
+//   await connectDB();
 
-  const auth = getAuthUser(req);
+//   const auth = getAuthUser(req);
 
-  if (auth.error) {
-    return NextResponse.json(
-      { message: auth.error },
-      { status: auth.status }
-    );
-  }
+//   if (auth.error) {
+//     return NextResponse.json(
+//       { message: auth.error },
+//       { status: auth.status }
+//     );
+//   }
 
-  const { productId } = await params;
+//   const { productId } = await params;
 
-  await WishlistModel.findOneAndUpdate(
-    { user: auth.decoded.id },
-    {
-      $pull: {
-        products: productId,
-      },
-    }
-  );
+//   await WishlistModel.findOneAndUpdate(
+//     { user: auth.decoded.id },
+//     {
+//       $pull: {
+//         products: productId,
+//       },
+//     }
+//   );
 
-  return NextResponse.json( await getWishlistResponse(auth.decoded.id))
-}
+//   return NextResponse.json( await getWishlistResponse(auth.decoded.id))
+// }
 
 
 
@@ -103,3 +103,41 @@ export async function DELETE(
 
 //   return NextResponse.json(await getWishlistResponse(auth.decoded.id));
 // }
+
+
+
+
+
+
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ productId: string }> }
+) {
+  await connectDB();
+
+  const auth = getAuthUser(req);
+
+  if (auth.error) {
+    return NextResponse.json(
+      { message: auth.error },
+      { status: auth.status }
+    );
+  }
+
+  const { productId } = await params;
+
+  await WishlistModel.findOneAndUpdate(
+    { user: auth.decoded.id },
+    {
+      $pull: {
+        products: productId,
+      },
+    }
+  );
+
+  return NextResponse.json({
+    status: "success",
+    data: await getWishlistResponse(auth.decoded.id),
+  });
+}

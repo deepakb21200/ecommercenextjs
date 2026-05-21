@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { CustomerOrder } from "./types";
-import { getCustomerOrders, returnCustomerOrder } from "./api";
-import toast from "react-hot-toast";
+import { getCustomerOrders,  } from "./api";
+ 
 
 type CustomerOrdersStore = {
   isOpen: boolean;
@@ -10,7 +10,7 @@ type CustomerOrdersStore = {
   openOrders: () => Promise<void>;
   closeOrders: () => void;
   loadOrders: () => Promise<void>;
-  returnOrder: (orderId: string) => Promise<void>;
+ 
   clear: () => void;
 };
 
@@ -43,24 +43,6 @@ export const useCustomerOrdersStore = create<CustomerOrdersStore>(
         items: [],
       });
     },
-    returnOrder: async (orderId) => {
-      try {
-        const response = await returnCustomerOrder(orderId);
-
-        set((state) => ({
-          items: state.items.map((item) =>
-            item._id === orderId
-              ? {
-                  ...item,
-                  orderStatus: response?.orderStatus ?? item?.orderStatus,
-                  returnedAt: response?.returnedAt ?? item.returnedAt ?? null,
-                }
-              : item,
-          ),
-        }));
-      } catch {
-        toast.error("Failed to return order");
-      }
-    },
+   
   }),
 );

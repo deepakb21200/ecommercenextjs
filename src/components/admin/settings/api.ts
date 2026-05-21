@@ -36,19 +36,11 @@ export async function uploadAdminBanners(
 
 
 
-
-
 export async function deleteAdminBanner(id: string) {
-  const res = await fetch(`${BASE_URL}/${id}`, {
+  const res = await fetch(`${BASE_URL}/banners/${id}`, { // ← sahi
     method: "DELETE",
     credentials: "include",
   });
-
-  console.log(res);
-  
- 
   if (!res.ok) throw new Error("Failed to delete banner");
- 
   return res.json();
 }
- 

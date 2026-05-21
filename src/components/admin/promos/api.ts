@@ -1,3 +1,4 @@
+import { AdminPromosResponse, PromoFormValues } from "./types";
 
 const BASE_URL = "/api/admin/promos";
 
@@ -11,12 +12,17 @@ export async function getAdminPromos() {
   if (!res.ok) {
     throw new Error("Failed to fetch promos");
   }
+// let a = await res.json()
+//   console.log(res.ok, a);
+
+
+  
 
   return res.json();
 }
 
 // ================= CREATE =================
-export async function createAdminPromo(body: any) {
+export async function createAdminPromo(body:  PromoFormValues): Promise<AdminPromosResponse>  {
   const res = await fetch(BASE_URL, {
     method: "POST",
     headers: {
@@ -33,10 +39,7 @@ export async function createAdminPromo(body: any) {
 }
 
 // ================= UPDATE =================
-export async function updateAdminPromo(
-  promoId: string,
-  body: any
-) {
+export async function updateAdminPromo(promoId: string,body: PromoFormValues): Promise<AdminPromosResponse> {
   const res = await fetch(`${BASE_URL}/${promoId}`, {
     method: "PATCH", // 👈 same as axios version
     headers: {

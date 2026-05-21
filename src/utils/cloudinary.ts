@@ -48,3 +48,16 @@ export async function uploadManyBuffersToCloudinary(
     )
   );
 }
+
+
+
+
+export async function deleteFromCloudinary(
+  publicId: string
+): Promise<void> {
+  if (!publicId) return;
+
+  await cloudinary.uploader.destroy(publicId, {
+    resource_type: "image",
+  });
+}

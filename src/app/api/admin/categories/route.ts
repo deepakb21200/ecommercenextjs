@@ -1,9 +1,60 @@
-import { NextResponse } from "next/server";
+// import { NextResponse } from "next/server";
  
-import { CategoryModel } from "@/models/Category";
-import { connectDB } from "@/lib/connectDB";
+// import { CategoryModel } from "@/models/Category";
+// import { connectDB } from "@/lib/connectDB";
 
  
+
+// // ✅ GET all categories
+// export async function GET() {
+//   await connectDB();
+
+//   const categories = await CategoryModel.find().sort({ createdAt: -1 });
+
+//   return NextResponse.json(categories);
+// }
+
+// // ✅ CREATE category
+// export async function POST(req: Request) {
+//   await connectDB();
+
+//   const body = await req.json();
+
+//   if (!body.name) {
+//     return NextResponse.json(
+//       { message: "Name is required" },
+//       { status: 400 }
+//     );
+//   }
+
+//   const exists = await CategoryModel.findOne({ name: body.name });
+
+//   if (exists) {
+//     return NextResponse.json(
+//       { message: "Category already exists" },
+//       { status: 400 }
+//     );
+//   }
+
+//   const category = await CategoryModel.create({
+//     name: body.name,
+//   });
+
+//   return NextResponse.json(category, { status: 201 });
+// }
+
+
+
+
+
+
+
+// /api/admin/categories/route.ts
+
+import { NextResponse } from "next/server";
+import { connectDB } from "@/lib/connectDB";
+import { CategoryModel } from "@/models/Category";
+import { uploadSingleBufferToCloudinary } from "@/utils/cloudinary";
 
 // ✅ GET all categories
 export async function GET() {
@@ -18,27 +69,60 @@ export async function GET() {
 export async function POST(req: Request) {
   await connectDB();
 
-  const body = await req.json();
+  try {
+    const formData = await req.formData();
 
-  if (!body.name) {
+    const name = String(formData.get("name") || "").trim();
+    const file = formData.get("image") as File | null;
+
+    if (!name) {
+      return NextResponse.json(
+        { message: "Name is required" },
+        { status: 400 }
+      );
+    }
+
+    if (!file) {
+      return NextResponse.json(
+        { message: "Image is required" },
+        { status: 400 }
+      );
+    }
+
+    const exists = await CategoryModel.findOne({
+      name: { $regex: new RegExp(`^${name}$`, "i") },
+    });
+
+    if (exists) {
+      return NextResponse.json(
+        { message: "Category already exists" },
+        { status: 400 }
+      );
+    }
+
+    // Convert File -> Buffer
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    // Upload to Cloudinary
+    const uploaded = await uploadSingleBufferToCloudinary(
+      buffer,
+      "ecommerce-monster-video/categories"
+    );
+
+    // Save category
+    const category = await CategoryModel.create({
+      name,
+      image: uploaded.url,
+    });
+
+    return NextResponse.json(category, { status: 201 });
+  } catch (error: any) {
     return NextResponse.json(
-      { message: "Name is required" },
-      { status: 400 }
+      {
+        message: error.message || "Something went wrong",
+      },
+      { status: 500 }
     );
   }
-
-  const exists = await CategoryModel.findOne({ name: body.name });
-
-  if (exists) {
-    return NextResponse.json(
-      { message: "Category already exists" },
-      { status: 400 }
-    );
-  }
-
-  const category = await CategoryModel.create({
-    name: body.name,
-  });
-
-  return NextResponse.json(category, { status: 201 });
 }

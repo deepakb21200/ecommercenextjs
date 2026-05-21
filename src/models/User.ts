@@ -20,7 +20,7 @@ export type UserType = {
   email: string;
   password: string;
   role: UserRole;
-  points: number;
+  points?: number;
   addresses: Address[];
   createdAt: Date;
   updatedAt: Date;
@@ -81,3 +81,41 @@ const UserSchema = new mongoose.Schema<UserType>(
 export const UserModel =
   (mongoose.models.User as mongoose.Model<UserType>) ||
   mongoose.model<UserType>("User", UserSchema);
+
+
+
+
+
+
+
+// const addressSchema = new mongoose.Schema<Address>(
+//   {
+//     fullName: {
+//       type: String,
+//       required: true,
+//       trim: true,
+//     },
+//     address: {
+//       type: String,
+//       required: true,
+//       trim: true,
+//     },
+//     state: {
+//       type: String,
+//       required: true,
+//       trim: true,
+//     },
+//     postalCode: {
+//       type: String,
+//       required: true,
+//       trim: true,
+//     },
+//     isDefault: {
+//       type: Boolean,
+//       default: false,
+//     },
+//   },
+//   {
+//     _id: true, // each address will get its own unique _id
+//   }
+// );

@@ -1,9 +1,54 @@
+// export type CustomerOrderStatus =
+//   | "placed"
+//   | "shipped"
+//   | "delivered"
+//   | "cancelled";
+// export type CustomerPaymentStatus =
+//   | "pending"
+//   | "paid"
+//   | "failed";
+
+// export type CustomerOrder = {
+//   _id: string;
+//   code: string;
+//   totalItems: number;
+//   totalAmount: number;
+//   paymentStatus: CustomerPaymentStatus;
+//   orderStatus: CustomerOrderStatus;
+//   paidAt?: string | null;
+//   deliveredAt?: string | null;
+//   createdAt: string;
+
+//   expiresAt?: string | null;
+// };
+
+// export type CustomerOrdersResponse = {
+//   items: CustomerOrder[];
+// };
+
+
+
+
+
+
+
+
+
+
+
+// store/home/orders/types.ts
+
+// ✅ "cancelled" added
 export type CustomerOrderStatus =
   | "placed"
   | "shipped"
   | "delivered"
-  | "returned";
-export type CustomerPaymentStatus = "pending" | "paid" | "failed";
+  | "cancelled";
+
+export type CustomerPaymentStatus =
+  | "pending"
+  | "paid"
+  | "failed";
 
 export type CustomerOrder = {
   _id: string;
@@ -14,16 +59,34 @@ export type CustomerOrder = {
   orderStatus: CustomerOrderStatus;
   paidAt?: string | null;
   deliveredAt?: string | null;
-  returnedAt?: string | null;
   createdAt: string;
+  expiresAt?: string | null;
 };
 
 export type CustomerOrdersResponse = {
   items: CustomerOrder[];
 };
 
-export type CustomerReturnOrderResponse = {
+// ─── Admin types ─────────────────────────────────────────────────────
+
+export type AdminOrderStatus =
+  | "placed"
+  | "shipped"
+  | "delivered"
+  | "cancelled";
+
+export type AdminPaymentStatus = "pending" | "paid" | "failed";
+
+export type AdminOrder = {
   _id: string;
-  orderStatus: CustomerOrderStatus;
-  returnedAt?: string | null;
+  code: string;
+  customerName: string;
+  customerEmail: string;
+  totalItems: number;
+  totalAmount: number;
+  paymentStatus: AdminPaymentStatus;
+  orderStatus: AdminOrderStatus;
+  paidAt?: string | null;
+  deliveredAt?: string | null;
+  createdAt: string;
 };
