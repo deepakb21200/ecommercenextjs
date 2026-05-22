@@ -486,6 +486,10 @@ export async function POST(req: NextRequest) {
     // ===============================
     const data = await getCartResponse(auth.decoded.id);
 
+
+    console.log("addtocart",data);
+    
+
     return NextResponse.json({
       status: "success",
       data,

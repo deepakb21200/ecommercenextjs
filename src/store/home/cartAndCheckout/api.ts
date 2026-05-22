@@ -163,6 +163,11 @@ export async function getCheckoutData(): Promise<CheckoutDataResponse> {
   
   ]);
 
+  console.log(cart);
+  console.log(addresses);
+  
+  
+
   const safeCart = cart ?? { items: [], totalQuantity: 0 };
   const safeAddresses = addresses ?? { items: [] };
 

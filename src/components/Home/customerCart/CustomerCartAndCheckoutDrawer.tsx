@@ -54,23 +54,20 @@ function CustomerCartAndCheckoutDrawer() {
 
   useEffect(() => {
     if (!isOpen) return;
-    void loadCart(isSignedIn);
+   loadCart(isSignedIn);
+
+    console.log(selectedAddressId,"kl");
     
     
   }, [isOpen, isSignedIn, loadCart]);
 
-  const selectedAddress =
-    addresses.find((item) => item._id === selectedAddressId) || null;
+  const selectedAddress =addresses.find((item) => item._id === selectedAddressId) || null;
 
 
 
-    const subTotal = cart.items.reduce(
-  (sum, item) => sum + item.finalPrice * item.quantity,
-  0
-);
+    const subTotal = cart.items.reduce((sum, item) => sum + item.finalPrice * item.quantity,0);
 
-// const discountAmount = appliedPromo?.discount ?? 0;
-// const totalAmount = appliedPromo?.finalTotal ?? subTotal;
+
 const discountAmount = appliedPromo
   ? Math.round((subTotal * appliedPromo.percentage) / 100)
   : 0;
@@ -216,18 +213,13 @@ const totalAmount = subTotal - discountAmount;
                 type="button"
                 onClick={() => {
                   setOpen(false);
-                  void startStripeCheckout({
-                    isSignedIn,
-                  });
-                }}
+                  startStripeCheckout({ isSignedIn, })
+                 }}
                 disabled={
-                  loading ||
-                  !cart.items.length ||
-                  !selectedAddressId ||
-                  checkoutLoading}
+                  loading || !cart.items.length ||  !selectedAddressId ||  checkoutLoading}
 
-                className="w-full h-11 rounded-xl bg-[hsl(174,62%,38%)] text-white text-sm font-medium hover:bg-[hsl(174,62%,32%)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-              >
+                className="w-full h-11 rounded-xl bg-[hsl(174,62%,38%)] text-white text-sm font-medium
+                 hover:bg-[hsl(174,62%,32%)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
                 {checkoutLoading ? "Processing..." : "Pay with Stripe"}
               </button>
 

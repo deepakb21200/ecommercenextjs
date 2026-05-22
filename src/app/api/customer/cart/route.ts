@@ -57,7 +57,7 @@ async function getCartResponse(userId: string) {
     "title brand price salePercentage images"
   );
 
-//   const cartItems = (cart?.items || []) as CartPreviewItem[]; yye chat gpt ka tha 
+
 
 
 const cartItems = (cart?.items || []) as unknown as CartPreviewItem[];

@@ -1,3 +1,128 @@
+// import { NextRequest, NextResponse } from "next/server";
+// import jwt from "jsonwebtoken";
+// import { UserModel } from "@/models/User";
+// import { connectDB } from "@/lib/connectDB";
+
+// type DecodedToken = { id: string  };
+
+// function getAuthUser(req: NextRequest) {
+//   const token = req.cookies.get("token")?.value;
+//   if (!token) return { error: "Unauthorized", status: 401 };
+//   try {
+//     const decoded = jwt.verify(token, process.env.JWT_KEY!) as DecodedToken;
+//     return { decoded };
+//   } catch {
+//     return { error: "Invalid token", status: 401 };
+//   }
+// }
+
+// type AddressDoc = {
+//   _id: unknown;
+//   fullName: string;
+//   address: string;
+//   state: string;
+//   postalCode: string;
+//   isDefault: boolean;
+// };
+
+// function mapAddresses(addresses: AddressDoc[]) {
+//   return [...addresses]
+//     .sort((a, b) => Number(b.isDefault) - Number(a.isDefault))
+//     .map((item) => ({
+//       _id: String(item._id || ""),
+//       fullName: item.fullName,
+//       address: item.address,
+//       state: item.state,
+//       postalCode: item.postalCode,
+//       isDefault: item.isDefault,
+//     }));
+// }
+
+// function errorResponse(message: string, status: number) {
+//   return NextResponse.json({ status: "error", message }, { status });
+// }
+
+// export async function GET(req: NextRequest) {
+//   await connectDB();
+//   const auth = getAuthUser(req);
+//   if (auth.error) return errorResponse(auth.error, auth.status);
+
+//   try {
+//     const user = await UserModel.findById(auth.decoded.id);
+//     if (!user) return errorResponse("User not found", 404);
+//     return NextResponse.json({ status: "success", data: { items: mapAddresses(user.addresses || []) } });
+//   } catch (err: unknown) {
+//     return errorResponse(err instanceof Error ? err.message : "Something went wrong", 500);
+//   }
+// }
+
+// export async function POST(req: NextRequest) {
+//   await connectDB();
+//   const auth = getAuthUser(req);
+//   if (auth.error) return errorResponse(auth.error, auth.status);
+
+//   try {
+//     const body = await req.json();
+//     const fullName   = String(body.fullName   || "").trim();
+//     const address    = String(body.address    || "").trim();
+//     const state      = String(body.state      || "").trim();
+//     const postalCode = String(body.postalCode || "").trim();
+
+//     if (!fullName || !address || !state || !postalCode)
+//       return errorResponse("All fields are required", 400);
+
+//     const user = await UserModel.findById(auth.decoded.id);
+//     if (!user) return errorResponse("User not found", 404);
+
+//     const isDefault = body.isDefault === true || user.addresses.length === 0;
+//     if (isDefault) user.addresses.forEach((a: AddressDoc) => (a.isDefault = false));
+
+//     user.addresses.push({ fullName, address, state, postalCode, isDefault } as AddressDoc);
+//     await user.save();
+
+//     return NextResponse.json({ status: "success", data: { items: mapAddresses(user.addresses) } });
+//   } catch (err: unknown) {
+//     return errorResponse(err instanceof Error ? err.message : "Something went wrong", 500);
+//   }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";

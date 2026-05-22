@@ -355,8 +355,26 @@ export const useCustomerCartAndCheckoutStore =
             size: item.size,
           });
           console.log(response, "sssssssssssssss");
+         
 
           set({ cart: response ?? emptyCart });
+
+
+//           {
+//     "items": [
+//         {
+//             "productId": "6a05a09121924e34a5a03be5",
+//             "title": "men suit",
+//             "brand": "Tommy Hilfiger",
+//             "image": "https://res.cloudinary.com/dcb3u3vy8/image/upload/v1778753681/NextJS_Projects/products/aze9blfbnsoz1jl4mayx.jpg",
+//             "finalPrice": 1299,
+//             "quantity": 1,
+//             "color": "black",
+//             "size": "S"
+//         }
+//     ],
+//     "totalQuantity": 1
+// }
         }
 
         else {
@@ -397,6 +415,27 @@ export const useCustomerCartAndCheckoutStore =
     increase: async (item, isSignedIn) => {
       try {
         const response = isSignedIn ? await increaseCustomerCartItem(item) : increaseGuestItem(item);
+
+         console.log(response,"INce");
+
+//          {
+//     "items": [
+//         {
+//             "productId": "6a05a09121924e34a5a03be5",
+//             "title": "men suit",
+//             "brand": "Tommy Hilfiger",
+//             "image": "https://res.cloudinary.com/dcb3u3vy8/image/upload/v1778753681/NextJS_Projects/products/aze9blfbnsoz1jl4mayx.jpg",
+//             "finalPrice": 1299,
+//             "quantity": 2,
+//             "color": "black",
+//             "size": "M"
+//         }
+//     ],
+//     "totalQuantity": 2
+// }
+     
+        
+        
         set({
           cart: response ?? emptyCart,
           appliedPromo: null,
@@ -416,12 +455,30 @@ export const useCustomerCartAndCheckoutStore =
     decrease: async (item, isSignedIn) => {
       try {
         const response = isSignedIn ? await decreaseCustomerCartItem(item) : decreaseGuestItem(item);
+        console.log(response,"INce");
         set({
           cart: response ?? emptyCart,
           appliedPromo: null,
           promoInput: "",
         });
         // toast.success("Cart updated");
+
+
+//         {
+//     "items": [
+//         {
+//             "productId": "6a05a09121924e34a5a03be5",
+//             "title": "men suit",
+//             "brand": "Tommy Hilfiger",
+//             "image": "https://res.cloudinary.com/dcb3u3vy8/image/upload/v1778753681/NextJS_Projects/products/aze9blfbnsoz1jl4mayx.jpg",
+//             "finalPrice": 1299,
+//             "quantity": 1,
+//             "color": "black",
+//             "size": "M"
+//         }
+//     ],
+//     "totalQuantity": 1
+// }
       } catch {
         toast.error("Failed to update cart");
       }
@@ -430,12 +487,20 @@ export const useCustomerCartAndCheckoutStore =
     remove: async (item, isSignedIn) => {
       try {
         const response = isSignedIn ? await removeCustomerCartItem(item) : removeGuestItem(item);
+        console.log(response,"INce");
+
+        //{items: Array(0), totalQuantity: 0}
         set({
           cart: response ?? emptyCart,
           appliedPromo: null,
           promoInput: "",
         });
         toast.success("Cart item removed");
+
+//         {
+//     "items": [],
+//     "totalQuantity": 0
+// }
       } catch {
         toast.error("Failed to remove from cart");
       }
@@ -445,12 +510,10 @@ export const useCustomerCartAndCheckoutStore =
     clearPromo: () => set({ promoInput: "", appliedPromo: null }),
 
     applyPromo: async () => {
-      const { promoInput, cart } = get();
+      const { promoInput, cart } = get()
 
-      const subtotal = cart.items.reduce(
-        (sum, item) => sum + item.finalPrice * item.quantity,
-        0
-      );
+
+      const subtotal = cart.items.reduce((sum, item) => sum + item.finalPrice * item.quantity, 0);
 
       if (!promoInput.trim()) {
         set({ appliedPromo: null });
@@ -465,6 +528,25 @@ export const useCustomerCartAndCheckoutStore =
           code: promoInput.trim(),
           orderValue: subtotal,
         });
+
+        console.log(response,"prpomo");
+
+//         {
+//     "status": "success",
+//     "data": {
+//         "code": "TRY2",
+//         "percentage": 10,
+//         "discount": 129.9,
+//         "finalTotal": 1169.1,
+//         "minimumOrderValue": 1000,
+//         "isLoggedIn": true
+//     }
+// }
+
+
+
+        
+        
 
         set({
           appliedPromo: response.data,

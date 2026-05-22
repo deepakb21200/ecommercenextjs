@@ -30,6 +30,9 @@ function CollectionDetails() {
 
     loadProduct(id);
 
+   
+    
+
 
     return () => { clear(); };
   }, [clear, id, loadProduct]);
