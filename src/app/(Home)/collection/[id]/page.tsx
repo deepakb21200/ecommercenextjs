@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import CustomerProductDetailsGallery from "@/components/Home/products/details/Customerproductdetailsgallery";
 import CustomerProductDetailsSummary from "@/components/Home/products/details/Customerproductdetailssummary";
-import CustomerProductRelatedCard from "@/components/Home/products/details/CustomerProductRelatedCard ";
 import { Commonloader } from "@/components/admin/Loader";
 import { useAuthStore } from "@/components/user/store/api";
 import { useCustomerProductDetailsStore } from "@/store/home/products/store";
@@ -17,39 +16,40 @@ function CollectionDetails() {
   const id = (params?.id as string) || "";
 
   const user = useAuthStore((s) => s.user)
-  
+
   const isSignedIn = Boolean(user)
   const { loadProduct, clear, data, toggleWishlist, addToCart } = useCustomerProductDetailsStore((state) => state);
 
   const wishlistItems = useCustomerWishlistStore((state) => state.items);
   const product = data?.product ?? null;
   const relatedProducts = data?.relatedProducts ?? [];
- const isWishlistActive = product? wishlistItems.some((item) => item.productId === product._id): false;
+  const isWishlistActive = product ? wishlistItems.some((item) => item.productId === product._id) : false;
 
   useEffect(() => {
 
 
-    void loadProduct(id);
+    loadProduct(id);
 
 
-    
     return () => { clear(); };
   }, [clear, id, loadProduct]);
 
 
 
-  useEffect(()=>{
-      console.log("product", product);
-        console.log("redalted", relatedProducts);
-  },[relatedProducts, product])
+  useEffect(() => {
+    // console.log("product", product);
+    //   console.log("redalted", relatedProducts);
+
+    console.log(data);
+  }, [relatedProducts, product, data])
 
 
-  useEffect(()=>{
-// console.log(data,"ddata");
-// console.log(wishlistItems,"po");
+  useEffect(() => {
+    // console.log(data,"ddata");
+    // console.log(wishlistItems,"po");
 
 
-  },[data,wishlistItems])
+  }, [data, wishlistItems])
 
   if (!product) return <Commonloader />;
 
@@ -79,7 +79,7 @@ function CollectionDetails() {
       </div>
 
       {/* Brand + Title strip */}
-      <div className="px-4 py-8 sm:px-6"  style={{ background: "white", borderBottom: "1px solid hsl(40,20%,88%)"}}>
+      <div className="px-4 py-8 sm:px-6" style={{ background: "white", borderBottom: "1px solid hsl(40,20%,88%)" }}>
         <div className="mx-auto max-w-7xl">
           <div className="flex items-center gap-2 mb-2">
             <span
@@ -146,8 +146,8 @@ function CollectionDetails() {
             {/* <CustomerProductRelatedCard key={item._id} product={item} /> */}
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {relatedProducts.map((item) => (
-              
-               <Products    key={item._id}  product={item}/>
+
+                <Products key={item._id} product={item} />
               ))}
             </div>
           </section>

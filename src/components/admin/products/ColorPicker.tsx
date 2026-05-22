@@ -30,12 +30,7 @@ export function ColorPicker({ colors, setColors }: Props) {
     // UPDATE
     if (editingColor) {
       setColors((prev) =>
-        prev.map((c) =>
-          c.hex === editingColor
-            ? { hex: color, name: name.trim() }
-            : c
-        )
-      );
+        prev.map((c) => c.hex === editingColor  ? { hex: color, name: name.trim() } : c ));
 
       setEditingColor(null);
       setColor("#111111");
@@ -79,67 +74,56 @@ export function ColorPicker({ colors, setColors }: Props) {
 console.log(colors);
 
   },[colors])
+
+  const handleCancelEdit = () => {
+  setEditingColor(null);
+  setColor("#111111");
+  setName("");
+};
   return (
     <div className="space-y-4">
 
       {/* INPUT */}
       <div className="flex items-center gap-3 flex-wrap">
 
-        <input
-          type="color"
-          value={color}
-          onChange={(e) => setColor(e.target.value)}
-          className="h-11 w-16 cursor-pointer border rounded"
-        />
+        <input type="color" value={color} onChange={(e) => setColor(e.target.value)}
+          className="h-11 w-16 cursor-pointer border rounded"/>
 
-        <input
-          type="text"
-          placeholder="Enter color name (required)"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="border px-3 py-2 rounded-lg text-sm"
-        />
+        <input type="text" placeholder="Enter color name (required)" value={name}
+         onChange={(e) => setName(e.target.value)} className="border px-3 py-2 rounded-lg text-sm"/>
 
-        <button
-          onClick={handleAddOrUpdate}
-          type="button"
-          className="px-4 py-2 text-sm  bg-gradient-to-r from-violet-600 to-cyan-500 text-white rounded-lg"
-        >
+        <button  onClick={handleAddOrUpdate} type="button"
+          className="px-4 py-2 text-sm  bg-gradient-to-r from-violet-600 to-cyan-500 text-white rounded-lg">
+
           {editingColor ? "Update" : "Add"}
+          
         </button>
+
+         {editingColor && (
+          <button type="button" onClick={handleCancelEdit} className="px-4 py-2 text-sm border border-white/10 rounded-lg
+           text-white hover:bg-white/10"> Cancel</button>
+           )}
+
 
       </div>
 
       {/* LIST */}
       <div className="flex flex-wrap gap-2">
         {colors.map((c) => (
-          <div
-            key={c.hex}
+          <div  key={c.hex}
             className={`flex items-center gap-2 px-3 py-2 rounded-full border ${
-              editingColor === c.hex ? "border-black bg-gray-100" : ""
-            }`}
-          >
+              editingColor === c.hex ? "border-black text-black bg-white" : ""}`}>
 
-            <button
-              type="button"
-              onClick={() => handleSelectForEdit(c)}
-              className="flex items-center gap-2"
-            >
-              <span
-                className="h-5 w-5 rounded-full border"
-                style={{ background: c.hex }}
-              />
+            <button type="button" onClick={() => handleSelectForEdit(c)}
+              className="flex items-center gap-2">
+              <span  className="h-5 w-5 rounded-full border" style={{ background: c.hex }}/>
 
               <span className="text-sm font-medium">
                 {c.name}
               </span>
             </button>
 
-            <button
-              type="button"
-              onClick={() => handleRemove(c.hex)}
-              className="text-gray-500 hover:text-red-500"
-            >
+            <button  type="button" onClick={() => handleRemove(c.hex)} className="text-gray-500 hover:text-red-500">
               <FaTimes className="text-xs" />
             </button>
 

@@ -37,6 +37,5 @@ const bannerSchema = new Schema<BannerItem>(
 
 // ─── Model (Next.js hot-reload safe) ─────────────────────────────────────────
 
-export const Banner =
-  (mongoose.models.Banner as mongoose.Model<BannerItem>) ||
+export const Banner =(mongoose.models.Banner as mongoose.Model<BannerItem>) ||
   model<BannerItem>("Banner", bannerSchema);

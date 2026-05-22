@@ -37,6 +37,8 @@ export function ProductsTable({
     );
   }
 
+  
+
   if (!products.length) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-zinc-400">
@@ -48,7 +50,7 @@ export function ProductsTable({
 
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-      {products.map((product) => {
+      { products.length >0 && products.map((product) => {
         const isDeleting =
           deletingProductId === product._id;
 
@@ -116,5 +118,7 @@ export function ProductsTable({
         );
       })}
     </div>
+
+
   );
 }

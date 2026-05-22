@@ -29,6 +29,9 @@ export async function GET(req: NextRequest) {
 
   const items = await Banner.find().sort({ createdAt: -1 });
 
+  console.log("Get req called");
+  
+
   return NextResponse.json({
     items: items.map((item) => ({
       _id: String(item._id),
@@ -39,61 +42,94 @@ export async function GET(req: NextRequest) {
   });
 }
 
+// export async function POST(req: NextRequest) {
+//   await connectDB();
+
+//   const auth = requireAdmin(req);
+//   if (auth.error) return NextResponse.json({ message: auth.error }, { status: auth.status });
+
+//   // JWT se user lo
+
+
+  
+//   const decoded: any = auth.decoded;
+//   const { UserModel } = await import("@/models/User");
+//   const dbUser = await UserModel.findById(decoded.id);
+//   if (!dbUser) return NextResponse.json({ message: "User not found" }, { status: 404 });
+
+//   const formData = await req.formData();
+//   const imageFiles = formData.getAll("images") as File[];
+
+//   if (!imageFiles.length) {
+//     return NextResponse.json({ message: "At least one image is required" }, { status: 400 });
+//   }
+
+//   const buffers = await Promise.all(
+//     imageFiles.map(async (file) => Buffer.from(await file.arrayBuffer()))
+//   );
+
+//   await uploadManyBuffersToCloudinary(buffers, BANNER_FOLDER);
+
+ 
+ 
+// const allBanners = await Banner.find().sort({ createdAt: -1 }).lean();
+
+// return NextResponse.json({
+//   items: allBanners.map((item) => ({
+//     _id: String(item._id),
+//     imageUrl: item.imageUrl,
+//     imagePublicId: item.imagePublicId,
+//     createdAt: (item.createdAt as Date).toISOString(),
+//   })),
+// })}
+
+
+
+
+
+
+
 export async function POST(req: NextRequest) {
   await connectDB();
 
   const auth = requireAdmin(req);
-  if (auth.error) return NextResponse.json({ message: auth.error }, { status: auth.status });
+  if (auth.error) {
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
+  }
 
-  // JWT se user lo
-
-
-  
-  const decoded: any = auth.decoded;
-  const { UserModel } = await import("@/models/User");
-  const dbUser = await UserModel.findById(decoded.id);
-  if (!dbUser) return NextResponse.json({ message: "User not found" }, { status: 404 });
-
-  const formData = await req.formData();
+  const formData   = await req.formData();
   const imageFiles = formData.getAll("images") as File[];
 
   if (!imageFiles.length) {
-    return NextResponse.json({ message: "At least one image is required" }, { status: 400 });
+    return NextResponse.json(
+      { message: "At least one image is required" },
+      { status: 400 }
+    );
   }
 
   const buffers = await Promise.all(
     imageFiles.map(async (file) => Buffer.from(await file.arrayBuffer()))
   );
 
-  const uploadedImages = await uploadManyBuffersToCloudinary(buffers, BANNER_FOLDER);
+  const uploaded = await uploadManyBuffersToCloudinary(buffers, BANNER_FOLDER);
 
-  const created = await Banner.insertMany(
-    uploadedImages.map((item) => ({
-      imageUrl: item.url,
-      imagePublicId: item.publicId,
-      createdBy: dbUser._id,
+  // ✅ createdBy — JWT se seedha, extra DB call nahi
+  await Banner.insertMany(
+    uploaded.map((img) => ({
+      imageUrl:      img.url,
+      imagePublicId: img.publicId,
+      createdBy:     auth.decoded.id,
     }))
   );
 
-//   return NextResponse.json({
-//     items: created.map((item: any) => ({
-//       _id: String(item._id),
-//       imageUrl: item.imageUrl,
-//       imagePublicId: item.imagePublicId,
-//       createdAt: item.createdAt.toISOString(),
-//     })),
-//   });
-// }
+  const allBanners = await Banner.find().sort({ createdAt: -1 }).lean();
 
-
-// Ab — sab banners return karo
-const allBanners = await Banner.find().sort({ createdAt: -1 }).lean();
-
-return NextResponse.json({
-  items: allBanners.map((item) => ({
-    _id: String(item._id),
-    imageUrl: item.imageUrl,
-    imagePublicId: item.imagePublicId,
-    createdAt: (item.createdAt as Date).toISOString(),
-  })),
-})}
+  return NextResponse.json({
+    items: allBanners.map((item) => ({
+      _id:          String(item._id),
+      imageUrl:     item.imageUrl,
+      imagePublicId: item.imagePublicId,
+      createdAt:    (item.createdAt as Date).toISOString(),
+    })),
+  });
+}

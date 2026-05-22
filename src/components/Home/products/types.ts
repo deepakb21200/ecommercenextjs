@@ -38,13 +38,6 @@ export type CustomerProduct = {
   updatedAt: string;
 };
 
-export type GetCustomerProductsParams = {
-  category?: string;
-  brand?: string;
-  color?: string;
-  size?: string;
-  sort?: ProductSort;
-};
 
 export type CustomerProductDetailsResponse = {
   product: CustomerProduct;

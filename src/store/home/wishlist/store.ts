@@ -18,13 +18,13 @@ export const useCustomerWishlistStore = create<CustomerWishlistStore>(
   (set) => ({
     items: [],
     isOpen: false,
-     loading: false,
+    loading: false,
     setOpen: (value) => set({ isOpen: value }),
     setItems: (items) => set({ items }),
     clear: () => set({ items: [], isOpen: false }),
     loadWishlist: async () => {
       try {
-         set({ loading: true });
+        set({ loading: true });
         const response = await getCustomerWishlist();
         console.log("wisheee", response);
 
@@ -42,7 +42,7 @@ export const useCustomerWishlistStore = create<CustomerWishlistStore>(
         const response = await removeCustomerWishlistItem(productId);
 
         console.log(response);
-        
+
         set({ items: response?.items ?? [] });
         toast.success("Removed from wishlist");
       } catch {

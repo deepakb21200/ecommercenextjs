@@ -43,11 +43,10 @@ export function ImagePicker({
 
   // ✅ previews
   const previews = useMemo(
-    () =>
-      newImages.map((item) => ({
-        ...item,
-        url: URL.createObjectURL(item.file),
-      })),
+    () => newImages.map((item) => ({
+      ...item,
+      url: URL.createObjectURL(item.file),
+    })),
     [newImages]
   );
 
@@ -59,11 +58,15 @@ export function ImagePicker({
   const handleFilesAdd = (files: FileList | null) => {
     if (!files) return;
 
-    const items: NewImageItem[] = Array.from(files).map((file) => ({
-      id: crypto.randomUUID(),
-      file,
-      isCover: false,
-    }));
+    const items: NewImageItem[] = [];
+
+    for (const file of Array.from(files)) {
+      items.push({
+        id: crypto.randomUUID(),
+        file,
+        isCover: false,
+      });
+    }
 
     setNewImages((prev) => [...prev, ...items]);
   };
@@ -74,18 +77,19 @@ export function ImagePicker({
   };
 
   // ✅ toggle new cover
+
   const handleNewCover = (id: string) => {
     setNewImages((prev) =>
-      prev.map((img) =>
-        img.id === id
-          ? { ...img, isCover: !img.isCover }
-          : { ...img, isCover: false }
-      )
+      prev.map((img) => ({
+        ...img,
+        isCover: img.id === id,
+      }))
     );
 
-    // reset existing cover
     setExistingCoverPublicId?.("");
   };
+
+
 
   // ✅ remove existing
   const handleExistingRemove = (publicId: string) => {
@@ -115,7 +119,7 @@ export function ImagePicker({
   };
 
 
- 
+
   return (
     <div className="space-y-4">
 
@@ -125,15 +129,10 @@ export function ImagePicker({
         <span className="text-sm font-medium">Upload Images</span>
 
         <input
-          type="file"
-          multiple
-          accept="image/*"
-          className="hidden"
+          type="file" multiple accept="image/*" className="hidden"
           onChange={(e) => {
             handleFilesAdd(e.target.files);
-            e.target.value = "";
-          }}
-        />
+          }} />
       </label>
 
       {/* EXISTING */}
@@ -141,13 +140,13 @@ export function ImagePicker({
         <div>
           <p className="text-sm font-medium mb-2">Existing Images</p>
 
-          <div className="grid   xl:grid-cols-3 gap-5"> 
+          <div className="grid   xl:grid-cols-3 gap-5">
             {existingImages.map((img) => {
               const isCover = existingCoverPublicId === img.publicId;
 
               return (
                 <div key={img.publicId} className="border rounded-xl   h-[700px] pb-10 ">
-                   <div className="flex justify-between p-2  ">
+                  <div className="flex justify-between p-2  ">
                     <button
                       type="button"
                       onClick={() => handleExistingCover(img.publicId)}
@@ -168,7 +167,7 @@ export function ImagePicker({
                   </div>
                   <img src={img.url} className="h-full w-full object-cover  " />
 
-                 
+
                 </div>
               );
             })}
@@ -178,7 +177,7 @@ export function ImagePicker({
 
 
 
- 
+
 
       {/* NEW */}
       {previews.length > 0 && (
@@ -189,27 +188,19 @@ export function ImagePicker({
             {previews.map((item) => (
               <div key={item.id} className="border rounded-xl overflow-hidden h-[700px] pb-10">
                 <div className="flex justify-between p-2">
-                  <button
-                    type="button"
-                    onClick={() => handleNewCover(item.id)}
-                    className={`text-xs px-2 py-1 rounded flex items-center gap-1
-                      ${item.isCover ? "bg-green-100 text-green-700" : " "}`}
-                  >
+                  <button type="button" onClick={() => handleNewCover(item.id)} className={`text-xs px-2 py-1 rounded flex
+                   items-center gap-1  ${item.isCover ? "bg-green-100 text-green-700" : " "}`} >
                     <FaStar />
                     {item.isCover ? "Uncover" : "Set Cover"}
                   </button>
 
-                  <button
-                    type="button"
-                    onClick={() => handleNewRemove(item.id)}
-                    className="text-red-500"
-                  >
+                  <button type="button" onClick={() => handleNewRemove(item.id)} className="text-red-500" >
                     <FaTimes />
                   </button>
                 </div>
                 <img src={item.url} className="h-full w-full object-cover" />
 
-                
+
               </div>
             ))}
           </div>

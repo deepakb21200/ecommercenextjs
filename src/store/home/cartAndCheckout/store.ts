@@ -1,7 +1,7 @@
 "use client"
 
 import { create } from "zustand";
-import { loadStripe } from "@stripe/stripe-js"
+// import { loadStripe } from "@stripe/stripe-js"
 import type {
   AddCustomerCartItemBody,
   AppliedPromo,
@@ -45,10 +45,8 @@ type CustomerCartAndCheckoutStore = {
   selectedAddressId: string;
   promoInput: string;
   appliedPromo: AppliedPromo | null;
-
   promoLoading: boolean;
   checkoutLoading: boolean;
-
   setOpen: (value: boolean) => void;
   setCart: (cart: CustomerCartResponse) => void;
   loadCart: (isSignedIn: boolean) => Promise<void>;
@@ -75,7 +73,6 @@ const defaultUiState = {
   selectedAddressId: "",
   promoInput: "",
   appliedPromo: null as AppliedPromo | null,
-
   promoLoading: false,
   checkoutLoading: false,
 
@@ -85,26 +82,6 @@ const defaultUiState = {
 
 const GUEST_CART_KEY = "guest_cart_items";
 
-function readGuestItems(): GuestCartItem[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const items = JSON.parse(
-      window.localStorage.getItem(GUEST_CART_KEY) || "[]"
-    );
-    // return Array.isArray(items)
-    //   ? items.filter((item) => item?.productId && Number(item?.quantity) > 0)
-    //   : [];
-
-    return Array.isArray(items) ? items : [];
-  } catch {
-    return [];
-  }
-}
-
-function writeGuestItems(items: GuestCartItem[]) {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(GUEST_CART_KEY, JSON.stringify(items));
-}
 
 function clearGuestItems() {
   if (typeof window === "undefined") return;
@@ -112,22 +89,28 @@ function clearGuestItems() {
 }
 
 function getGuestResponse(): CustomerCartResponse {
-  const items = readGuestItems();
-
-  console.log("final", {
-    items,
-    totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
-  });
+  const items: GuestCartItem[] =
+    typeof window === "undefined"
+      ? []
+      : JSON.parse(localStorage.getItem(GUEST_CART_KEY) || "[]");
 
   return {
     items,
-    totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
+    totalQuantity: items.reduce(
+      (sum, item) => sum + item.quantity,
+      0
+    ),
   };
 }
 
 function getGuestSyncPayload(): SyncCustomerCartBody {
+  const items: GuestCartItem[] =
+    typeof window === "undefined"
+      ? []
+      : JSON.parse(localStorage.getItem(GUEST_CART_KEY) || "[]");
+
   return {
-    items: readGuestItems().map((item) => ({
+    items: items.map((item) => ({
       productId: item.productId,
       quantity: item.quantity,
       color: item.color,
@@ -135,7 +118,6 @@ function getGuestSyncPayload(): SyncCustomerCartBody {
     })),
   };
 }
-
 
 function isSameItem(
   item: CustomerCartItemIdentifier,
@@ -152,23 +134,29 @@ function isSameItem(
 
 
 
-function addGuestItem(item: Omit<GuestCartItem, "quantity">) {
-  const items = readGuestItems();
+function addGuestItem(item: Omit<GuestCartItem, "quantity">): CustomerCartResponse {
+  const items: GuestCartItem[] =
+    typeof window === "undefined" ? [] : JSON.parse(localStorage.getItem(GUEST_CART_KEY) || "[]");
 
-  // const index = items.findIndex((cartItem) =>
-  //   isSameItem(cartItem, item)
-  // );
   const index = items.findIndex(
-    (cartItem) => cartItem.productId === item.productId && cartItem.color === item.color && cartItem.size === item.size
+    (cartItem) =>
+      cartItem.productId === item.productId &&
+      cartItem.color === item.color &&
+      cartItem.size === item.size
   );
 
   // SAME PRODUCT
   if (index !== -1) {
-
-    // MAX LIMIT
     if (items[index].quantity >= 5) {
       toast.error("Max 5 quantity allowed");
-      return getGuestResponse();
+
+      return {
+        items,
+        totalQuantity: items.reduce(
+          (sum, item) => sum + item.quantity,
+          0
+        ),
+      };
     }
 
     items[index] = {
@@ -189,7 +177,10 @@ function addGuestItem(item: Omit<GuestCartItem, "quantity">) {
 
   toast.success("Added to cart");
 
-  return getGuestResponse();
+  return {
+    items,
+    totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0)
+  };
 }
 
 
@@ -197,17 +188,16 @@ function addGuestItem(item: Omit<GuestCartItem, "quantity">) {
 
 
 function increaseGuestItem(item: CustomerCartItemIdentifier) {
-
   let isUpdated = false;
 
-  const items = readGuestItems().map((cartItem) => {
+  const items: GuestCartItem[] =
+    typeof window === "undefined"
+      ? []
+      : JSON.parse(localStorage.getItem(GUEST_CART_KEY) || "[]");
 
-    // Different item
-    if (!isSameItem(cartItem, item)) {
-      return cartItem;
-    }
+  const updatedItems = items.map((cartItem) => {
+    if (!isSameItem(cartItem, item)) return cartItem;
 
-    // Max limit
     if (cartItem.quantity >= 5) {
       toast.error("Max 5 quantity allowed");
       return cartItem;
@@ -221,21 +211,29 @@ function increaseGuestItem(item: CustomerCartItemIdentifier) {
     };
   });
 
-  writeGuestItems(items);
+  localStorage.setItem(GUEST_CART_KEY, JSON.stringify(updatedItems));
 
-  // Success toast only if updated
   if (isUpdated) {
-    toast.success("Cart updated45");
+    toast.success("Cart updated");
   }
 
-  return getGuestResponse();
+  return {
+    items: updatedItems,
+    totalQuantity: updatedItems.reduce(
+      (sum, item) => sum + item.quantity,
+      0
+    ),
+  };
 }
 
 
-
 function decreaseGuestItem(item: CustomerCartItemIdentifier) {
+  const items: GuestCartItem[] =
+    typeof window === "undefined"
+      ? []
+      : JSON.parse(localStorage.getItem(GUEST_CART_KEY) || "[]");
 
-  const items = readGuestItems()
+  const updatedItems = items
     .map((cartItem) =>
       isSameItem(cartItem, item)
         ? {
@@ -246,24 +244,41 @@ function decreaseGuestItem(item: CustomerCartItemIdentifier) {
     )
     .filter((cartItem) => cartItem.quantity > 0);
 
-  writeGuestItems(items);
+  localStorage.setItem(GUEST_CART_KEY, JSON.stringify(updatedItems));
 
   toast.success("Cart updated");
 
-  return getGuestResponse();
+  return {
+    items: updatedItems,
+    totalQuantity: updatedItems.reduce(
+      (sum, item) => sum + item.quantity,
+      0
+    ),
+  };
 }
 
 
 
 function removeGuestItem(item: CustomerCartItemIdentifier) {
-  const items = readGuestItems().filter(
+  const items: GuestCartItem[] =
+    typeof window === "undefined"
+      ? []
+      : JSON.parse(localStorage.getItem(GUEST_CART_KEY) || "[]");
+
+  const updatedItems = items.filter(
     (cartItem) => !isSameItem(cartItem, item)
   );
-  localStorage.setItem(GUEST_CART_KEY, JSON.stringify(items));
 
-  return getGuestResponse();
+  localStorage.setItem(GUEST_CART_KEY, JSON.stringify(updatedItems));
+
+  return {
+    items: updatedItems,
+    totalQuantity: updatedItems.reduce(
+      (sum, item) => sum + item.quantity,
+      0
+    ),
+  };
 }
-
 
 
 
@@ -387,7 +402,7 @@ export const useCustomerCartAndCheckoutStore =
           appliedPromo: null,
           promoInput: "",
         });
-        toast.success("Cart updated");
+        // toast.success("Cart updated");
       }
       catch (error) {
         if (error instanceof Error) {
@@ -406,7 +421,7 @@ export const useCustomerCartAndCheckoutStore =
           appliedPromo: null,
           promoInput: "",
         });
-        toast.success("Cart updated");
+        // toast.success("Cart updated");
       } catch {
         toast.error("Failed to update cart");
       }
@@ -415,9 +430,10 @@ export const useCustomerCartAndCheckoutStore =
     remove: async (item, isSignedIn) => {
       try {
         const response = isSignedIn ? await removeCustomerCartItem(item) : removeGuestItem(item);
-        set({ cart: response ?? emptyCart ,
-             appliedPromo: null,
-    promoInput: "",
+        set({
+          cart: response ?? emptyCart,
+          appliedPromo: null,
+          promoInput: "",
         });
         toast.success("Cart item removed");
       } catch {
@@ -461,12 +477,12 @@ export const useCustomerCartAndCheckoutStore =
 
 
       } catch {
-        set({ appliedPromo: null});
+        set({ appliedPromo: null });
         toast.error("Unable to apply promo");
       }
-      finally{
-         set({ promoLoading: false })
-      }   
+      finally {
+        set({ promoLoading: false })
+      }
     },
 
     clear: () => set({ cart: emptyCart, isOpen: false, ...defaultUiState }),

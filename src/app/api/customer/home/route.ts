@@ -84,14 +84,15 @@
 import { NextResponse } from "next/server";
 import { Banner } from "@/models/Banner";
 import { CategoryModel } from "@/models/Category";
-import { ProductModel } from "@/models/Product";
+import { ProductImage, ProductModel } from "@/models/Product";
 import { PromoModel } from "@/models/Promo";
 import { connectDB } from "@/lib/connectDB";
 
 // ─── Helpers ───────────────────────────────────────────
 
 function formatProduct(product: any) {
-  const image = product.images.find((i: any) => i.isCover)?.url || product.images?.[0]?.url || "";
+  // const image = product.images.find((i: any) => i.isCover)?.url || product.images?.[0]?.url || "";
+  const image = product.images.find((img: ProductImage) => img.isCover === true)?.url || product.images?.[0]?.url || ""
 
   return {
     _id: String(product._id),
@@ -101,7 +102,7 @@ function formatProduct(product: any) {
     price: product.price,
     finalPrice:
       product.salePercentage > 0
-        ? Math.round(  product.price -(product.price * product.salePercentage) / 100 )
+        ? Math.round(product.price - (product.price * product.salePercentage) / 100)
         : product.price,
     salePercentage: product.salePercentage,
     stock: product.stock,
@@ -149,8 +150,8 @@ export async function GET() {
         .lean(),
     ]);
 
-    console.log("babnners,", banners);
-    
+  console.log("babnners,", banners);
+
 
   return NextResponse.json({
     banners,

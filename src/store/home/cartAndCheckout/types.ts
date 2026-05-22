@@ -64,18 +64,9 @@ export type CheckoutConfirmBody = {
   paymentIntentId: string;
 };
 
-export type CheckoutConfirmResponse = {
-  _id: string;
-};
 
-export type CheckoutPointsResponse = {
-  points: number;
-};
 
-export type CheckoutPayWithPointsResponse = {
-  _id: string;
-  totalPoints: number;
-};
+
 
 export type CheckoutAddressOption = CustomerAddress;
 
@@ -85,7 +76,6 @@ export type CheckoutDataResponse = {
     items: CheckoutAddressOption[];
   };
   subtotal: number;
-  // points: number;
 };
 
 

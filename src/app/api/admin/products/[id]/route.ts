@@ -38,18 +38,7 @@ export async function PUT(
     const existingImages = JSON.parse(String(formData.get("existingImages") || "[]"));
 
     // Colors — JSON parse
-    let colors: { hex: string; name: string }[] = [];
-    const rawColors = formData.get("colors");
-    if (typeof rawColors === "string") {
-      try {
-        const parsed = JSON.parse(rawColors);
-        if (Array.isArray(parsed)) {
-          colors = parsed.map((c) => ({ hex: c.hex, name: c.name }));
-        }
-      } catch {
-        return NextResponse.json({ message: "Invalid colors format" }, { status: 400 });
-      }
-    }
+   const colors = JSON.parse((formData.get("colors") as string) || "[]");
 
     if (!title || !description || !category || !brand) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 });

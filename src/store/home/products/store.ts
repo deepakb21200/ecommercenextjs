@@ -56,7 +56,7 @@ export const useCustomerProductDetailsStore =create<CustomerProductDetailsStore>
           data: response ?? null,
           selectedImage: product ? getCoverImage(product) : "",
          
-          selectedColor: product?.colors?.[0]?.name || "", // ✅ FIX
+          selectedColor: product?.colors?.[0]?.name || "", 
           selectedSize: product?.sizes?.[0] || "",
         });
       } catch {

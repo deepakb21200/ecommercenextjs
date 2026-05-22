@@ -1,182 +1,3 @@
-// "use client";
-
-// import { AdminOrder, AdminOrderStatus, AdminPaymentStatus } from "@/components/admin/orders/types";
-// import {
-//   HiOutlineCube,
-//   HiOutlineShoppingBag,
-// } from "react-icons/hi2";
-
-// type Props = {
-
-//     orders: AdminOrder[];
-
-//   canUpdate: (order:AdminOrder) => boolean;
-//   changeStatus: (
-//     id: string,
-//     status: AdminOrderStatus
-//   ) => Promise<void>;
-//   updatingOrderId: string;
-//   orderOptions: string[];
-//   formatPrice: (v: number) => string;
-//   formatDate: (v: string) => string;
-//   PaymentBadge: ({
-//     status,
-//   }: {
-//     status: AdminPaymentStatus;
-//   }) => React.ReactNode;
-// };
-
-// export default function OrderCards({
-//   orders,
-//   canUpdate,
-//   changeStatus,
-//   updatingOrderId,
-//   orderOptions,
-//   formatPrice,
-//   formatDate,
-// }: Props) {
-//   if (!orders.length) {
-//     return (
-//       <div className="flex flex-col items-center gap-4 py-24">
-//         <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-white/5">
-//           <HiOutlineCube className="text-4xl text-zinc-500" />
-//         </div>
-//         <div className="text-center">
-//           <p className="text-lg font-semibold text-white">No Orders Found</p>
-//           <p className="mt-1 text-sm text-zinc-500">
-//             Customer orders will appear here
-//           </p>
-//         </div>
-//       </div>
-//     );
-//   }
-
-
-//   console.log(orders);
-
-
-//   return (
-//     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-//       {orders.map((order) => {
-//         const editable = canUpdate(order);
-//         const isUpdating = updatingOrderId === order._id;
-
-//         return (
-//           <div
-//             key={order._id}
-//             className="rounded-[20px] border border-white/10 bg-[#111827]/60 p-4 backdrop-blur-xl"
-//           >
-
-//             <div className="flex items-start justify-between gap-3">
-//               <div className="flex gap-3">
-
-//                 <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-[#0B1120]">
-//                   <HiOutlineShoppingBag className="text-xl text-violet-400" />
-//                 </div>
-
-
-//                 <div>
-//                   <p className="text-sm font-bold text-white">
-//                     #{order._id.slice(-6).toUpperCase()}
-//                   </p>
-//                   <p className="text-xs text-zinc-500">
-//                     {order.customerName}
-//                   </p>
-//                 </div>
-//               </div>
-
-
-
-
-//               <div className="mt-4">
-//                 {editable ? (
-//                   <select
-//                     value={order.orderStatus}
-
-//                     onChange={(e) =>
-//                       changeStatus(
-//                         order._id,
-//                         e.target.value as AdminOrderStatus
-//                       )
-//                     }
-
-
-//                     disabled={isUpdating}
-//                     className="w-full rounded-xl border border-white/10 bg-[#0B1120] px-3 py-2 text-sm text-white outline-none transition-all focus:border-violet-500/50 focus:ring-4 focus:ring-violet-500/10"
-//                   >
-//                     {orderOptions.map((status) => (
-//                       <option key={status} value={status}
-//                         disabled={
-//                           // current status se pehle wale options disable
-//                           orderOptions.indexOf(status) <
-//                           orderOptions.indexOf(order.orderStatus)
-//                         }>
-//                         {status}
-//                       </option>
-//                     ))}
-//                   </select>
-//                 ) : (
-//                   <div className="text-xs text-zinc-500">
-//                     {order.paymentStatus !== "paid"
-//                       ? "Payment Pending"
-//                       : order.orderStatus === "delivered"
-//                         ? "Completed"
-//                         : "Processing"}
-//                   </div>
-//                 )}
-//               </div>
-//             </div>
-
-
-//             <div className="mt-4 space-y-2 text-xs text-zinc-400">
-//               <div className="flex justify-between">
-//                 <span>Amount</span>
-//                 <span className="text-white">
-//                   {formatPrice(order.totalAmount)}
-//                 </span>
-//               </div>
-
-//               <div className="flex justify-between">
-//                 <span>Date</span>
-//                 <span className="text-white">
-//                   {formatDate(order.paidAt || order.createdAt)}
-//                 </span>
-//               </div>
-
-
-//               <div className="flex justify-between">
-//                 <span> Payment</span>
-//                 <span className="text-white">
-//                   {order.paymentStatus}
-//                 </span>
-//               </div>
-
-//             </div>
-
-
-
-//           </div>
-//         );
-//       })}
-//     </div>
-
-
-
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
 "use client";
 
 import type { AdminOrder, AdminOrderStatus, AdminPaymentStatus } from "@/components/admin/orders/types";
@@ -186,9 +7,10 @@ import { HiOutlineCube, HiOutlineShoppingBag } from "react-icons/hi2";
 function getStatusLabel(order: AdminOrder): { label: string; color: string } {
   const { paymentStatus, orderStatus } = order;
 
-  if (paymentStatus === "failed" && orderStatus === "cancelled") {
-    return { label: "Cancelled", color: "text-rose-400" };
-  }
+  // if (paymentStatus === "failed" && orderStatus === "cancelled") {
+  //   return { label: "Cancelled", color: "text-rose-400" };
+  // }
+
   if (paymentStatus === "pending" && orderStatus === "placed") {
     return { label: "Payment Pending", color: "text-amber-400" };
   }
@@ -236,7 +58,6 @@ type Props = {
   updatingOrderId: string;
   orderOptions: AdminOrderStatus[];
   formatPrice: (v: number) => string;
-  // formatDate: (v?: string | null) => string;
     formatDate: (v: string) => string;
 };
 
@@ -305,7 +126,7 @@ export default function OrderCards({
                   <select
                     value={order.orderStatus}
                     onChange={(e) =>
-                      void changeStatus(order._id, e.target.value as AdminOrderStatus)
+                  changeStatus(order._id, e.target.value as AdminOrderStatus)
                     }
                     disabled={isUpdating}
                     className="rounded-xl border border-white/10 bg-[#0B1120] px-3 py-2 text-xs text-white outline-none transition-all focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/10 disabled:opacity-50"

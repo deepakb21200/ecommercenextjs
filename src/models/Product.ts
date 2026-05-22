@@ -1,6 +1,4 @@
-
-
-import mongoose, { HydratedDocument, Schema, Types } from "mongoose";
+import mongoose, { Schema, Types } from "mongoose";
 
 // ─── Types ─────────────────────────────────────────────
 
@@ -35,7 +33,6 @@ export type ProductType = {
   updatedAt: Date;
 };
 
-export type ProductDocument = HydratedDocument<ProductType>;
 
 // ─── Sub Schemas ───────────────────────────────────────
 
@@ -61,6 +58,7 @@ const productColorSchema = new mongoose.Schema<ProductColor>(
 const ProductSchema = new mongoose.Schema<ProductType>(
   {
     title: { type: String, required: true, trim: true },
+
     description: { type: String, required: true, trim: true },
 
     category: {
@@ -122,7 +120,6 @@ export const ProductModel =
 
 
 
- 
 
 
- 
+

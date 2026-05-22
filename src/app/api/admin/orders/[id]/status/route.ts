@@ -1,127 +1,3 @@
-// // ${BASE_URL}/orders/${orderId}/status`
-
-// import { NextRequest, NextResponse } from "next/server";
-// import jwt from "jsonwebtoken";
-// import { connectDB } from "@/lib/connectDB";
- 
-// import { OrderModel } from "@/models/Order";
- 
-
-// const ALLOWED_ORDER_STATUSES = [
-//   "placed",
-//   "shipped",
-//   "delivered",
- 
-// ] as const;
-
-// type AdminOrderStatus = (typeof ALLOWED_ORDER_STATUSES)[number];
-
-// function requireAdmin(req: NextRequest) {
-//   const token = req.cookies.get("token")?.value;
-
-//   if (!token) return { error: "Unauthorized", status: 401 };
-
-//   try {
-//     const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
-
-//     if (decoded.role !== "admin") {
-//       return { error: "Admin access only", status: 403 };
-//     }
-
-//     return { decoded };
-//   } catch {
-//     return { error: "Invalid token", status: 401 };
-//   }
-// }
-
-// export async function PATCH(
-//   req: NextRequest,
-//   { params }: { params: Promise<{ id: string }> }
-// ) {
-//   await connectDB();
-
-//   const auth = requireAdmin(req);
-//   if (auth.error) {
-//     return NextResponse.json(
-//       { message: auth.error },
-//       { status: auth.status }
-//     );
-//   }
-
-//   const { id: orderId } = await params;
-
-//   if (!orderId) {
-//     return NextResponse.json(
-//       { message: "Order id is required" },
-//       { status: 400 }
-//     );
-//   }
-
-//   const body = await req.json();
-//   const orderStatus = String(body.orderStatus || "").trim() as AdminOrderStatus;
-
-//   if (!orderStatus) {
-//     return NextResponse.json(
-//       { message: "orderStatus is required" },
-//       { status: 400 }
-//     );
-//   }
-
-//   if (!ALLOWED_ORDER_STATUSES.includes(orderStatus)) {
-//     return NextResponse.json(
-//       { message: "Invalid order status" },
-//       { status: 400 }
-//     );
-//   }
-
-//   const order = await OrderModel.findById(orderId);
-
-//   if (!order) {
-//     return NextResponse.json(
-//       { message: "Order not found" },
-//       { status: 404 }
-//     );
-//   }
-//   if (order.orderStatus === orderStatus) {
-//   return NextResponse.json(
-//     { message: "Order already in this status" },
-//     { status: 400 }
-//   );
-// }
- 
-
-//   // ─────────────────────────────────────────────
-//   // 🚚 DELIVERED LOGIC
-//   // ─────────────────────────────────────────────
-//   if (orderStatus === "delivered" && !order.deliveredAt) {
-//     order.deliveredAt = new Date();
-//   }
-
-//   // ─────────────────────────────────────────────
-//   // 📝 UPDATE STATUS
-//   // ─────────────────────────────────────────────
-//   order.orderStatus = orderStatus;
-
-//   await order.save();
-
-//   return NextResponse.json({
-//     _id: String(order._id),
-//     orderStatus: order.orderStatus,
-//     deliveredAt: order.deliveredAt ?? null,
-     
-//   });
-// }
-
-
-
-
-
-
-
-
-
-
-
 
 
 // app/api/admin/orders/[id]/status/route.ts
@@ -180,6 +56,7 @@ export async function PATCH(
   const body = await req.json() as { orderStatus?: string };
   const orderStatus = (body.orderStatus ?? "").trim() as AdminOrderStatus;
 
+ 
   if (!orderStatus) {
     return NextResponse.json({ message: "orderStatus is required" }, { status: 400 });
   }
@@ -204,9 +81,15 @@ export async function PATCH(
   }
 
   // ✅ Delivered timestamp
-  if (orderStatus === "delivered" && !order.deliveredAt) {
+  // if (orderStatus === "delivered" && !order.deliveredAt) {
+  //   order.deliveredAt = new Date();
+  // }
+
+  if (orderStatus === "delivered") {
+  if (!order.deliveredAt) {
     order.deliveredAt = new Date();
   }
+}
 
   order.orderStatus = orderStatus;
   await order.save();

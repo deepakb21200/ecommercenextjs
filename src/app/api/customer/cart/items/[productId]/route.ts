@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
- 
+
 import { CartModel } from "@/models/Cart";
 import { ProductModel } from "@/models/Product";
 import { connectDB } from "@/lib/connectDB";
@@ -47,8 +47,8 @@ async function getCartResponse(userId: string) {
   const cart = await CartModel.findOne({ user: userId }).populate(
     "items.product", "title brand price salePercentage images"
   );
-//   const cartItems = (cart?.items || []) as CartPreviewItem[];
-const cartItems = (cart?.items || []) as unknown as CartPreviewItem[];
+  //   const cartItems = (cart?.items || []) as CartPreviewItem[];
+  const cartItems = (cart?.items || []) as unknown as CartPreviewItem[];
   const items = cartItems.flatMap((cartItem) => {
     if (!cartItem.product) return [];
     return [{ ...formatProduct(cartItem.product), quantity: cartItem.quantity, color: cartItem.color, size: cartItem.size }];
@@ -57,15 +57,9 @@ const cartItems = (cart?.items || []) as unknown as CartPreviewItem[];
   return { items, totalQuantity };
 }
 
-function isSameCartItem(item: any, productId: string, color?: string, size?: string) {
-  return (
-    String(item.product) === productId &&
-    (item.color || "") === (color || "") &&
-    (item.size || "") === (size || "")
-  );
-}
 
 // DELETE /api/customer/cart/items/[productId]
+//    /api/customer/cart/items/123?color=Black&size=M
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ productId: string }> }
@@ -103,9 +97,15 @@ export async function DELETE(
     if (product.colors.length > 0) color = colorValue || undefined;
     if (product.sizes.length > 0) size = sizeValue || undefined;
 
-    cart.items = cart.items.filter(
-      (item: any) => !isSameCartItem(item, productId, color, size)
-    );
+    // cart.items = cart.items.filter((item: any) => !isSameCartItem(item, productId, color, size));
+
+    cart.items = cart.items = cart.items.filter((item: any) => {
+      return (
+        String(item.product) !== productId ||
+        (item.color || "") !== (color || "") ||
+        (item.size || "") !== (size || "")
+      );
+    });
 
     await cart.save();
 

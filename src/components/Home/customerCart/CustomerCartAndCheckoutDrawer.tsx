@@ -55,6 +55,8 @@ function CustomerCartAndCheckoutDrawer() {
   useEffect(() => {
     if (!isOpen) return;
     void loadCart(isSignedIn);
+    
+    
   }, [isOpen, isSignedIn, loadCart]);
 
   const selectedAddress =
@@ -157,7 +159,7 @@ const totalAmount = subTotal - discountAmount;
                     />
                     <button
                       type="button"
-                      onClick={() => void applyPromo()}
+                      onClick={() => applyPromo()}
                       disabled={promoLoading || !promoInput.trim()}
                       className="h-9 px-4 text-xs font-medium bg-[hsl(174,62%,38%)] text-white rounded-lg hover:bg-[hsl(174,62%,32%)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                     >

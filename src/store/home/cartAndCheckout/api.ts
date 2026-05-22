@@ -5,10 +5,7 @@ import { getCustomerAddresses } from "../profile/api";
 import type {
   AddCustomerCartItemBody,
   AppliedPromo,
-  CheckoutConfirmBody,
-  CheckoutConfirmResponse,
   CheckoutDataResponse,
-
   CustomerCartItemIdentifier,
   CustomerCartResponse,
   SyncCustomerCartBody,
@@ -29,11 +26,15 @@ function buildCartItemUrl(
   const query = searchParams.toString();
   const actionPath = action ? `/${action}` : "";
   const path = `${BASE_URL}/cart/items/${item.productId}${actionPath}`;
+  // /api/customer/cart/items/123/increase
 
   console.log("path", path);
   
 
   return query ? `${path}?${query}` : path;
+  // /api/customer/cart/items/123/increase?color=Black&size=M
+  // /api/customer/cart/items/123/decrease?color=Black&size=M
+  // /api/customer/cart/items/123?color=Black&size=M
 }
 
 

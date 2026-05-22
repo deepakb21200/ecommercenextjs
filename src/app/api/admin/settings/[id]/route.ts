@@ -72,7 +72,7 @@ export async function DELETE(
   try {
     await connectDB();
 
-    const { id } = params;
+    const { id } = await params;
 
     const banner = await Banner.findById(id);
 

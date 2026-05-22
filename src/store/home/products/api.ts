@@ -1,6 +1,12 @@
-import { CustomerProduct, CustomerProductDetailsResponse, GetCustomerProductsParams, ProductCategory } from "@/components/Home/products/types";
+import { CustomerProduct, CustomerProductDetailsResponse, ProductCategory, ProductSort } from "@/components/Home/products/types";
 
-
+export type GetCustomerProductsParams = {
+  category?: string;
+  brand?: string;
+  color?: string;
+  size?: string;
+  sort?: ProductSort;
+};
 const BASE_URL = "/api/customer";
 
 // ================= CATEGORIES =================

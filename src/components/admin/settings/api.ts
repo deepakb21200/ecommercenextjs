@@ -37,10 +37,17 @@ export async function uploadAdminBanners(
 
 
 export async function deleteAdminBanner(id: string) {
-  const res = await fetch(`${BASE_URL}/banners/${id}`, { // ← sahi
+  const res = await fetch(`${BASE_URL}/${id}`, {
     method: "DELETE",
     credentials: "include",
   });
-  if (!res.ok) throw new Error("Failed to delete banner");
-  return res.json();
+
+  const data = await res.json().catch(() => null);
+
+  if (!res.ok) {
+    console.error("Backend Error:", data); // 👈 yaha actual error aayega
+    throw new Error(data?.message || "Failed to delete banner");
+  }
+
+  return data;
 }
