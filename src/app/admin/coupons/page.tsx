@@ -165,9 +165,9 @@ const [deletingPromoId, setDeletingPromoId] = useState<string | null>(null);
           <PromoCards
             promos={filteredPromos}
             loading={loading}
-            // deletingPromoId={deletingPromoId}
+            deletingPromoId={deletingPromoId}
          
-                  deletingPromoId={deletingPromoId ?? ""}
+                  // deletingPromoId={deletingPromoId ?? ""}
             onEdit={openEditDialog}
             onDelete={handleRemovePromo}
           />

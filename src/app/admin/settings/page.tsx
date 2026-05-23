@@ -80,7 +80,7 @@ export default function AdminSettings() {
 
   return (
     <div className="min-h-screen">
-      <div className="mx-auto max-w-[1600px] space-y-8">
+      <div className="mx-auto  space-y-8">
 
         <AdminHero
           badgeText="Nova Banners"

@@ -10,24 +10,24 @@ import { Promo } from "./types";
 
 
 
-// type Props = {
-//   promos: Promo[];
-//   loading: boolean;
-//   deletingPromoId: string | null;
-//   onEdit: (promo: Promo) => void;
-//   onDelete: (promoId: string) => void;
-// };
-
-
-
-
 type Props = {
   promos: Promo[];
   loading: boolean;
-  deletingPromoId: string;
+  deletingPromoId: string | null;
   onEdit: (promo: Promo) => void;
   onDelete: (promoId: string) => void;
 };
+
+
+
+
+// type Props = {
+//   promos: Promo[];
+//   loading: boolean;
+//   deletingPromoId: string;
+//   onEdit: (promo: Promo) => void;
+//   onDelete: (promoId: string) => void;
+// };
 function formatDate(value: string) {
   return new Date(value).toLocaleDateString("en-IN", {
     day: "2-digit",
