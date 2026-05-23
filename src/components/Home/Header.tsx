@@ -31,10 +31,10 @@ function Header() {
   const { openOrders } = useCustomerOrdersStore((state) => state);
 
   useEffect(() => {
-    void loadCart(isSignedIn);
-    if (!isSignedIn) { clearWishlist(); clearProfile(); return; }
-    void loadWishlist();
-  }, [isSignedIn]);
+  void loadCart();
+  if (!isSignedIn) { clearWishlist(); clearProfile(); return; }
+  void loadWishlist();
+}, [isSignedIn]);
 
   return (
     <>

@@ -1,8 +1,4 @@
-
-
-
-
-
+ 
 "use client";
 
 import { formatPrice } from "@/config/constants";

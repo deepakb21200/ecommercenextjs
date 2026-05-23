@@ -1,17 +1,10 @@
-
 "use client";
 
 import { useEffect } from "react";
-
 import {
-  RiMapPinLine,
-  RiCoupon3Line,
-  RiCloseLine,
-  RiCheckLine,
-
-  RiLockLine,
+  RiMapPinLine, RiCoupon3Line, RiCloseLine,
+  RiCheckLine, RiLockLine,
 } from "react-icons/ri";
-import { useAuthStore } from "@/components/user/store/api";
 import { useCustomerCartAndCheckoutStore } from "@/store/home/cartAndCheckout/store";
 import CustomerCartItems from "./CustomerCartItems";
 import { formatPrice } from "@/config/constants";
@@ -26,56 +19,28 @@ function SummaryRow({ label, value }: { label: string; value: string | number })
 }
 
 function CustomerCartAndCheckoutDrawer() {
-
-
-  const { user } = useAuthStore();
-  const isSignedIn = !!user;
-
   const {
-    isOpen,
-    setOpen,
-    loadCart,
-    selectedAddressId,
-    addresses,
-    promoInput,
-    appliedPromo,
-
-    promoLoading,
-    checkoutLoading,
-
-    setPromoInput,
-    clearPromo,
-    applyPromo,
-    startStripeCheckout,
-
-    loading,
-    cart,
+    isOpen, setOpen, loadCart,
+    selectedAddressId, addresses,
+    promoInput, appliedPromo,
+    promoLoading, checkoutLoading,
+    setPromoInput, clearPromo, applyPromo,
+    startStripeCheckout, loading, cart,
   } = useCustomerCartAndCheckoutStore((state) => state);
 
   useEffect(() => {
     if (!isOpen) return;
-   loadCart(isSignedIn);
+    void loadCart();
+  }, [isOpen]);
 
-    console.log(selectedAddressId,"kl");
-    
-    
-  }, [isOpen, isSignedIn, loadCart]);
+  const selectedAddress = addresses.find((a) => a._id === selectedAddressId) || null;
 
-  const selectedAddress =addresses.find((item) => item._id === selectedAddressId) || null;
+  const subTotal = cart.items.reduce((sum, item) => sum + item.finalPrice * item.quantity, 0);
+  const discountAmount = appliedPromo ? Math.round((subTotal * appliedPromo.percentage) / 100) : 0;
+  const totalAmount = subTotal - discountAmount;
 
-
-
-    const subTotal = cart.items.reduce((sum, item) => sum + item.finalPrice * item.quantity,0);
-
-
-const discountAmount = appliedPromo
-  ? Math.round((subTotal * appliedPromo.percentage) / 100)
-  : 0;
-
-const totalAmount = subTotal - discountAmount;
   return (
     <>
-
       {/* Backdrop */}
       <div
         className={`fixed inset-0 z-[998] bg-[hsl(220,20%,15%)]/60 backdrop-blur-sm transition-opacity duration-300
@@ -90,15 +55,15 @@ const totalAmount = subTotal - discountAmount;
       >
         <div className="grid h-full w-full lg:grid-cols-[1.7fr_1fr] bg-white overflow-hidden">
 
-          {/* ── Left: Cart Items ── */}
+          {/* Left: Cart Items */}
           <div className="min-h-0 border-r border-[hsl(40,20%,88%)] overflow-hidden">
             <CustomerCartItems />
           </div>
 
-          {/* ── Right: Checkout Panel ── */}
+          {/* Right: Checkout */}
           <div className="flex min-h-0 flex-col bg-[hsl(40,33%,98%)] overflow-hidden">
 
-            {/* Panel Header */}
+            {/* Header */}
             <div className="flex items-center justify-between shrink-0 border-b border-[hsl(40,20%,88%)] bg-white px-5 py-4">
               <div className="flex items-center gap-2">
                 <RiLockLine className="text-[hsl(174,62%,38%)] text-base" />
@@ -106,39 +71,37 @@ const totalAmount = subTotal - discountAmount;
               </div>
               <button
                 onClick={() => setOpen(false)}
-                className="h-8 w-8 flex items-center justify-center rounded-full hover:bg-[hsl(40,20%,92%)] text-[hsl(220,10%,45%)] hover:text-[hsl(220,20%,15%)] transition-colors"
+                className="h-8 w-8 flex items-center justify-center rounded-full hover:bg-[hsl(40,20%,92%)] text-[hsl(220,10%,45%)] transition-colors"
               >
                 <RiCloseLine className="text-lg" />
               </button>
             </div>
 
-            {/* Scrollable Content */}
+            {/* Content */}
             <div className="flex-1 overflow-y-auto px-5 py-4 space-y-5">
 
               {/* Address */}
-              {isSignedIn && (
-                <section className="space-y-2">
-                  <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[hsl(220,10%,45%)]">
-                    <RiMapPinLine className="text-sm text-[hsl(174,62%,38%)]" />
-                    Delivery Address
-                  </p>
-                  {selectedAddress ? (
-                    <div className="rounded-xl border border-[hsl(40,20%,88%)] bg-white p-3 space-y-0.5">
-                      <p className="text-sm font-medium text-[hsl(220,20%,15%)]">{selectedAddress.fullName}</p>
-                      <p className="text-xs text-[hsl(220,10%,45%)]">
-                        {selectedAddress.address}, {selectedAddress.state}
-                      </p>
-                      <p className="text-xs text-[hsl(220,10%,45%)]">{selectedAddress.postalCode}</p>
-                    </div>
-                  ) : (
-                    <div className="rounded-xl border border-dashed border-[hsl(40,20%,88%)] bg-white p-4 text-center">
-                      <p className="text-xs text-[hsl(220,10%,45%)]">
-                        No default address. Add one from your profile.
-                      </p>
-                    </div>
-                  )}
-                </section>
-              )}
+              <section className="space-y-2">
+                <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[hsl(220,10%,45%)]">
+                  <RiMapPinLine className="text-sm text-[hsl(174,62%,38%)]" />
+                  Delivery Address
+                </p>
+                {selectedAddress ? (
+                  <div className="rounded-xl border border-[hsl(40,20%,88%)] bg-white p-3 space-y-0.5">
+                    <p className="text-sm font-medium text-[hsl(220,20%,15%)]">{selectedAddress.fullName}</p>
+                    <p className="text-xs text-[hsl(220,10%,45%)]">
+                      {selectedAddress.address}, {selectedAddress.state}
+                    </p>
+                    <p className="text-xs text-[hsl(220,10%,45%)]">{selectedAddress.postalCode}</p>
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-dashed border-[hsl(40,20%,88%)] bg-white p-4 text-center">
+                    <p className="text-xs text-[hsl(220,10%,45%)]">
+                      No default address. Add one from your profile.
+                    </p>
+                  </div>
+                )}
+              </section>
 
               {/* Promo */}
               <section className="space-y-2">
@@ -152,11 +115,11 @@ const totalAmount = subTotal - discountAmount;
                       value={promoInput}
                       onChange={(e) => setPromoInput(e.target.value)}
                       placeholder="Enter promo code"
-                      className="flex-1 rounded-lg border border-[hsl(40,20%,88%)] bg-white px-3 py-2 text-sm outline-none focus:border-[hsl(174,62%,38%)] focus:ring-1 focus:ring-[hsl(174,62%,38%)]/20 transition-colors text-[hsl(220,20%,15%)] placeholder:text-[hsl(220,10%,45%)]"
+                      className="flex-1 rounded-lg border border-[hsl(40,20%,88%)] bg-white px-3 py-2 text-sm outline-none focus:border-[hsl(174,62%,38%)] transition-colors text-[hsl(220,20%,15%)] placeholder:text-[hsl(220,10%,45%)]"
                     />
                     <button
                       type="button"
-                      onClick={() => applyPromo()}
+                      onClick={() => void applyPromo()}
                       disabled={promoLoading || !promoInput.trim()}
                       className="h-9 px-4 text-xs font-medium bg-[hsl(174,62%,38%)] text-white rounded-lg hover:bg-[hsl(174,62%,32%)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                     >
@@ -184,49 +147,26 @@ const totalAmount = subTotal - discountAmount;
               {/* Summary */}
               <section className="rounded-xl border border-[hsl(40,20%,88%)] bg-white p-4 space-y-2.5">
                 <SummaryRow label="Items" value={cart.totalQuantity} />
-
-                <SummaryRow
-                  label="Subtotal"
-                  value={formatPrice(subTotal)}
-                />
-
-                <SummaryRow
-                  label="Discount"
-                  value={`- ${formatPrice(discountAmount)}`}
-                />
-
+                <SummaryRow label="Subtotal" value={formatPrice(subTotal)} />
+                <SummaryRow label="Discount" value={`- ${formatPrice(discountAmount)}`} />
                 <div className="flex items-center justify-between border-t border-[hsl(40,20%,88%)] pt-3 text-base font-semibold text-[hsl(220,20%,15%)]">
                   <span>Total</span>
-                  <span className="text-[hsl(174,62%,38%)]">
-                    {formatPrice(totalAmount)}
-                  </span>
+                  <span className="text-[hsl(174,62%,38%)]">{formatPrice(totalAmount)}</span>
                 </div>
               </section>
-
-
             </div>
 
-            {/* Footer Buttons */}
-
+            {/* Footer */}
             <div className="shrink-0 space-y-2 border-t border-[hsl(40,20%,88%)] bg-white px-5 py-4">
               <button
                 type="button"
-                onClick={() => {
-                  setOpen(false);
-                  startStripeCheckout({ isSignedIn, })
-                 }}
-                disabled={
-                  loading || !cart.items.length ||  !selectedAddressId ||  checkoutLoading}
-
-                className="w-full h-11 rounded-xl bg-[hsl(174,62%,38%)] text-white text-sm font-medium
-                 hover:bg-[hsl(174,62%,32%)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors">
+                onClick={() => { setOpen(false); void startStripeCheckout(); }}
+                disabled={loading || !cart.items.length || !selectedAddressId || checkoutLoading}
+                className="w-full h-11 rounded-xl bg-[hsl(174,62%,38%)] text-white text-sm font-medium hover:bg-[hsl(174,62%,32%)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
                 {checkoutLoading ? "Processing..." : "Pay with Stripe"}
               </button>
-
-
             </div>
-
-
           </div>
         </div>
       </div>

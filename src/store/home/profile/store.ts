@@ -1,147 +1,74 @@
 import { create } from "zustand";
 import type { CustomerAddress, CustomerAddressFormValues } from "./types";
- 
 import toast from "react-hot-toast";
 import { createCustomerAddresses, deleteCustomerAddress, getCustomerAddresses, updateCustomerAddresses } from "./api";
-
-const emptyForm: CustomerAddressFormValues = {
-  fullName: "",
-  address: "",
-  state: "",
-  postalCode: "",
-  isDefault: false,
-};
-
-type FormMode = "none" | "add" | "edit";
 
 type CustomerProfileStore = {
   isOpen: boolean;
   items: CustomerAddress[];
-   loading: boolean;
-  mode: FormMode;
-  editingAddressId: string;
-  form: CustomerAddressFormValues;
+  loading: boolean;
   openProfile: () => Promise<void>;
   closeProfile: () => void;
   loadAddresses: () => Promise<void>;
-  startAdd: () => void;
-  startEdit: (address: CustomerAddress) => void;
-  updateForm: <K extends keyof CustomerAddressFormValues>(
-    key: K,
-    value: CustomerAddressFormValues[K]
-  ) => void;
-  cancelForm: () => void;
-  saveForm: () => Promise<void>;
-  removeAddress: (addressId: string) => Promise<void>;
+  addAddress: (form: CustomerAddressFormValues) => Promise<void>;
+  editAddress: (id: string, form: CustomerAddressFormValues) => Promise<void>;
+  removeAddress: (id: string) => Promise<void>;
   clear: () => void;
 };
 
-export const useCustomerProfileStore = create<CustomerProfileStore>(
-  (set, get) => ({
-    isOpen: false,
-        loading: false,
-    items: [],
-    mode: "none",
-    editingAddressId: "",
-    form: emptyForm,
+export const useCustomerProfileStore = create<CustomerProfileStore>((set, get) => ({
+  isOpen: false,
+  loading: false,
+  items: [],
 
-    openProfile: async () => {
-      set({ isOpen: true });
-      await get().loadAddresses();
-    },
+  openProfile: async () => {
+    set({ isOpen: true });
+    await get().loadAddresses();
+  },
 
-    closeProfile: () => {
-      set({ isOpen: false, mode: "none", editingAddressId: "", form: emptyForm });
-    },
+  closeProfile: () => set({ isOpen: false }),
 
-    loadAddresses: async () => {
-      try {
-           set({ loading: true });
-        const response = await getCustomerAddresses();
-        set({ items: response?.items ?? [] });
-      } catch {
-        set({ items: [] });
-      }finally {
-        set({ loading: false });
-      }
-    },
+  loadAddresses: async () => {
+    try {
+      set({ loading: true });
+      const response = await getCustomerAddresses();
+      set({ items: response?.items ?? [] });
+    } catch {
+      set({ items: [] });
+    } finally {
+      set({ loading: false });
+    }
+  },
 
-    startAdd: () => {
-      set({ mode: "add", editingAddressId: "", form: emptyForm });
-    },
+  addAddress: async (form) => {
+    try {
+      const response = await createCustomerAddresses(form);
+      set({ items: response?.items ?? [] });
+      toast.success("Address added");
+    } catch {
+      toast.error("Failed to add address");
+    }
+  },
 
-    startEdit: (currentAddress) => {
-      set({
-        mode: "edit",
-        editingAddressId: currentAddress._id,
-        form: {
-          fullName: currentAddress.fullName,
-          address: currentAddress.address,
-          state: currentAddress.state,
-          postalCode: currentAddress.postalCode,
-          isDefault: currentAddress.isDefault,
-        },
-      });
-    },
+  editAddress: async (id, form) => {
+    try {
+      const response = await updateCustomerAddresses(id, form);
+      set({ items: response?.items ?? [] });
+      toast.success("Address updated");
+    } catch {
+      toast.error("Failed to update address");
+    }
+  },
 
-    updateForm: (key, value) => {
-      set((state) => ({ form: { ...state.form, [key]: value } }));
-    },
+  removeAddress: async (id) => {
+    try {
+      const response = await deleteCustomerAddress(id);
+      set({ items: response?.items ?? [] });
+      toast.success("Address deleted");
+    } catch {
+      toast.error("Failed to delete address");
+    }
+  },
 
-    cancelForm: () => {
-      set({ mode: "none", editingAddressId: "", form: emptyForm });
-    },
-
-    saveForm: async () => {
-      const { mode, editingAddressId, form } = get();
-
-      const payload: CustomerAddressFormValues = {
-        fullName: form.fullName.trim(),
-        address: form.address.trim(),
-        state: form.state.trim(),
-        postalCode: form.postalCode.trim(),
-        isDefault: form.isDefault,
-      };
-
-      try {
-        const response =
-          mode === "edit"
-            ? await updateCustomerAddresses(editingAddressId, payload)
-            : await createCustomerAddresses(payload);
-
-        set({
-          items: response?.items ?? [],
-          mode: "none",
-          editingAddressId: "",
-          form: emptyForm,
-        });
-
-        toast.success(mode === "edit" ? "Address updated" : "Address created");
-      } catch {
-        toast.error("Failed to add or update address");
-      }
-    },
-
-    removeAddress: async (addressId) => {
-      try {
-        const response = await deleteCustomerAddress(addressId);
-
-        set((state) => ({
-          items: response?.items ?? [],
-          mode: state.editingAddressId === addressId ? "none" : state.mode,
-          editingAddressId:
-            state.editingAddressId === addressId ? "" : state.editingAddressId,
-          form: state.editingAddressId === addressId ? emptyForm : state.form,
-        }));
-
-        toast.success("Address deleted successfully");
-      } catch {
-        toast.error("Failed to delete address!");
-      }
-    },
-
-    clear: () => {
-      set({ isOpen: false, items: [], mode: "none", form: emptyForm, editingAddressId: "" });
-    },
-  })
-);
+  clear: () => set({ isOpen: false, items: [], loading: false }),
+}));

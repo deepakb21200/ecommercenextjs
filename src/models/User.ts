@@ -64,10 +64,7 @@ const UserSchema = new mongoose.Schema<UserType>(
       enum: ["user", "admin"],
       default: "user",
     },
-    points: {
-      type: Number,
-      default: 0,
-    },
+
     addresses: {
       type: [addressSchema],
       default: [],
@@ -85,37 +82,3 @@ export const UserModel =
 
 
 
-
-
-
-// const addressSchema = new mongoose.Schema<Address>(
-//   {
-//     fullName: {
-//       type: String,
-//       required: true,
-//       trim: true,
-//     },
-//     address: {
-//       type: String,
-//       required: true,
-//       trim: true,
-//     },
-//     state: {
-//       type: String,
-//       required: true,
-//       trim: true,
-//     },
-//     postalCode: {
-//       type: String,
-//       required: true,
-//       trim: true,
-//     },
-//     isDefault: {
-//       type: Boolean,
-//       default: false,
-//     },
-//   },
-//   {
-//     _id: true, // each address will get its own unique _id
-//   }
-// );

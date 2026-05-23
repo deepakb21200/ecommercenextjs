@@ -1,28 +1,18 @@
-"use client"; 
-import { useAuthStore } from "@/components/user/store/api";
+"use client";
 import { formatPrice } from "@/config/constants";
 import { useCustomerCartAndCheckoutStore } from "@/store/home/cartAndCheckout/store";
 import Link from "next/link";
-
- 
 import {
-  RiShoppingCart2Line,
-  RiDeleteBin6Line,
-  RiAddLine,
-  RiSubtractLine,
-  RiInboxLine,
+  RiShoppingCart2Line, RiDeleteBin6Line,
+  RiAddLine, RiSubtractLine, RiInboxLine,
 } from "react-icons/ri";
 
 function CustomerCartItems() {
-  const { user } = useAuthStore();
- const isSignedIn = Boolean(user);
-
   const { cart, setOpen, increase, decrease, remove } =
     useCustomerCartAndCheckoutStore((state) => state);
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-
       {/* Header */}
       <div className="shrink-0 border-b border-gray-100 px-5 py-4 bg-gray-50">
         <p className="flex items-center gap-2 text-sm font-semibold text-gray-800">
@@ -36,11 +26,9 @@ function CustomerCartItems() {
         </p>
       </div>
 
-      {/* Scrollable List */}
+      {/* List */}
       <div className="min-h-0 flex-1 overflow-y-auto">
         <div className="space-y-3 p-5">
-
-          {/* Empty */}
           {!cart.items.length ? (
             <div className="flex min-h-[320px] flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-gray-200 bg-gray-50 px-6 text-center">
               <RiInboxLine className="text-5xl text-gray-200" />
@@ -49,7 +37,7 @@ function CustomerCartItems() {
           ) : (
             cart.items.map((item, index) => (
               <div
-                key={`${item.productId}-${index + 1}`}
+                key={`${item.productId}-${index}`}
                 className="group flex gap-4 rounded-xl border border-gray-100 bg-white p-3 shadow-sm transition-all duration-200 hover:border-gray-200 hover:shadow-md"
               >
                 {/* Image */}
@@ -66,31 +54,26 @@ function CustomerCartItems() {
                   <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">
                     {item.brand}
                   </p>
-
                   <Link
                     href={`/collection/${item.productId}`}
-                    className="block line-clamp-2 text-sm font-medium text-gray-900 transition-colors hover:text-black"
+                    className="block line-clamp-2 text-sm font-medium text-gray-900 hover:text-black transition-colors"
                     onClick={() => setOpen(false)}
                   >
                     {item.title}
                   </Link>
-
                   <p className="text-xs text-gray-400">
                     {[item.color, item.size].filter(Boolean).join(" - ") || "Standard"}
                   </p>
-
                   <p className="text-sm font-semibold text-gray-900">
                     {formatPrice(item.finalPrice)}
                   </p>
 
-                  {/* Footer Row */}
+                  {/* Controls */}
                   <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-
-                    {/* Qty Controls */}
                     <div className="flex items-center overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
                       <button
                         type="button"
-                        onClick={() => decrease(item, isSignedIn)}
+                        onClick={() => void decrease(item)}
                         className="flex h-8 w-8 items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors"
                       >
                         <RiSubtractLine className="text-sm" />
@@ -100,17 +83,15 @@ function CustomerCartItems() {
                       </span>
                       <button
                         type="button"
-                        onClick={() => increase(item, isSignedIn)}
+                        onClick={() => void increase(item)}
                         className="flex h-8 w-8 items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors"
                       >
                         <RiAddLine className="text-sm" />
                       </button>
                     </div>
-
-                    {/* Remove */}
                     <button
                       type="button"
-                      onClick={() =>  remove(item, isSignedIn)}
+                      onClick={() => void remove(item)}
                       className="inline-flex items-center gap-1.5 h-8 px-3 text-xs font-medium border border-red-200 text-red-500 rounded-lg hover:bg-red-50 transition-colors"
                     >
                       <RiDeleteBin6Line className="text-sm" />
@@ -128,4 +109,3 @@ function CustomerCartItems() {
 }
 
 export default CustomerCartItems;
- 

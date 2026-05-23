@@ -215,8 +215,19 @@ export async function POST(req: NextRequest) {
     // 1. Saare products normal price par bhejo
     // 2. Ek negative line item bhejo for discount
 
-    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] =
-      [];
+    // const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] =
+    //   [];
+
+    const lineItems: {
+      price_data: {
+        currency: string;
+        product_data: { name: string };
+        unit_amount: number;
+      };
+      quantity: number;
+    }[] = [];
+
+
 
     // Product line items
     for (const item of tempItems) {
@@ -239,9 +250,11 @@ export async function POST(req: NextRequest) {
     // Discount as separate negative adjustment
     // Stripe direct negative item support nahi deta,
     // isliye coupon create karenge.
-    let discounts:
-      | Stripe.Checkout.SessionCreateParams.Discount[]
-      | undefined = undefined;
+    // let discounts:
+    //   | Stripe.Checkout.SessionCreateParams.Discount[]
+    //   | undefined = undefined;
+
+    let discounts: { coupon: string }[] | undefined = undefined;
 
     if (discountAmount > 0) {
       const coupon = await stripe.coupons.create({

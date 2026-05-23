@@ -4,8 +4,8 @@ import type { CustomerAddress } from "../profile/types";
 
 export type CustomerCartItemIdentifier = {
   productId: string;
-  color?: string;
-  size?: ProductSize;
+  color: string;
+  size: ProductSize;
 };
 
 export type CustomerCartItem = CustomerCartItemIdentifier & {
