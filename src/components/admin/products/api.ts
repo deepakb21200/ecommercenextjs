@@ -67,6 +67,8 @@ export async function getAdminProducts(search?: string) {
   });
   if (!res.ok) throw new Error("Failed to fetch products");
   return res.json();
+  console.log("e");
+  
 }
 
 export async function getAdminProductById(productId: string) {
