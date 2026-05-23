@@ -69,7 +69,7 @@ const [deletingPromoId, setDeletingPromoId] = useState<string | null>(null);
     if (!query) return promos;
 
     return promos.filter((promo) =>
-      promo.code.toLowerCase().includes(query)
+      promo.code.toLowerCase().includes(query)//
     );
   }, [promos, search]);
 
