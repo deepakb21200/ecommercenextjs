@@ -110,7 +110,7 @@ export default function LoginPage() {
     username: "",
     password: "",
   });
-  console.log("login");
+  
   
 
   const handleSubmit = async () => {
