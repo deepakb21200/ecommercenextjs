@@ -18,6 +18,8 @@ function CollectionDetails() {
   const user = useAuthStore((s) => s.user)
 
   // const isSignedIn = Boolean(user)
+  console.log("s");
+  
   
   
   const { loadProduct, clear, data, toggleWishlist, addToCart } = useCustomerProductDetailsStore((state) => state);
