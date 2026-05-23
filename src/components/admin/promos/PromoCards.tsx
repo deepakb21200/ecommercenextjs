@@ -10,10 +10,21 @@ import { Promo } from "./types";
 
 
 
+// type Props = {
+//   promos: Promo[];
+//   loading: boolean;
+//   deletingPromoId: string | null;
+//   onEdit: (promo: Promo) => void;
+//   onDelete: (promoId: string) => void;
+// };
+
+
+
+
 type Props = {
   promos: Promo[];
   loading: boolean;
-  deletingPromoId: string | null;
+  deletingPromoId: string;
   onEdit: (promo: Promo) => void;
   onDelete: (promoId: string) => void;
 };
