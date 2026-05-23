@@ -8,14 +8,15 @@ import { HiOutlineTicket } from "react-icons/hi2";
 import AdminItemCard from "@/utils/AdminItemCard";
 import { Promo } from "./types";
 
+
+
 type Props = {
   promos: Promo[];
   loading: boolean;
-deletingPromoId: string | null;
+  deletingPromoId: string | null;
   onEdit: (promo: Promo) => void;
   onDelete: (promoId: string) => void;
 };
-
 function formatDate(value: string) {
   return new Date(value).toLocaleDateString("en-IN", {
     day: "2-digit",

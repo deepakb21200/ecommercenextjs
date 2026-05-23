@@ -65,7 +65,8 @@ export async function POST(req: NextRequest) {
     const productId = String(rawItem.productId || "").trim();
     const quantity = Number(rawItem.quantity || 0);
     const color = String(rawItem.color || "").trim();
-    const size = String(rawItem.size || "").trim();
+    // const size = String(rawItem.size || "").trim();
+    const size = rawItem.size || undefined;
 
     if (!productId || quantity < 1) continue;
 
@@ -99,11 +100,7 @@ export async function POST(req: NextRequest) {
 
   await cart.save();
 
-//   return NextResponse.json({
-//     success: true,
-//     cart,
-//   });
-
+ 
 return NextResponse.json({
   data: {
     items: cart.items,
