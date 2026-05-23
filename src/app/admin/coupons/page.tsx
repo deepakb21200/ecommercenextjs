@@ -33,7 +33,7 @@ export default function AdminPromos() {
   const [promos, setPromos] = useState<Promo[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-const [deletingPromoId, setDeletingPromoId] = useState<string>("");
+const [deletingPromoId, setDeletingPromoId] = useState<string | null>(null);
   const [hasLoaded, setHasLoaded] = useState(false);
 
   // ================= LOAD PROMOS =================
@@ -125,7 +125,7 @@ const [deletingPromoId, setDeletingPromoId] = useState<string>("");
         prev.filter((promo) => promo._id !== promoId)
       );
     } finally {
-      setDeletingPromoId("");
+      setDeletingPromoId(null);
     }
   }
 
