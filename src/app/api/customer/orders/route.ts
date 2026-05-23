@@ -21,59 +21,7 @@ function getAuthUser(req: NextRequest) {
     return { error: "Invalid token", status: 401 };
   }
 }
-
-// export async function GET(req: NextRequest) {
-//   await connectDB();
-
-//   const auth = getAuthUser(req);
-
-//   console.log("authentication", auth);
-
-//   if (auth.error) {
-//     return NextResponse.json(
-//       { message: auth.error },
-//       { status: auth.status }
-//     );
-//   }
-
-//   try {
  
-
-//     const orders = await OrderModel.find({ user: auth.decoded.id })
-//       .select(
-//         "totalItems totalAmount paymentStatus orderStatus paidAt deliveredAt returnedAt createdAt expiresAt"
-//       )
-//       .sort({ createdAt: -1 })
-//       .lean();
-
-
-//     console.log("This is order get", orders);
-
-//     return NextResponse.json({
-//       items: orders.map((order: any) => ({
-//         _id: String(order._id),
-//         code: String(order._id).slice(-8).toUpperCase(),
-//         totalItems: order.totalItems,
-//         totalAmount: order.totalAmount,
-//         paymentStatus: order.paymentStatus,
-//         orderStatus: order.orderStatus,
-//         paidAt: order.paidAt,
-//         deliveredAt: order.deliveredAt,
-//         returnedAt: order.returnedAt,
-//         createdAt: order.createdAt,
-//         expiresAt: order.expiresAt, // ✅ ADD THIS
-//       })),
-//     });
-//   } catch (err: any) {
-//     return NextResponse.json(
-//       { message: err.message || "Something went wrong" },
-//       { status: 500 }
-//     );
-//   }
-// }
-
-
-
 
 
 

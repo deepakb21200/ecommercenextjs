@@ -9,8 +9,8 @@ import { connectDB } from "@/lib/connectDB";
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+  { params }: { params: Promise<{ id: string }> }
+){
   await connectDB();
 
   try {
@@ -72,7 +72,7 @@ export async function PUT(
         ? img.isCover
         : img.publicId === coverImagePublicId,
     }));
-
+ 
     const { id } = await params;
 
     const updated = await ProductModel.findByIdAndUpdate(
@@ -93,10 +93,10 @@ export async function PUT(
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+  { params }: { params: Promise<{ id: string }> }
+){
   await connectDB();
-  const { id } = await params;
+const { id } = await params;
   const product = await ProductModel.findById(id).populate("category", "name");
   if (!product) return NextResponse.json({ message: "Product not found" }, { status: 404 });
   return NextResponse.json(product);

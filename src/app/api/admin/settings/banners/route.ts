@@ -42,51 +42,6 @@ export async function GET(req: NextRequest) {
   });
 }
 
-// export async function POST(req: NextRequest) {
-//   await connectDB();
-
-//   const auth = requireAdmin(req);
-//   if (auth.error) return NextResponse.json({ message: auth.error }, { status: auth.status });
-
-//   // JWT se user lo
-
-
-  
-//   const decoded: any = auth.decoded;
-//   const { UserModel } = await import("@/models/User");
-//   const dbUser = await UserModel.findById(decoded.id);
-//   if (!dbUser) return NextResponse.json({ message: "User not found" }, { status: 404 });
-
-//   const formData = await req.formData();
-//   const imageFiles = formData.getAll("images") as File[];
-
-//   if (!imageFiles.length) {
-//     return NextResponse.json({ message: "At least one image is required" }, { status: 400 });
-//   }
-
-//   const buffers = await Promise.all(
-//     imageFiles.map(async (file) => Buffer.from(await file.arrayBuffer()))
-//   );
-
-//   await uploadManyBuffersToCloudinary(buffers, BANNER_FOLDER);
-
- 
- 
-// const allBanners = await Banner.find().sort({ createdAt: -1 }).lean();
-
-// return NextResponse.json({
-//   items: allBanners.map((item) => ({
-//     _id: String(item._id),
-//     imageUrl: item.imageUrl,
-//     imagePublicId: item.imagePublicId,
-//     createdAt: (item.createdAt as Date).toISOString(),
-//   })),
-// })}
-
-
-
-
-
 
 
 export async function POST(req: NextRequest) {

@@ -107,28 +107,4 @@ export async function GET(req: NextRequest) {
 
 
 
-
-
-
-
-
-// async function getCartResponse(userId: string) {
-//   const cart = await Cart.findOne({ user: userId }).populate(
-//     "items.product",
-//     "title brand price salePercentage images",
-//   );
-
-//   const cartItems = (cart?.items || []) as CartPreviewItem[];
-
-//   const items = cartItems.flatMap((cartItem) => {
-//     if (!cartItem.product) return [];
-
-//     return [
-//       {
-//         ...formatProduct(cartItem.product),
-//         quantity: cartItem.quantity,
-//         color: cartItem.color,
-//         size: cartItem.size,
-//       },
-//     ];
-//   });
+ 
