@@ -52,6 +52,9 @@ function PaymentBadge({ status }: { status: AdminPaymentStatus }) {
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 type Props = {
+  loading:boolean
+  error:string
+  hasLoaded:boolean
   orders: AdminOrder[];
   canUpdate: (order: AdminOrder) => boolean;
   changeStatus: (id: string, status: AdminOrderStatus) => Promise<void>;
@@ -59,10 +62,13 @@ type Props = {
   orderOptions: AdminOrderStatus[];
   formatPrice: (v: number) => string;
     formatDate: (v: string) => string;
+
 };
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function OrderCards({
+  loading,
+  error,
   orders,
   canUpdate,
   changeStatus,
@@ -70,20 +76,41 @@ export default function OrderCards({
   orderOptions,
   formatPrice,
   formatDate,
+  hasLoaded
 }: Props) {
-  if (!orders.length) {
+
+
+
+
+    if (loading || !hasLoaded) {
     return (
-      <div className="flex flex-col items-center gap-4 py-24">
-        <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-white/5">
-          <HiOutlineCube className="text-4xl text-zinc-500" />
-        </div>
-        <div className="text-center">
-          <p className="text-lg font-semibold text-white">No Orders Found</p>
-          <p className="mt-1 text-sm text-zinc-500">Customer orders will appear here</p>
-        </div>
+      <div className="flex flex-col items-center justify-center  ">
+        <div className="h-10  w-10 animate-spin rounded-full border-2 border-zinc-700 border-t-fuchsia-500" />
+        <p className="text-sm mt-2 text-zinc-500">Loading products...</p>
       </div>
     );
   }
+
+  if (error) {
+  return (
+    <div className="col-span-full flex items-center justify-center rounded-[24px] border border-red-500/20 bg-red-500/5 py-14">
+      <p className="text-sm font-medium tracking-wide text-red-400">
+        Failed to fetch orders
+      </p>
+    </div>
+  );
+}
+
+  // ← tab empty check karo
+  if (!orders.length ) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-zinc-400 col-span-full">
+        <HiOutlineCube className="text-4xl text-zinc-500" />
+        <p className="mt-2 text-sm">No Orders Found</p>
+      </div>
+    );
+  }
+
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

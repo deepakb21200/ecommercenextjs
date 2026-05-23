@@ -80,10 +80,9 @@
 
 
 "use client";
-
-import { useAdminProductsStore } from "@/store/admin/products/store";
+ 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+ 
 import { IconType } from "react-icons";
 import {
     HiOutlineMagnifyingGlass,
@@ -101,7 +100,6 @@ type AdminToolbarProps = {
     search: string;
     onSearchChange: (value: string) => void;
     item: number
- 
 
     // Search input placeholder
     placeholder: string;
@@ -116,14 +114,16 @@ type AdminToolbarProps = {
 
     // Optional secondary button
     extraAction?: ExtraAction;
-    refreshAll?: () => void; // optional prop
+    refreshAll?: () => void; // optional prop 
+    
+    error: string
+
 
 };
 
 export default function AdminToolbar({
     search,
     onSearchChange,
- 
     placeholder = "Search...",
     primaryButtonLabel,
     primaryButtonIcon: PrimaryIcon = HiOutlinePlus,
@@ -134,11 +134,10 @@ export default function AdminToolbar({
     sectionLabel,
     heading,
     refreshAll,
+    error
 }: AdminToolbarProps) {
 
-
-
-      // =========================
+    // =========================
     const router = useRouter();
 
     const handlePrimaryClick = () => {
@@ -152,14 +151,7 @@ export default function AdminToolbar({
         }
     };
 
- 
 
-
-
-
-
-
-    
     return (
 
         <>
@@ -180,19 +172,16 @@ export default function AdminToolbar({
                     <div className="hidden md:flex items-center gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-300">
                         {/* Refresh button */}
                         {refreshAll && (
-                            <button
-                                type="button"
-                                
-                                onClick={refreshAll}
-                             
-                                title="Refresh"
-                                className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-emerald-400/20 bg-emerald-500/10 text-emerald-300 transition-colors hover:bg-emerald-500/20 hover:text-white"
-                            >
+                            <button type="button" onClick={refreshAll}
+                                title="Refresh" className="inline-flex h-8 w-8 items-center justify-center rounded-lg border
+                                 border-emerald-400/20 bg-emerald-500/10 text-emerald-300 transition-colors
+                                  hover:bg-emerald-500/20 hover:text-white">
                                 <RiRefreshLine className="text-base" />
                             </button>
                         )}
 
                         {/* Product count */}
+ 
                         <span>{item} Products</span>
                     </div>
 
@@ -208,12 +197,16 @@ export default function AdminToolbar({
                     <div className="relative w-full lg:max-w-md">
                         <HiOutlineMagnifyingGlass className="absolute left-4 top-1/2 z-10 -translate-y-1/2 text-lg text-zinc-500" />
 
-                        <input
-                            value={search}
-                            onChange={(e) => 
-                              onSearchChange(e.target.value)}
-                                 
-                            
+                        <input value={search}
+                            onChange={(e) => {
+                                if (error) {
+                                    alert("refresh again to get the data");
+                                    return
+                                }
+                                onSearchChange(e.target.value)
+                            }}
+
+
                             placeholder={placeholder}
                             className="h-14 w-full rounded-2xl border border-white/10 bg-[#0B1120] pl-12 pr-4 text-sm text-white outline-none transition-all placeholder:text-zinc-500 focus:border-violet-500/50 focus:ring-4 focus:ring-violet-500/10"
                         />
@@ -263,7 +256,7 @@ export default function AdminToolbar({
 }
 
 
-                    {/* <div className="hidden flex rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-300 md:block">
+{/* <div className="hidden flex rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-300 md:block">
                       
         {refreshAll && (
           <button

@@ -6,9 +6,12 @@ import type { AdminOrder, AdminOrderStatus } from "@/components/admin/orders/typ
 
 type AdminOrdersStore = {
   orders: AdminOrder[];
+  error: string
   loading: boolean;
+  hasLoaded: boolean
   updatingOrderId: string;
-  fetchOrders: () => Promise<void>;
+ 
+    fetchOrders: (search?: string) => Promise<void>;
   changeStatus: (orderId: string, orderStatus: AdminOrderStatus) => Promise<void>;
 };
 
@@ -16,22 +19,22 @@ export const useAdminOrdersStore = create<AdminOrdersStore>((set) => ({
   orders: [],
   loading: true,
   updatingOrderId: "",
+  hasLoaded: false,
+  error: "",
 
-  fetchOrders: async () => {
+ 
+
+  fetchOrders: async (search = "") => {
     try {
-      set({ loading: true });
-
-      const data = await extractAdminOrders();
-
+      set({ loading: true, orders: [], error: "" });
+      const data = await extractAdminOrders(search);
       set({ orders: data?.items ?? [] });
-    } catch (error) {
-      console.error("Fetch Orders Error:", error);
-      set({ orders: [] });
+    } catch {
+      set({ orders: [], error: "Failed to fetch orders" });
     } finally {
-      set({ loading: false });
+      set({ loading: false, hasLoaded: true });
     }
   },
-
   changeStatus: async (orderId, orderStatus) => {
     try {
       set({ updatingOrderId: orderId });

@@ -20,26 +20,29 @@ type AdminBanner = {
 };
 
 export default function AdminSettings() {
-  const [items, setItems]       = useState<AdminBanner[]>([]);
-  const [files, setFiles]       = useState<File[]>([]);
-  const [loading, setLoading]   = useState(true); 
+  const [items, setItems] = useState<AdminBanner[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
+  const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [deletingId, setDeletingId] = useState("");
+  const [error, setError] = useState(false)
 
   const fetchBanners = async () => {
     try {
       setLoading(true);
+      setError(false); // ←
       const res = await getAdminBanners();
       setItems(res.items || []);
     } catch (err: unknown) {
-      console.error("Failed to fetch banners:", err instanceof Error ? err.message : err);
+
+      setError(true)
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-   fetchBanners();
+    fetchBanners();
   }, []);
 
   const handleUpload = async () => {
@@ -139,7 +142,7 @@ export default function AdminSettings() {
               {/* Upload button */}
               <button
                 onClick={() => void handleUpload()}
-                disabled={uploading || !files.length}
+                disabled={uploading || !files.length || error}
                 className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-fuchsia-500 to-sky-500 px-5 py-4 text-sm font-semibold text-white shadow-xl shadow-fuchsia-500/20 transition-all hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <RiUploadCloud2Line className="text-lg" />
@@ -164,11 +167,22 @@ export default function AdminSettings() {
               </button>
             </div>
 
-            {/* ✅ Loading pehle check hoga — No Banners sirf tab jab loading false aur items empty */}
+
             {loading ? (
               <div className="flex flex-col items-center justify-center gap-4 py-24">
                 <div className="h-10 w-10 animate-spin rounded-full border-2 border-zinc-700 border-t-fuchsia-500" />
                 <p className="text-sm text-zinc-500">Loading banners...</p>
+              </div>
+            ) : error ? (
+              <div className="flex flex-col items-center gap-5 py-24">
+                <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-rose-500/10">
+                  <RiImageLine className="text-4xl text-rose-400" />
+                </div>
+                <div className="text-center">
+                  <p className="text-lg font-semibold text-white">Failed to fetch banners</p>
+                  <p className="mt-1 text-sm text-zinc-500">Please try refreshing</p>
+                </div>
+
               </div>
             ) : !items.length ? (
               <div className="flex flex-col items-center gap-5 py-24">

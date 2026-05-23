@@ -17,6 +17,7 @@ import {
 
 import { AdminHero } from "@/utils/AdminHero";
 import { createAdminPromo, deleteAdminPromo, getAdminPromos, updateAdminPromo } from "@/components/admin/promos/api";
+ 
 
 // API functions
 
@@ -24,6 +25,7 @@ import { createAdminPromo, deleteAdminPromo, getAdminPromos, updateAdminPromo } 
 export default function AdminPromos() {
   // ================= SEARCH =================
   const [search, setSearch] = useState("");
+  const [error, setError] = useState("")
 
   // ================= DIALOG =================
   const [promoDialogOpen, setPromoDialogOpen] = useState(false);
@@ -33,27 +35,41 @@ export default function AdminPromos() {
   const [promos, setPromos] = useState<Promo[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-const [deletingPromoId, setDeletingPromoId] = useState<string | null>(null);
+  const [deletingPromoId, setDeletingPromoId] = useState<string | null>(null);
   const [hasLoaded, setHasLoaded] = useState(false);
 
   // ================= LOAD PROMOS =================
   const refreshAll = useCallback(async () => {
     try {
       setLoading(true);
+      setPromos([])
 
       const response = await getAdminPromos();
 
       // Adjust if your API returns { data: [...] }
       const data = Array.isArray(response)
         ? response
-        : response?.items|| [];
+        : response?.items || [];
+
 
       setPromos(data);
       setHasLoaded(true);
-    } finally {
+    } catch (e) {
+      setError("failed to fetch promos")
+    }
+    finally {
       setLoading(false);
     }
   }, []);
+
+
+  useEffect(() => {
+    console.log("error", error);
+    console.log(promos);
+
+
+  }, [error, promos])
+
 
   // Initial load
   useEffect(() => {
@@ -65,6 +81,9 @@ const [deletingPromoId, setDeletingPromoId] = useState<string | null>(null);
   // ================= FILTERED PROMOS =================
   const filteredPromos = useMemo(() => {
     const query = search.trim().toLowerCase();
+
+    console.log("hasloaded", hasLoaded);
+
 
     if (!query) return promos;
 
@@ -129,6 +148,27 @@ const [deletingPromoId, setDeletingPromoId] = useState<string | null>(null);
     }
   }
 
+
+
+
+
+
+
+
+
+  useEffect(() => {
+  return () => {
+    setSearch("");
+    setError("");
+    setPromos([]);
+    setLoading(false);
+    setSaving(false);
+    setDeletingPromoId(null);
+    setHasLoaded(false);
+    setEditingPromo(null);
+    setPromoDialogOpen(false);
+  };
+}, []);
   // ================= UI =================
   return (
     <div>
@@ -158,20 +198,24 @@ const [deletingPromoId, setDeletingPromoId] = useState<string | null>(null);
           sectionLabel="Promotions Control"
           heading="Promo Controls"
           refreshAll={refreshAll}
+
+          error={error}
         />
 
         {/* CARDS */}
-        <div className="rounded-[30px] border border-white/10 bg-[#111827]/70 p-4 shadow-2xl backdrop-blur-xl lg:p-6">
-          <PromoCards
-            promos={filteredPromos}
-            loading={loading}
-            deletingPromoId={deletingPromoId}
-         
-                  // deletingPromoId={deletingPromoId ?? ""}
-            onEdit={openEditDialog}
-            onDelete={handleRemovePromo}
-          />
-        </div>
+
+
+
+        <PromoCards
+          promos={filteredPromos}
+          loading={loading}
+          deletingPromoId={deletingPromoId}
+          error={error}
+          onEdit={openEditDialog}
+          onDelete={handleRemovePromo}
+          hasLoaded={hasLoaded}
+        />
+
       </div>
 
       {/* DIALOG */}

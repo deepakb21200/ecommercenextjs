@@ -17,7 +17,7 @@ function CollectionDetails() {
 
   const user = useAuthStore((s) => s.user)
 
-  const isSignedIn = Boolean(user)
+  // const isSignedIn = Boolean(user)
   const { loadProduct, clear, data, toggleWishlist, addToCart } = useCustomerProductDetailsStore((state) => state);
 
   const wishlistItems = useCustomerWishlistStore((state) => state.items);
@@ -120,9 +120,9 @@ function CollectionDetails() {
           <CustomerProductDetailsGallery product={product} />
           <CustomerProductDetailsSummary
             product={product}
-            toggleWishlist={() => toggleWishlist(isSignedIn, isWishlistActive)}
+            toggleWishlist={() => toggleWishlist( isWishlistActive)}
             isWishlistActive={isWishlistActive}
-            onAddToCart={() => addToCart(isSignedIn)}
+            onAddToCart={() => addToCart()}
           />
         </div>
 

@@ -12,7 +12,9 @@ export async function getAdminBanners(): Promise<AdminBannersResponse> {
     credentials: "include",
   });
 
-  if (!res.ok) throw new Error("Failed to fetch banners");
+  // if (!res.ok) throw new Error("Failed to fetch banners");
+ 
+
 
   return res.json();
 }

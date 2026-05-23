@@ -1,10 +1,10 @@
 
- "use client";
+"use client";
 
 import type { AdminOrder, AdminOrderStatus } from "@/components/admin/orders/types";
 import { formatPrice } from "@/config/constants";
 import { useAdminOrdersStore } from "@/store/admin/orders/store";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HiOutlineShoppingBag, HiOutlineCheckCircle } from "react-icons/hi2";
 import OrderCards from "./OrderCards";
 import AdminToolbar from "@/components/admin/products/AdminToolbar";
@@ -36,25 +36,46 @@ const ORDER_OPTIONS: AdminOrderStatus[] = ["placed", "shipped", "delivered"];
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 export default function AdminOrders() {
-  const { loading, orders, updatingOrderId, fetchOrders, changeStatus } =
-    useAdminOrdersStore();
+  const { loading, orders, updatingOrderId, fetchOrders, changeStatus, error, hasLoaded } = useAdminOrdersStore();
 
   const [search, setSearch] = useState("");
+  const skipNextSearch = useRef(false);
+
+
+
 
   useEffect(() => {
-    void fetchOrders();
-  }, []);
+    if (skipNextSearch.current) { skipNextSearch.current = false; return; }
+    console.log("ok");
 
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-[#0B1120]">
-        <div className="flex flex-col items-center gap-4">
-          <div className="h-10 w-10 animate-spin rounded-full border-2 border-zinc-700 border-t-violet-500" />
-          <p className="text-sm text-zinc-500">Loading orders...</p>
-        </div>
-      </div>
-    );
+    const timer = setTimeout(() => {
+      void fetchOrders(search.trim());
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+
+
+  function refreshAll() {
+
+    if (search !== "") {
+      skipNextSearch.current = true;
+      setSearch("")
+    }
+    fetchOrders()
   }
+
+useEffect(() => {
+  return () => {
+    useAdminOrdersStore.setState({
+      orders: [],
+      loading: true,
+      hasLoaded: false,
+      error: "",
+      updatingOrderId: "",
+    });
+  };
+}, []);
 
   return (
     <div>
@@ -75,17 +96,22 @@ export default function AdminOrders() {
           placeholder="Search orders..."
           sectionLabel="Order Inventory"
           heading="Order Controls"
-          item={orders.length}
+          item={Number(orders.length)}
+          refreshAll={refreshAll}
+          error={error}
         />
 
         <OrderCards
+          loading={loading}
           orders={orders}
+          hasLoaded={hasLoaded}
           updatingOrderId={updatingOrderId}
           changeStatus={changeStatus}
           canUpdate={canUpdate}
           orderOptions={ORDER_OPTIONS}
           formatPrice={formatPrice}
           formatDate={formatDate}
+          error={error}
         />
 
       </div>

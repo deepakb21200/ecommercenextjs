@@ -60,7 +60,7 @@
 import { create } from "zustand";
 import { AdminDashboardLite, getAdminDashboardLite } from "./api";
 
-const fallbackStats: AdminDashboardLite = {
+export const fallbackStats: AdminDashboardLite = {
   totalProducts: 0,
   totalCategories: 0,
   totalSales: 0,
@@ -72,12 +72,16 @@ type AdminDashboardStore = {
   stats: AdminDashboardLite;
   loading: boolean;
   fetchDashboard: () => Promise<void>;
+  error: string
+  hasLoaded: boolean
 };
 
 export const useAdminDashboardLiteStore =
   create<AdminDashboardStore>((set) => ({
     stats: fallbackStats,
     loading: true,
+    error: "",
+    hasLoaded: false,
 
     fetchDashboard: async () => {
       try {
@@ -85,15 +89,19 @@ export const useAdminDashboardLiteStore =
 
         const response = await getAdminDashboardLite();
 
+
+
         set({
           stats: response ?? fallbackStats,
         });
       } catch {
         set({
           stats: fallbackStats,
+          error: "Error while fetching store details!"
+
         });
       } finally {
-        set({ loading: false });
+        set({ loading: false, hasLoaded: true });
       }
     },
   }));

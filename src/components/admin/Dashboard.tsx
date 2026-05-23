@@ -293,10 +293,10 @@ import {
 } from "react-icons/hi2";
 
 import { formatPrice } from "@/config/constants";
+ 
 
-import { Commonloader } from "./Loader";
-
-import { useAdminDashboardLiteStore } from "@/app/admin/store";
+import { fallbackStats, useAdminDashboardLiteStore } from "@/app/admin/store";
+import { AdminHero } from "@/utils/AdminHero";
 
 const statsItems = [
   {
@@ -341,89 +341,55 @@ const statsItems = [
 ] as const;
 
 export default function AdminDashboard() {
-const {
-  stats,
-  loading,
-  fetchDashboard,
-} = useAdminDashboardLiteStore();
+  const {
+    stats,
+    loading,
+    fetchDashboard,
+    error,
+    hasLoaded
+  } = useAdminDashboardLiteStore();
 
-useEffect(() => {
-  fetchDashboard();
-}, [fetchDashboard]);
+  useEffect(() => {
+    fetchDashboard();
+  }, [fetchDashboard]);
 
-  if (loading) {
-    return <Commonloader />;
-  }
 
+
+  useEffect(() => {
+    return () => {
+      useAdminDashboardLiteStore.setState({
+      
+
+         stats: fallbackStats ,loading: true, error: "", hasLoaded: false,
+
+      });
+    };
+  }, []);
+
+
+
+ 
   return (
     <div className=" bg-[#060816]    ">
 
       <div className="mx-auto space-y-8  ">
 
         {/* HERO SECTION */}
-        <div className="relative overflow-hidden rounded-[36px] border border-white/10 bg-gradient-to-br from-[#111827] via-[#0B1120] to-[#111827] px-7 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-12">
 
-          {/* Blur Effects */}
-          <div className="absolute left-[-100px] top-[-100px] h-80 w-80 rounded-full bg-fuchsia-500/20 blur-3xl" />
+        <AdminHero
+          badgeText=" Velvet Analytics"
+          title="Store Dashboard"
+          description=" Monitor products, categories, revenue, returns and customer activity through a  modern premium 
+          analytics dashboard built for real-time store management."
+          rightText="Live store insights"
+          icon={<HiOutlineChartBar className="text-3xl text-white" />}
+          rightIcon={<HiOutlineSparkles className="text-lg text-white" />}
+        />
 
-          <div className="absolute bottom-[-120px] right-[-60px] h-96 w-96 rounded-full bg-cyan-500/20 blur-3xl" />
 
-          <div className="relative z-10 flex flex-col gap-8 xl:flex-row xl:items-center xl:justify-between">
 
-            {/* LEFT */}
-            <div>
 
-              <div className="mb-5 flex items-center gap-4">
 
-                <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-fuchsia-500 via-violet-500 to-cyan-500 shadow-2xl shadow-violet-500/20">
-
-                  <HiOutlineChartBar className="text-3xl text-white" />
-
-                </div>
-
-                <div>
-
-                  <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-400">
-                    Velvet Analytics
-                  </p>
-
-                  <h1 className="mt-1 text-3xl font-black text-white sm:text-4xl xl:text-5xl">
-                    Store Dashboard
-                  </h1>
-
-                </div>
-              </div>
-
-              <p className="max-w-3xl text-sm leading-7 text-zinc-400 sm:text-base">
-                Monitor products, categories, revenue,
-                returns and customer activity through a
-                modern premium analytics dashboard built
-                for real-time store management.
-              </p>
-
-            </div>
-
-            {/* RIGHT BADGE */}
-            <div className="flex w-fit items-center gap-3 rounded-3xl border border-fuchsia-500/20 bg-fuchsia-500/10 px-6 py-4 backdrop-blur-xl">
-
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-fuchsia-500 to-violet-500">
-                <HiOutlineSparkles className="text-lg text-white" />
-              </div>
-
-              <div>
-                <p className="text-sm font-semibold text-fuchsia-200">
-                  Smart Analytics
-                </p>
-
-                <p className="mt-0.5 text-xs text-fuchsia-300/70">
-                  Live store insights
-                </p>
-              </div>
-
-            </div>
-
-          </div>
-        </div>
 
         {/* TOP INFO BAR */}
         <div className="flex flex-col gap-4 rounded-[30px] border border-white/10 bg-[#0F172A]/70 p-5 backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between">
@@ -452,10 +418,28 @@ useEffect(() => {
 
         </div>
 
+
+        {error &&
+          <div className="col-span-full flex items-center justify-center rounded-[24px] border border-red-500/20 bg-red-500/5 py-14">
+            <p className="text-sm font-medium tracking-wide text-red-400">
+              Failed to fetch orders
+            </p>
+          </div>
+        }
+
+
+        {
+          loading &&
+           <div className="flex flex-col items-center justify-center  ">
+        <div className="h-10  w-10 animate-spin rounded-full border-2 border-zinc-700 border-t-fuchsia-500" />
+        <p className="text-sm mt-2 text-zinc-500">Loading products...</p>
+      </div>
+        }
+
         {/* STATS GRID */}
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4 ">
 
-          {statsItems.map((item) => {
+          { hasLoaded &&statsItems.map((item) => {
             const Icon = item.icon;
 
             const value = stats[item.key];

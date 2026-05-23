@@ -4,13 +4,27 @@ import type { AdminOrderStatus, AdminOrdersResponse, AdminUpdateOrderStatusRespo
 
 const BASE_URL = "/api/admin";
 
-export async function extractAdminOrders(): Promise<AdminOrdersResponse> {
-  const res = await fetch(`${BASE_URL}/orders`, {
+// export async function extractAdminOrders(): Promise<AdminOrdersResponse> {
+//   const res = await fetch(`${BASE_URL}/orders`, {
+//     credentials: "include",
+//   });
+
+//   if (!res.ok) throw new Error("Failed to fetch orders");
+
+//   return res.json();
+// }
+
+
+export async function extractAdminOrders(search = ""): Promise<AdminOrdersResponse> {
+  const query = search.trim()
+    ? `?search=${encodeURIComponent(search.trim())}`
+    : "";
+
+  const res = await fetch(`${BASE_URL}/orders${query}`, {
     credentials: "include",
   });
 
   if (!res.ok) throw new Error("Failed to fetch orders");
-
   return res.json();
 }
 

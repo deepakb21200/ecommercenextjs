@@ -89,17 +89,7 @@
 // }));
 
 
-
-
-
-
-
-
-
-
-
 "use client";
-
 import { Category, Product } from "@/components/admin/products/productstable/types";
 import { create } from "zustand";
 
@@ -108,6 +98,7 @@ type AdminProductsStore = {
   categories: Category[];
   loading: boolean;
   hasLoaded: boolean;
+  error: string,
   fetchProducts: (search?: string) => Promise<void>;
   fetchCategories: () => Promise<void>;
   refreshAll: (search?: string) => Promise<void>;
@@ -121,11 +112,16 @@ export const useAdminProductsStore = create<AdminProductsStore>((set, get) => ({
   products: [],
   categories: [],
   loading: true,
+  error: "",
   hasLoaded: false,
 
 
   fetchProducts: async (search = "") => {
     // ✅ Pehle wali pending request cancel karo
+
+    // products empty karo
+    set({ products: [] });
+
     if (abortController) {
       abortController.abort();
     }
@@ -133,6 +129,8 @@ export const useAdminProductsStore = create<AdminProductsStore>((set, get) => ({
 
     try {
       set({ loading: true });
+
+
 
       const url = search.trim()
         ? `/api/admin/products?search=${encodeURIComponent(search.trim())}`
@@ -143,13 +141,36 @@ export const useAdminProductsStore = create<AdminProductsStore>((set, get) => ({
         signal: abortController.signal,
       });
 
+      console.log(res);
+
+      // await new Promise((resolve) =>
+      //   setTimeout(resolve, 3000)
+      // );
+
+      // // manually error throw
+      // throw new Error("Failed to fetch");
+
+        
+
+
       if (!res.ok) throw new Error("Failed to fetch");
 
       const data = await res.json();
+      //       await new Promise((resolve) =>
+      //   setTimeout(resolve, 5000)
+      // );
+
+      console.log(data);
+
+
       set({ products: Array.isArray(data) ? data : [] });
     } catch (err: unknown) {
       // AbortError ignore karo — yeh intentional cancel hai
+      set({
+        error: "Something went wrong",
+      });
       if (err instanceof Error && err.name === "AbortError") return;
+
       set({ products: [] });
     } finally {
       set({ loading: false });
@@ -175,6 +196,7 @@ export const useAdminProductsStore = create<AdminProductsStore>((set, get) => ({
   },
 
   refreshAll: async (search = "") => {
+    set({ hasLoaded: false });
     await Promise.all([
       get().fetchProducts(search),
       get().fetchCategories(),
@@ -203,7 +225,6 @@ export const useAdminProductsStore = create<AdminProductsStore>((set, get) => ({
 
 
 
- 
 
 
 
@@ -218,4 +239,4 @@ export const useAdminProductsStore = create<AdminProductsStore>((set, get) => ({
 
 
 
- 
+

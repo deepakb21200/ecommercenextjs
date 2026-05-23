@@ -1,10 +1,10 @@
 import { FiHeart, FiShoppingBag } from "react-icons/fi";
-import { CustomerProduct, ProductSize } from "../types";
+import { CustomerProduct,   } from "../types";
 import { extractSalePrice } from "../productListShared";
 import { formatPrice } from "@/config/constants";
 import CustomerProductOptionsGroup from "./Customerproductoptionsgroup";
 import { useCustomerProductDetailsStore } from "@/store/home/products/store";
-import toast from "react-hot-toast";
+ 
 
 
 type CustomerProductDetailsSummaryProps = {

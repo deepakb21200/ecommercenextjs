@@ -19,25 +19,26 @@ import { useAdminProductsStore } from "@/store/admin/products/store";
 
 
 function AdminProducts() {
-  const [search, setSearch] =useState("");
+  const [search, setSearch] = useState("");
   const [deletingProductId, setDeletingProductId] = useState("");
   const [categoryDialogOpen, setCategoryDialogOpen,] = useState(false);
 
 
-const skipNextSearch = useRef(false);
+  const skipNextSearch = useRef(false);
 
   const {
     products,
     categories,
     loading,
     refreshAll,
-    hasLoaded
+    hasLoaded,
+    error
 
   } = useAdminProductsStore();
 
 
 
-   // cleanup — sirf ek useEffect
+  // cleanup — sirf ek useEffect
   useEffect(() => {
     return () => {
       useAdminProductsStore.setState({
@@ -52,6 +53,7 @@ const skipNextSearch = useRef(false);
   useEffect(() => {
     if (skipNextSearch.current) { skipNextSearch.current = false; return; }
     const timer = setTimeout(() => { void refreshAll(search.trim()); }, 300);
+    console.log(hasLoaded);
     return () => clearTimeout(timer);
   }, [search]);
 
@@ -69,6 +71,13 @@ const skipNextSearch = useRef(false);
     }
   };
 
+
+
+  useEffect(() => {
+    console.log("solo", hasLoaded);
+    console.log("pro-+", products);
+
+  }, [hasLoaded, products])
 
   return (
     <div className="">
@@ -89,12 +98,15 @@ const skipNextSearch = useRef(false);
           }
         />
 
+
+
+
+
         {/* TOOLBAR */}
         <AdminToolbar
           search={search}
           onSearchChange={setSearch}
-
-
+          error={error}
           placeholder="Search products..."
           primaryButtonLabel="Add Product"
           primaryButtonHref="/admin/products/create-new"
@@ -112,35 +124,33 @@ const skipNextSearch = useRef(false);
           sectionLabel="Inventory Controls"
 
           heading="Product Controls"
-          
-              item={products.length}
+
+
+          item={Number(products.length)}
 
           refreshAll={async () => {
             if (search !== "") {
               skipNextSearch.current = true;
               setSearch("")
             }
-             await refreshAll("")
-            }}
+
+              await refreshAll(search)
+            
+          }}
 
 
         />
 
         {/* TABLE */}
-        {/* <div className="rounded-[30px] border border-white/10 bg-[#111827]/70 shadow-2xl backdrop-blur-xl   p-4 lg:p-6"> */}
 
-
-
-          <ProductsTable
-            loading={loading}
-            products={products}
-             hasLoaded={hasLoaded}
-              deletingProductId={deletingProductId}
-            onDelete={handleDelete}
-
-          />
-
-        {/* </div> */}
+        <ProductsTable
+          loading={loading}
+          products={products}
+          hasLoaded={hasLoaded}
+          deletingProductId={deletingProductId}
+          onDelete={handleDelete}
+          error={error}
+        />
       </div>
 
       {/* CATEGORY DIALOG */}
@@ -161,4 +171,3 @@ const skipNextSearch = useRef(false);
 export default AdminProducts;
 
 
- 
