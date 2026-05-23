@@ -9,3 +9,4 @@ export async function GET() {
   const categories = await CategoryModel.find({}).sort({ name: 1 });
   return NextResponse.json(categories);
 }
+// git config user.email "deepakbisht170000@gmail.com"
