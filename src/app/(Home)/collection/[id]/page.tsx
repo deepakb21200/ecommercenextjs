@@ -18,7 +18,7 @@ function CollectionDetails() {
   const user = useAuthStore((s) => s.user)
 
   // const isSignedIn = Boolean(user)
-  console.log("j");
+  
   
   const { loadProduct, clear, data, toggleWishlist, addToCart } = useCustomerProductDetailsStore((state) => state);
 
