@@ -111,7 +111,7 @@ export default function LoginPage() {
     password: "",
   });
   
-  console.log("d");
+  // console.log("d");
   
 
   const handleSubmit = async () => {
