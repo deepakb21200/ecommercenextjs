@@ -155,7 +155,8 @@ export default function AdminToolbar({
     return (
 
         <>
-            <div className="rounded-[30px] border-4  border border-white/10 bg-[#111827]/70  p-5 shadow-2xl backdrop-blur-xl lg:p-6">
+            {/* <div className="rounded-[30px] border-4  border border-white/10 bg-[#111827]/70  p-5 shadow-2xl backdrop-blur-xl lg:p-6"> */}
+               <div className="rounded-[30px] border-4  border-red-400  bg-[#111827]/70  p-5 shadow-2xl backdrop-blur-xl lg:p-6">
 
                 <div className="mb-6 flex items-center justify-between">
                     <div>
