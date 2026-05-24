@@ -85,6 +85,13 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   await connectDB();
 
+  
+    const auth = requireAdmin(req);
+  if (auth.error) {
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
+  }
+
+
   const { searchParams } = new URL(req.url);
   const search = searchParams.get("search")?.trim();
   const query = search ? { title: { $regex: search, $options: "i" } } : {};
