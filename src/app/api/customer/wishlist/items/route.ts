@@ -1,6 +1,6 @@
 //fetch(`${BASE_URL}/wishlist/items`
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+ 
 import { connectDB } from "@/lib/connectDB";
 import { WishlistModel } from "@/models/WIshlist";
  
@@ -8,23 +8,9 @@ import { WishlistModel } from "@/models/WIshlist";
  
  import { Types } from "mongoose";
 import { getWishlistResponse } from "../route";
+import { getAuthUser } from "@/lib/auth";
 
  
- function getAuthUser(req: NextRequest) {
-   const token = req.cookies.get("token")?.value;
-   if (!token) {
- 
-     console.log("token hi",token);
-     
-     return { error: "Unauthorized", status: 401 };
-   }
-   try {
-     const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
-     return { decoded };
-   } catch {
-     return { error: "Invalid token", status: 401 };
-   }
- }
  
 
 export async function POST(req: NextRequest) {
@@ -32,15 +18,11 @@ export async function POST(req: NextRequest) {
   
   await connectDB();
 
-  const auth = getAuthUser(req);
-
-  
+ const auth = getAuthUser(req);
   if (auth.error) {
-    return NextResponse.json(
-      { status: "error", message: auth.error },
-      { status: auth.status }
-    );
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
   }
+
 
   try {
     const body = await req.json();
@@ -61,11 +43,11 @@ export async function POST(req: NextRequest) {
     }
 
     // Wishlist dhundo ya naya banao
-    let wishlist = await WishlistModel.findOne({ user: auth.decoded.id });
+    let wishlist = await WishlistModel.findOne({ user: auth.decoded!.id });
 
     if (!wishlist) {
       wishlist = await WishlistModel.create({
-        user: auth.decoded.id,
+        user: auth.decoded!.id,
         products: [new Types.ObjectId(productId)],
       });
     } else {
@@ -80,7 +62,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const data = await getWishlistResponse(auth.decoded.id)
+    const data = await getWishlistResponse(auth.decoded!.id)
 
     
     return NextResponse.json({ status: "success", data });

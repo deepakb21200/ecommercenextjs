@@ -4,18 +4,9 @@ import jwt from "jsonwebtoken";
  
 import { UserModel } from "@/models/User";
 import { connectDB } from "@/lib/connectDB";
+import { getAuthUser } from "@/lib/auth";
 
-function getAuthUser(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
-  if (!token) return { error: "Unauthorized", status: 401 };
-  try {
-    const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
-    return { decoded };
-  } catch {
-    return { error: "Invalid token", status: 401 };
-  }
-}
-
+ 
 function mapAddress(item: any) {
   return {
     _id: String(item._id || ""),
@@ -39,11 +30,12 @@ export async function GET(req: NextRequest) {
 
   const auth = getAuthUser(req);
   if (auth.error) {
-    return NextResponse.json({ status: "error", message: auth.error }, { status: auth.status });
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
   }
 
+ 
   try {
-    const user = await UserModel.findById(auth.decoded.id);
+    const user = await UserModel.findById(auth.decoded!.id);
 
     if (!user) {
       return NextResponse.json({ status: "error", message: "User not found" }, { status: 404 });
@@ -81,7 +73,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ status: "error", message: "All fields are required" }, { status: 400 });
     }
 
-    const user = await UserModel.findById(auth.decoded.id);
+    const user = await UserModel.findById(auth.decoded!.id);
 
     if (!user) {
       return NextResponse.json({ status: "error", message: "User not found" }, { status: 404 });

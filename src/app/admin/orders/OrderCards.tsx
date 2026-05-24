@@ -102,7 +102,8 @@ export default function OrderCards({
 }
 
   // ← tab empty check karo
-  if (!orders.length ) {
+  // if (!orders.length ) {
+  if (!loading && hasLoaded && orders.length === 0){
     return (
       <div className="flex flex-col items-center justify-center py-20 text-zinc-400 col-span-full">
         <HiOutlineCube className="text-4xl text-zinc-500" />

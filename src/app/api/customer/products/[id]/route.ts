@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ProductModel } from "@/models/Product";
 import "@/models/Category";
 import { connectDB } from "@/lib/connectDB";
+ 
 
 export async function GET(
   req: NextRequest,
@@ -9,6 +10,7 @@ export async function GET(
 ) {
   await connectDB();
 
+ 
   const { id } = await params;
 
   const product = await ProductModel.findOne({
@@ -42,18 +44,18 @@ export async function GET(
       null;
 
     // remove unwanted fields
-   const {
-  _id,
-  createdAt,
-  updatedAt,
-  createdBy,
-  __v,
-  ...rest
-} = item;
+    const {
+      _id,
+      createdAt,
+      updatedAt,
+      createdBy,
+      __v,
+      ...rest
+    } = item;
 
     return {
       ...rest,
-        _id: String(_id),
+      _id: String(_id),
 
       finalPrice: item.salePercentage
         ? Math.round(item.price - (item.price * item.salePercentage) / 100)
@@ -63,8 +65,8 @@ export async function GET(
     };
   });
 
-  console.log( "gta" ,product)
-  
+  console.log("gta", product)
+
 
   return NextResponse.json({
     product: {

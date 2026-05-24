@@ -1,21 +1,12 @@
  
 
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+ 
 import { connectDB } from "@/lib/connectDB";
 import { WishlistModel } from "@/models/WIshlist";
+import { getAuthUser } from "@/lib/auth";
 
-function getAuthUser(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
-  if (!token) return { error: "Unauthorized", status: 401 };
-  try {
-    const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
-    return { decoded };
-  } catch {
-    return { error: "Invalid token", status: 401 };
-  }
-}
-
+ 
 export async function getWishlistResponse(userId: string) {
   const wishlist = await WishlistModel.findOne({ user: userId })
     .populate("products", "title brand price salePercentage images")
@@ -34,11 +25,13 @@ export async function getWishlistResponse(userId: string) {
 
 export async function GET(req: NextRequest) {
   await connectDB();
-  const auth = getAuthUser(req);
-  if (auth.error) return NextResponse.json({ status: "error", message: auth.error }, { status: auth.status });
+ const auth = getAuthUser(req);
+  if (auth.error) {
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
+  }
 
   try {
-    const data = await getWishlistResponse(auth.decoded.id);
+    const data = await getWishlistResponse(auth.decoded!.id);
     return NextResponse.json({ status: "success", data });
   } catch (err: any) {
     return NextResponse.json({ status: "error", message: err.message }, { status: 500 });

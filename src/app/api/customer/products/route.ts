@@ -8,6 +8,9 @@ type ProductSort = "recent" | "price-low" | "price-high";
 export async function GET(req: NextRequest) {
   await connectDB();
 
+
+  
+
   const { searchParams } = new URL(req.url);
   const category = searchParams.get("category")?.trim() || "";
   const brand = searchParams.get("brand")?.trim() || "";

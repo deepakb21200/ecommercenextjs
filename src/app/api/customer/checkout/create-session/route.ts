@@ -1,6 +1,6 @@
 // ye hai create sessison ka route.ts
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+ 
 import Stripe from "stripe";
 import { connectDB } from "@/lib/connectDB";
 import { CartModel } from "@/models/Cart";
@@ -8,40 +8,19 @@ import { UserModel } from "@/models/User";
 import { ProductModel } from "@/models/Product";
 import { PromoModel } from "@/models/Promo";
 import { OrderModel } from "@/models/Order";
+import { getAuthUser } from "@/lib/auth";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-function getAuthUser(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
-
-  if (!token) {
-    return { error: "Unauthorized", status: 401 };
-  }
-
-  try {
-    const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
-    return { decoded };
-  } catch {
-    return { error: "Invalid token", status: 401 };
-  }
-}
-
+ 
 export async function POST(req: NextRequest) {
   await connectDB();
 
-  const auth = getAuthUser(req);
-
+ const auth = getAuthUser(req);
   if (auth.error) {
-    return NextResponse.json(
-      {
-        status: "error",
-        message: auth.error,
-      },
-      {
-        status: auth.status,
-      }
-    );
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
   }
+
 
   try {
     const body = await req.json();
@@ -51,7 +30,7 @@ export async function POST(req: NextRequest) {
       .trim()
       .toUpperCase();
 
-    const userId = auth.decoded.id;
+    const userId = auth.decoded!.id;
 
     const [user, cart] = await Promise.all([
       UserModel.findById(userId).lean(),

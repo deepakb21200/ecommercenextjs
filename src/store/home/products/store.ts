@@ -254,12 +254,7 @@ export const useCustomerProductDetailsStore = create<CustomerProductDetailsStore
       quantity: 1,
       color: selectedColor || "",
       size: selectedSize || ("" as ProductSize),
-      title: product.title,
-      brand: product.brand,
-      image: getCoverImage(product),
-      finalPrice: product.salePercentage
-        ? Math.round(product.price - (product.price * product.salePercentage) / 100)
-        : product.price,
+   
     });
   },
 }));

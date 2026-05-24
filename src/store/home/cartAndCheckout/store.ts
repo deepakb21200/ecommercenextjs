@@ -19,13 +19,7 @@ import {
 } from "./api";
 import toast from "react-hot-toast";
 
-type AddCartItemInput = AddCustomerCartItemBody & {
-  title: string;
-  brand: string;
-  image: string;
-  finalPrice: number;
-};
-
+ 
 type CustomerCartAndCheckoutStore = {
   cart: CustomerCartResponse;
   isOpen: boolean;
@@ -39,7 +33,7 @@ type CustomerCartAndCheckoutStore = {
   setOpen: (value: boolean) => void;
   setCart: (cart: CustomerCartResponse) => void;
   loadCart: () => Promise<void>;
-  addItem: (item: AddCartItemInput) => Promise<void>;
+  addItem: (item: AddCustomerCartItemBody) => Promise<void>;
   increase: (item: CustomerCartItemIdentifier) => Promise<void>;
   decrease: (item: CustomerCartItemIdentifier) => Promise<void>;
   remove: (item: CustomerCartItemIdentifier) => Promise<void>;
@@ -95,7 +89,8 @@ export const useCustomerCartAndCheckoutStore = create<CustomerCartAndCheckoutSto
       });
       set({ cart: response ?? emptyCart });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to add to cart");
+     
+       toast.error(error instanceof Error ? error.message : "Failed to add to cart");
     }
   },
 

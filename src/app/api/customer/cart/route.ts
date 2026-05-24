@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+ 
 import { CartModel } from "@/models/Cart";
 import { connectDB } from "@/lib/connectDB";
+import { getAuthUser } from "@/lib/auth";
  
  
  // ye checke karnahai claude se 
@@ -21,16 +22,7 @@ type CartPreviewItem = {
   size?: string;
 };
 
-function getAuthUser(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
-  if (!token) return { error: "Unauthorized", status: 401 };
-  try {
-    const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
-    return { decoded };
-  } catch {
-    return { error: "Invalid token", status: 401 };
-  }
-}
+ 
 
 function formatProduct(product: ProductPreview) {
   const image =
@@ -81,16 +73,14 @@ const cartItems = (cart?.items || []) as unknown as CartPreviewItem[];
 export async function GET(req: NextRequest) {
   await connectDB();
 
-  const auth = getAuthUser(req);
+ const auth = getAuthUser(req);
   if (auth.error) {
-    return NextResponse.json(
-      { status: "error", message: auth.error },
-      { status: auth.status }
-    );
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
   }
 
+
   try {
-    const data = await getCartResponse(auth.decoded.id);
+    const data = await getCartResponse(auth.decoded!.id);
 
     
     return NextResponse.json({ status: "success", data });

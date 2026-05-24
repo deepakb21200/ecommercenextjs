@@ -39,28 +39,27 @@ export default function AdminPromos() {
   const [hasLoaded, setHasLoaded] = useState(false);
 
   // ================= LOAD PROMOS =================
-  const refreshAll = useCallback(async () => {
-    try {
-      setLoading(true);
-      setPromos([])
+const refreshAll = useCallback(async () => {
+  try {
+    setLoading(true);
+    setError("");
+    setPromos([]);
 
-      const response = await getAdminPromos();
+    const response = await getAdminPromos();
 
-      // Adjust if your API returns { data: [...] }
-      const data = Array.isArray(response)
-        ? response
-        : response?.items || [];
+    const data = Array.isArray(response)
+      ? response
+      : response?.items || [];
 
-
-      setPromos(data);
-      setHasLoaded(true);
-    } catch (e) {
-      setError("failed to fetch promos")
-    }
-    finally {
-      setLoading(false);
-    }
-  }, []);
+    setPromos(data);
+  } catch {
+    setError("Failed to fetch promos");
+    setPromos([]);
+  } finally {
+    setLoading(false);
+    setHasLoaded(true);
+  }
+}, []);
 
 
   useEffect(() => {
@@ -156,19 +155,7 @@ export default function AdminPromos() {
 
 
 
-  useEffect(() => {
-  return () => {
-    setSearch("");
-    setError("");
-    setPromos([]);
-    setLoading(false);
-    setSaving(false);
-    setDeletingPromoId(null);
-    setHasLoaded(false);
-    setEditingPromo(null);
-    setPromoDialogOpen(false);
-  };
-}, []);
+  
   // ================= UI =================
   return (
     <div>

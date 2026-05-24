@@ -65,17 +65,17 @@ export default function AdminOrders() {
     fetchOrders()
   }
 
-useEffect(() => {
-  return () => {
-    useAdminOrdersStore.setState({
-      orders: [],
-      loading: true,
-      hasLoaded: false,
-      error: "",
-      updatingOrderId: "",
-    });
-  };
-}, []);
+  useEffect(() => {
+    return () => {
+      useAdminOrdersStore.setState({
+        orders: [],
+        loading: false,
+        hasLoaded: false,
+        error: "",
+        updatingOrderId: "",
+      });
+    };
+  }, []);
 
   return (
     <div>

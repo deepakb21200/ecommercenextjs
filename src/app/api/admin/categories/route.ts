@@ -1,14 +1,22 @@
 
 // /api/admin/categories/route.ts
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/connectDB";
 import { CategoryModel } from "@/models/Category";
 import { uploadSingleBufferToCloudinary } from "@/utils/cloudinary";
+import { requireAdmin } from "@/lib/auth";
 
 // ✅ GET all categories
-export async function GET() {
+export async function GET(req: NextRequest) {
   await connectDB();
+
+
+  const auth = requireAdmin(req);
+  if (auth.error) {
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
+  }
+
 
   const categories = await CategoryModel.find().sort({ createdAt: -1 });
 
@@ -16,8 +24,14 @@ export async function GET() {
 }
 
 // ✅ CREATE category
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   await connectDB();
+
+  const auth = requireAdmin(req);
+  if (auth.error) {
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
+  }
+
 
   try {
     const formData = await req.formData();

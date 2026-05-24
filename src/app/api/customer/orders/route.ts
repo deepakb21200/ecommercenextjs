@@ -2,25 +2,12 @@
 // app/api/customer/orders/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+ 
 import { connectDB } from "@/lib/connectDB";
 import { OrderModel } from "@/models/Order";
+import { getAuthUser } from "@/lib/auth";
 
 
-function getAuthUser(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
-
-  if (!token) {
-    return { error: "Unauthorized", status: 401 };
-  }
-
-  try {
-    const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
-    return { decoded };
-  } catch {
-    return { error: "Invalid token", status: 401 };
-  }
-}
  
 
 
@@ -29,7 +16,7 @@ function getAuthUser(req: NextRequest) {
 export async function GET(req: NextRequest) {
   await connectDB();
 
-  const auth = getAuthUser(req);
+ const auth = getAuthUser(req);
   if (auth.error) {
     return NextResponse.json({ message: auth.error }, { status: auth.status });
   }

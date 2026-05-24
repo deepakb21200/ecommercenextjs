@@ -1,25 +1,14 @@
+import { getAuthUser } from '@/lib/auth';
 
 // ye hai user loggedin and user not lgogged bhi karlega
 
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+ 
 
 import { PromoModel } from "@/models/Promo";
 import { connectDB } from "@/lib/connectDB";
 
-// ✅ OPTIONAL auth (no blocking)
-function getAuthUser(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
-  if (!token) return null;
-
-  try {
-    const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
-    return decoded;
-  } catch {
-    return null;
-  }
-}
-
+ 
 // POST /api/customer/promos/apply
  
 
@@ -27,7 +16,11 @@ function getAuthUser(req: NextRequest) {
 export async function POST(req: NextRequest) {
   await connectDB();
 
-  const user = getAuthUser(req); // optional auth
+  const user =    getAuthUser(req);
+  if (user.error) {
+    return NextResponse.json({ message: user.error }, { status: user.status });
+  }
+
 
   try {
     const body = await req.json();

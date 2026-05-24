@@ -5,11 +5,12 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import CustomerProductDetailsGallery from "@/components/Home/products/details/Customerproductdetailsgallery";
 import CustomerProductDetailsSummary from "@/components/Home/products/details/Customerproductdetailssummary";
-import { Commonloader } from "@/components/admin/Loader";
+
 import { useAuthStore } from "@/components/user/store/api";
 import { useCustomerProductDetailsStore } from "@/store/home/products/store";
 import { useCustomerWishlistStore } from "@/store/home/wishlist/store";
 import Products from "@/components/Home/ProductCarfs";
+import { HomeLoader } from "../../HomeLoader";
 
 function CollectionDetails() {
   const params = useParams();
@@ -58,7 +59,7 @@ function CollectionDetails() {
 
   }, [data, wishlistItems])
 
-  if (!product) return <Commonloader />;
+  if (!product) return <HomeLoader/>
 
   return (
     <div className="min-h-screen" style={{ background: "hsl(40,33%,98%)" }}>
@@ -150,7 +151,7 @@ function CollectionDetails() {
                 Related Products
               </h2>
             </div>
-            {/* <CustomerProductRelatedCard key={item._id} product={item} /> */}
+      
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {relatedProducts.map((item) => (
 

@@ -9,27 +9,9 @@ export async function getAdminPromos() {
     credentials: "include",
   });
 
-
-
-
-//  await new Promise((resolve) =>
-//         setTimeout(resolve, 3000)
-//       );
-
-//       // manually error throw
-//       throw new Error("Failed to fetch");
-
-
-
-
-
-
   if (!res.ok) {
     throw new Error("Failed to fetch promos");
   }
-// let a = await res.json()
-//   console.log(res.ok, a);
- 
 
   
 

@@ -4,11 +4,18 @@ import { connectDB } from "@/lib/connectDB";
 import { OrderModel } from "@/models/Order";
 import { PromoModel } from "@/models/Promo";
 import { CartModel } from "@/models/Cart";
+import { getAuthUser } from "@/lib/auth";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(req: NextRequest) {
   await connectDB();
+
+   const auth = getAuthUser(req);
+  if (auth.error) {
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
+  }
+
 
   try {
     const body = await req.json();

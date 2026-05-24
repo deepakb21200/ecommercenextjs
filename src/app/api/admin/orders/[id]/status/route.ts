@@ -3,36 +3,16 @@
 // app/api/admin/orders/[id]/status/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+
 import { connectDB } from "@/lib/connectDB";
 import { OrderModel } from "@/models/Order";
+import { requireAdmin } from "@/lib/auth";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-type DecodedToken = { id: string; role: string };
-
-type AuthResult =
-  | { decoded: DecodedToken; error?: never; status?: never }
-  | { error: string; status: number; decoded?: never };
 
 // Admin sirf yeh 3 set kar sakta hai — cancelled webhook se hota hai
 const ALLOWED_STATUSES = ["placed", "shipped", "delivered"] as const;
 type AdminOrderStatus = (typeof ALLOWED_STATUSES)[number];
 
-// ─── Auth helper ──────────────────────────────────────────────────────────────
-
-function requireAdmin(req: NextRequest): AuthResult {
-  const token = req.cookies.get("token")?.value;
-  if (!token) return { error: "Unauthorized", status: 401 };
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_KEY!) as DecodedToken;
-    if (decoded.role !== "admin") return { error: "Admin access only", status: 403 };
-    return { decoded };
-  } catch {
-    return { error: "Invalid token", status: 401 };
-  }
-}
 
 // ─── PATCH /api/admin/orders/[id]/status ─────────────────────────────────────
 
@@ -47,6 +27,7 @@ export async function PATCH(
     return NextResponse.json({ message: auth.error }, { status: auth.status });
   }
 
+
   const { id: orderId } = await params;
 
   if (!orderId) {
@@ -56,7 +37,7 @@ export async function PATCH(
   const body = await req.json() as { orderStatus?: string };
   const orderStatus = (body.orderStatus ?? "").trim() as AdminOrderStatus;
 
- 
+
   if (!orderStatus) {
     return NextResponse.json({ message: "orderStatus is required" }, { status: 400 });
   }
@@ -86,16 +67,16 @@ export async function PATCH(
   // }
 
   if (orderStatus === "delivered") {
-  if (!order.deliveredAt) {
-    order.deliveredAt = new Date();
+    if (!order.deliveredAt) {
+      order.deliveredAt = new Date();
+    }
   }
-}
 
   order.orderStatus = orderStatus;
   await order.save();
 
   return NextResponse.json({
-    _id:         String(order._id),
+    _id: String(order._id),
     orderStatus: order.orderStatus,
     deliveredAt: order.deliveredAt ?? null,
   });

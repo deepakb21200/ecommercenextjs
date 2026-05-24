@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
- 
+
 import { Banner } from "@/models/Banner";
 import { v2 as cloudinary } from "cloudinary";
 import { connectDB } from "@/lib/connectDB";
+import { requireAdmin } from "@/lib/auth";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -12,7 +13,7 @@ cloudinary.config({
 
 
 
- 
+
 type BannerDoc = {
   _id: unknown;
   imageUrl: string;
@@ -21,11 +22,15 @@ type BannerDoc = {
 };
 
 export async function DELETE(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
+    const auth = requireAdmin(req);
+    if (auth.error) {
+      return NextResponse.json({ message: auth.error }, { status: auth.status });
+    }
 
     const { id } = await params;
 

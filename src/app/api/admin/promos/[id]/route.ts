@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+
 import { PromoModel } from "@/models/Promo";
 import { connectDB } from "@/lib/connectDB";
- 
- 
+import { requireAdmin } from "@/lib/auth";
+
+
 function parsePromoPayload(data: Record<string, any>) {
   const code = String(data.code || "").trim().toUpperCase();
   const percentage = Number(data.percentage);
@@ -29,17 +30,6 @@ function parsePromoPayload(data: Record<string, any>) {
   return { data: { code, percentage, count, minimumOrderValue, startsAt, endsAt } };
 }
 
-function requireAdmin(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
-  if (!token) return { error: "Unauthorized", status: 401 };
-  try {
-    const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
-    if (decoded.role !== "admin") return { error: "Admin access only", status: 403 };
-    return { decoded };
-  } catch {
-    return { error: "Invalid token", status: 401 };
-  }
-}
 
 async function getAllPromos() {
   const promos = await PromoModel.find().sort({ createdAt: -1 });
@@ -53,8 +43,9 @@ export async function PATCH(
   await connectDB();
 
   const auth = requireAdmin(req);
-  if (auth.error) return NextResponse.json({ message: auth.error }, { status: auth.status });
-
+  if (auth.error) {
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
+  }
   const { id } = await params;
   const body = await req.json();
   const parsed = parsePromoPayload(body);
@@ -78,9 +69,10 @@ export async function DELETE(
 ) {
   await connectDB();
 
-  // const auth = requireAdmin(req);
-  // if (auth.error) return NextResponse.json({ message: auth.error }, { status: auth.status });
-
+  const auth = requireAdmin(req);
+  if (auth.error) {
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
+  }
   const { id } = await params;
 
   const promo = await PromoModel.findById(id);

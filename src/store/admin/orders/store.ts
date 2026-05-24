@@ -1,61 +1,199 @@
-// store/admin/orders/store.ts
+// // store/admin/orders/store.ts
+
+// import { create } from "zustand";
+// import { extractAdminOrders, updateAdminOrderStatus } from "./api";
+// import type { AdminOrder, AdminOrderStatus } from "@/components/admin/orders/types";
+
+// type AdminOrdersStore = {
+//   orders: AdminOrder[];
+//   error: string
+//   loading: boolean;
+//   hasLoaded: boolean
+//   updatingOrderId: string;
+ 
+//     fetchOrders: (search?: string) => Promise<void>;
+//   changeStatus: (orderId: string, orderStatus: AdminOrderStatus) => Promise<void>;
+// };
+
+// export const useAdminOrdersStore = create<AdminOrdersStore>((set) => ({
+//   orders: [],
+//   loading: true,
+//   updatingOrderId: "",
+//   hasLoaded: false,
+//   error: "",
+
+ 
+
+//   fetchOrders: async (search = "") => {
+//     try {
+//       set({ loading: true, orders: [], error: "" });
+//       const data = await extractAdminOrders(search);
+//       set({ orders: data?.items ?? [] });
+//     } catch {
+//       set({ orders: [], error: "Failed to fetch orders" });
+//     } finally {
+//       set({ loading: false, hasLoaded: true });
+//     }
+//   },
+//   changeStatus: async (orderId, orderStatus) => {
+//     try {
+//       set({ updatingOrderId: orderId });
+
+//       const res = await updateAdminOrderStatus(orderId, orderStatus);
+
+//       set((state) => ({
+//         orders: state.orders.map((order) =>
+//           order._id === orderId
+//             ? {
+//               ...order,
+//               orderStatus: res.orderStatus,
+//               deliveredAt: res.deliveredAt ?? order.deliveredAt,
+//             }
+//             : order
+//         ),
+//       }));
+//     } catch (error) {
+//       console.error("Update Order Error:", error);
+//     } finally {
+//       set({ updatingOrderId: "" });
+//     }
+//   },
+// }));
+
+
+
+
+
+
+
+
+
+
+
+
+
+"use client";
 
 import { create } from "zustand";
-import { extractAdminOrders, updateAdminOrderStatus } from "./api";
-import type { AdminOrder, AdminOrderStatus } from "@/components/admin/orders/types";
+import {
+  extractAdminOrders,
+  updateAdminOrderStatus,
+} from "./api";
+
+import type {
+  AdminOrder,
+  AdminOrderStatus,
+} from "@/components/admin/orders/types";
 
 type AdminOrdersStore = {
   orders: AdminOrder[];
-  error: string
+  error: string;
   loading: boolean;
-  hasLoaded: boolean
+  hasLoaded: boolean;
   updatingOrderId: string;
- 
-    fetchOrders: (search?: string) => Promise<void>;
-  changeStatus: (orderId: string, orderStatus: AdminOrderStatus) => Promise<void>;
+
+  fetchOrders: (search?: string) => Promise<void>;
+
+  changeStatus: (
+    orderId: string,
+    orderStatus: AdminOrderStatus
+  ) => Promise<void>;
 };
 
-export const useAdminOrdersStore = create<AdminOrdersStore>((set) => ({
-  orders: [],
-  loading: true,
-  updatingOrderId: "",
-  hasLoaded: false,
-  error: "",
+// race condition handle
+let abortController: AbortController | null = null;
 
+export const useAdminOrdersStore =
+  create<AdminOrdersStore>((set) => ({
+    orders: [],
+    loading: false,
+    hasLoaded: false,
+    updatingOrderId: "",
+    error: "",
+
+    fetchOrders: async (search = "") => {
+      // previous request cancel
+      if (abortController) {
+        abortController.abort();
+      }
+
+      abortController = new AbortController();
+
+      try {
+        set({
+          loading: true,
+          error: "",
+           orders: []// ye maine kiya h
+
+        });
+
+        const data = await extractAdminOrders(
+          search,
+          abortController.signal
+        );
  
 
-  fetchOrders: async (search = "") => {
-    try {
-      set({ loading: true, orders: [], error: "" });
-      const data = await extractAdminOrders(search);
-      set({ orders: data?.items ?? [] });
-    } catch {
-      set({ orders: [], error: "Failed to fetch orders" });
-    } finally {
-      set({ loading: false, hasLoaded: true });
-    }
-  },
-  changeStatus: async (orderId, orderStatus) => {
-    try {
-      set({ updatingOrderId: orderId });
+        set({
+          orders: data?.items ?? [],
+          hasLoaded: true,
+        });
+      } catch (err: unknown) {
+        // abort ignore
+        if (
+          err instanceof Error &&
+          err.name === "AbortError"
+        ) {
+          return;
+        }
 
-      const res = await updateAdminOrderStatus(orderId, orderStatus);
+        set({
+          error: "Failed to fetch orders",
+          orders: [],
+          hasLoaded: true,
+        });
+      } finally {
+        set({
+          loading: false,
+        });
+      }
+    },
 
-      set((state) => ({
-        orders: state.orders.map((order) =>
-          order._id === orderId
-            ? {
-              ...order,
-              orderStatus: res.orderStatus,
-              deliveredAt: res.deliveredAt ?? order.deliveredAt,
-            }
-            : order
-        ),
-      }));
-    } catch (error) {
-      console.error("Update Order Error:", error);
-    } finally {
-      set({ updatingOrderId: "" });
-    }
-  },
-}));
+    changeStatus: async (
+      orderId,
+      orderStatus
+    ) => {
+      try {
+        set({
+          updatingOrderId: orderId,
+        });
+
+        const res = await updateAdminOrderStatus(
+          orderId,
+          orderStatus
+        );
+
+        set((state) => ({
+          orders: state.orders.map((order) =>
+            order._id === orderId
+              ? {
+                  ...order,
+                  orderStatus: res.orderStatus,
+                  deliveredAt:
+                    res.deliveredAt ??
+                    order.deliveredAt,
+                }
+              : order
+          ),
+        }));
+      } catch (error) {
+        console.error(
+          "Update Order Error:",
+          error
+        );
+      } finally {
+        set({
+          updatingOrderId: "",
+        });
+      }
+    },
+  }));

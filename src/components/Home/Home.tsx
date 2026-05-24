@@ -8,6 +8,7 @@ import { CouponsSection } from "./Categories/Couponssection";
 import { FaqSection } from "./Categories/FaqSection";
 import Products from "./ProductCarfs";
 import BannerSlider from "./BannerSlider";
+import { HomeLoader } from "@/app/(Home)/HomeLoader";
 
 export function StoreHome() {
   const { data, loading, loadHome } = useCustomerHomeStore((state) => state);
@@ -25,9 +26,8 @@ export function StoreHome() {
 
 
  
-  if (loading) {
-    return <Commonloader />;
-  }
+    // Full screen — header/footer ke upar
+  if (loading) return <HomeLoader />
 
   return (
     <>

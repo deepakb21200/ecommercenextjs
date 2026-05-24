@@ -1,22 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
 import { ProductModel } from "@/models/Product";
 import { uploadManyBuffersToCloudinary } from "@/utils/cloudinary";
 import { connectDB } from "@/lib/connectDB";
 import { CategoryModel } from "@/models/Category";
+import { requireAdmin } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   await connectDB();
 
-  const token = req.cookies.get("token")?.value;
-  if (!token) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
-  let decoded: any;
-  try {
-    decoded = jwt.verify(token, process.env.JWT_KEY!);
-  } catch {
-    return NextResponse.json({ message: "Invalid token" }, { status: 401 });
+    const auth = requireAdmin(req);
+  if (auth.error) {
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
   }
+
 
   const formData = await req.formData();
 
@@ -77,7 +74,7 @@ export async function POST(req: NextRequest) {
     salePercentage,
     stock,
     status,
-    createdBy: decoded.id,
+    createdBy: auth.decoded!.id,
   });
 
   const createdProduct = await ProductModel.findById(product._id).populate("category", "name");
@@ -98,3 +95,15 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json(products);
 }
+
+
+  // const token = req.cookies.get("token")?.value;
+  // if (!token) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+  // let decoded: any;
+  // try {
+  //   decoded = jwt.verify(token, process.env.JWT_KEY!);
+  // } catch {
+  //   return NextResponse.json({ message: "Invalid token" }, { status: 401 });
+  // }
+

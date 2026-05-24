@@ -17,19 +17,12 @@ type Props = {
   onEdit: (promo: Promo) => void;
   onDelete: (promoId: string) => void;
   error: string
-  hasLoaded:boolean
+  hasLoaded: boolean
 };
 
 
 
 
-// type Props = {
-//   promos: Promo[];
-//   loading: boolean;
-//   deletingPromoId: string;
-//   onEdit: (promo: Promo) => void;
-//   onDelete: (promoId: string) => void;
-// };
 function formatDate(value: string) {
   return new Date(value).toLocaleDateString("en-IN", {
     day: "2-digit",
@@ -47,6 +40,8 @@ export default function PromoCards({
   error,
   hasLoaded
 }: Props) {
+
+
   if (loading || !hasLoaded) {
     return (
       <div className="flex flex-col items-center justify-center  ">
@@ -55,6 +50,7 @@ export default function PromoCards({
       </div>
     );
   }
+
 
   if (error) {
     return (
@@ -69,8 +65,7 @@ export default function PromoCards({
 
 
 
-
-  if (!promos.length) {
+if (!loading && hasLoaded && promos.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-zinc-400  ">
         <HiOutlineTicket className="text-4xl text-zinc-500" />

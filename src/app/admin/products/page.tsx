@@ -31,8 +31,8 @@ function AdminProducts() {
     categories,
     loading,
     refreshAll,
-    hasLoaded,
-    error
+    error,
+    hasLoaded
 
   } = useAdminProductsStore();
 
@@ -42,7 +42,11 @@ function AdminProducts() {
   useEffect(() => {
     return () => {
       useAdminProductsStore.setState({
-        products: [], categories: [], loading: false, hasLoaded: false,
+        products: [],
+        categories: [],
+        loading: false,
+        error: "",
+        hasLoaded: false,
       });
     };
   }, []);
@@ -53,7 +57,7 @@ function AdminProducts() {
   useEffect(() => {
     if (skipNextSearch.current) { skipNextSearch.current = false; return; }
     const timer = setTimeout(() => { void refreshAll(search.trim()); }, 300);
-    console.log(hasLoaded);
+
     return () => clearTimeout(timer);
   }, [search]);
 
@@ -74,10 +78,10 @@ function AdminProducts() {
 
 
   useEffect(() => {
-    console.log("solo", hasLoaded);
+
     console.log("pro-+", products);
 
-  }, [hasLoaded, products])
+  }, [products])
 
   return (
     <div className="">
@@ -133,10 +137,10 @@ function AdminProducts() {
               skipNextSearch.current = true;
               setSearch("")
             }
-            
 
-              await refreshAll(search)
-            
+
+            await refreshAll(search)
+
           }}
 
 
@@ -147,6 +151,7 @@ function AdminProducts() {
         <ProductsTable
           loading={loading}
           products={products}
+
           hasLoaded={hasLoaded}
           deletingProductId={deletingProductId}
           onDelete={handleDelete}

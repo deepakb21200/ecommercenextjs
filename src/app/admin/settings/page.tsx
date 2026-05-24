@@ -3,7 +3,7 @@
 import AdminSettingsBannersTable from "@/components/admin/orders/BannerTable";
 import { deleteAdminBanner, getAdminBanners, uploadAdminBanners } from "@/components/admin/settings/api";
 import { AdminHero } from "@/utils/AdminHero";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   RiImageAddLine,
   RiRefreshLine,
@@ -26,20 +26,23 @@ export default function AdminSettings() {
   const [uploading, setUploading] = useState(false);
   const [deletingId, setDeletingId] = useState("");
   const [error, setError] = useState(false)
-
-  const fetchBanners = async () => {
+ 
+  const fetchBanners = useCallback(async () => {
     try {
       setLoading(true);
-      setError(false); // ←
-      const res = await getAdminBanners();
-      setItems(res.items || []);
-    } catch (err: unknown) {
+      setError(false);
 
-      setError(true)
+      const res = await getAdminBanners();
+
+      setItems(Array.isArray(res.items) ? res.items : []);
+    } catch {
+      setError(true);
+      setItems([]);
     } finally {
       setLoading(false);
+       
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchBanners();
@@ -142,7 +145,7 @@ export default function AdminSettings() {
               {/* Upload button */}
               <button
                 onClick={() => void handleUpload()}
-                disabled={uploading || !files.length || error}
+               disabled={uploading || !files.length}
                 className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-fuchsia-500 to-sky-500 px-5 py-4 text-sm font-semibold text-white shadow-xl shadow-fuchsia-500/20 transition-all hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <RiUploadCloud2Line className="text-lg" />
@@ -168,7 +171,7 @@ export default function AdminSettings() {
             </div>
 
 
-            {loading ? (
+          {loading ? (
               <div className="flex flex-col items-center justify-center gap-4 py-24">
                 <div className="h-10 w-10 animate-spin rounded-full border-2 border-zinc-700 border-t-fuchsia-500" />
                 <p className="text-sm text-zinc-500">Loading banners...</p>

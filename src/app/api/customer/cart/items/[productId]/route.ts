@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
-
+ 
 import { CartModel } from "@/models/Cart";
 import { ProductModel } from "@/models/Product";
 import { connectDB } from "@/lib/connectDB";
+import { getAuthUser } from "@/lib/auth";
 
 type ProductPreview = {
   _id: string;
@@ -21,16 +21,7 @@ type CartPreviewItem = {
   size?: string;
 };
 
-function getAuthUser(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
-  if (!token) return { error: "Unauthorized", status: 401 };
-  try {
-    const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
-    return { decoded };
-  } catch {
-    return { error: "Invalid token", status: 401 };
-  }
-}
+ 
 
 function formatProduct(product: ProductPreview) {
   const image =
@@ -68,8 +59,9 @@ export async function DELETE(
 
   const auth = getAuthUser(req);
   if (auth.error) {
-    return NextResponse.json({ status: "error", message: auth.error }, { status: auth.status });
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
   }
+
 
   try {
     const { productId } = await params;
@@ -80,7 +72,7 @@ export async function DELETE(
       return NextResponse.json({ status: "error", message: "Product id is required" }, { status: 400 });
     }
 
-    const cart = await CartModel.findOne({ user: auth.decoded.id });
+    const cart = await CartModel.findOne({ user: auth.decoded!.id });
 
     if (!cart) {
       return NextResponse.json({ status: "success", data: { items: [], totalQuantity: 0 } });
@@ -109,7 +101,7 @@ export async function DELETE(
 
     await cart.save();
 
-    const data = await getCartResponse(auth.decoded.id);
+    const data = await getCartResponse(auth.decoded!.id);
     return NextResponse.json({ status: "success", data });
   } catch (err: any) {
     return NextResponse.json({ status: "error", message: err.message || "Something went wrong" }, { status: 500 });

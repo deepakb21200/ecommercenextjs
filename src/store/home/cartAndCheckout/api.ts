@@ -63,13 +63,14 @@ export async function addCustomerCartItem(
     body: JSON.stringify(body),
   });
 
+  const data = await res.json();
+
   if (!res.ok) {
-    const err = await res.json();
- 
-    throw new Error(err.message || "Failed to add item");
+    throw new Error(
+      data?.message || "Failed to add to cart"
+    );
   }
 
-  const data = await res.json();
   return data.data;
 }
 
@@ -84,8 +85,7 @@ export async function increaseCustomerCartItem(
     method: "PATCH",
     credentials: "include",
   });
-
-  // if (!res.ok) throw new Error("Failed to increase item");
+ 
     if (!res.ok) {
           const err = await res.json();
  
@@ -128,30 +128,6 @@ export async function removeCustomerCartItem(
 
 
 
-
-export async function syncCustomerCart(
-  body: SyncCustomerCartBody
-): Promise<CustomerCartResponse> {
-  const res = await fetch(`${BASE_URL}/cart/sync`, {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-
-  if (!res.ok) {
-    const err = await res.json();
-    console.error("SYNC ERROR:", err);
-    throw new Error("Failed to sync cart");
-  }
-
-  const data = await res.json();
-  console.log(data,"sd");
-  console.log(data.data,"d");
-  
-  
-  return data.data;
-}
 
 
 

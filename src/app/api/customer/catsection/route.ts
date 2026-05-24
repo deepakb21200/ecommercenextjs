@@ -6,6 +6,8 @@ import { CategoryModel } from "@/models/Category";
 
 export async function GET(req: NextRequest) {
   await connectDB();
+ 
+
 
   const { searchParams } = new URL(req.url);
 

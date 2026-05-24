@@ -6,6 +6,7 @@ export type CustomerCartItemIdentifier = {
   productId: string;
   color: string;
   size: ProductSize;
+   quantity: number;
 };
 
 export type CustomerCartItem = CustomerCartItemIdentifier & {
@@ -21,9 +22,7 @@ export type CustomerCartResponse = {
   totalQuantity: number;
 };
 
-export type AddCustomerCartItemBody = CustomerCartItemIdentifier & {
-  quantity?: number;
-};
+export type AddCustomerCartItemBody = CustomerCartItemIdentifier 
 
 export type SyncCustomerCartBody = {
   items: Array<

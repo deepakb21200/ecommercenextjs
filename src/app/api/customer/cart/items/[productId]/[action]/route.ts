@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
-
+ 
 import { CartModel } from "@/models/Cart";
 import { ProductModel } from "@/models/Product";
 import { connectDB } from "@/lib/connectDB";
+import { getAuthUser } from "@/lib/auth";
 
 type ProductPreview = {
   _id: string;
@@ -21,20 +21,7 @@ type CartPreviewItem = {
   size?: string;
 };
 
-function getAuthUser(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
-
-  if (!token) {
-    return { error: "Unauthorized", status: 401 };
-  }
-
-  try {
-    const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
-    return { decoded };
-  } catch {
-    return { error: "Invalid token", status: 401 };
-  }
-}
+ 
 
 function formatProduct(product: ProductPreview) {
   const image =
@@ -111,19 +98,11 @@ function isSameCartItem(
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ productId: string; action: string }>; }) {
   await connectDB();
 
-  const auth = getAuthUser(req);
-
+ const auth = getAuthUser(req);
   if (auth.error) {
-    return NextResponse.json(
-      {
-        status: "error",
-        message: auth.error,
-      },
-      {
-        status: auth.status,
-      }
-    );
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
   }
+
 
   try {
 
@@ -164,7 +143,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ pr
     // GET CART
     // ===============================
     const cart = await CartModel.findOne({
-      user: auth.decoded.id,
+      user: auth.decoded!.id,
     });
 
     if (!cart) {
@@ -298,7 +277,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ pr
     // RESPONSE
     // ===============================
     const data = await getCartResponse(
-      auth.decoded.id
+      auth.decoded!.id
     );
 
     return NextResponse.json({

@@ -1,11 +1,12 @@
 
 
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+ 
 import { CartModel } from "@/models/Cart";
 import { ProductModel } from "@/models/Product";
 import { connectDB } from "@/lib/connectDB";
 import { ProductSize } from "@/components/Home/products/types";
+import { getAuthUser } from "@/lib/auth";
 
 type ProductPreview = {
   _id: string;
@@ -23,62 +24,7 @@ type CartPreviewItem = {
   size?: string;
 };
 
-function getAuthUser(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
-  if (!token) {
-    console.log("thatis", token);
-
-    return { error: "Unauthorized", status: 401 };
-  }
-  try {
-    const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
-    return { decoded };
-  } catch {
-    return { error: "Invalid token", status: 401 };
-  }
-}
-
-// function formatProduct(product: ProductPreview) {
-//   const image =
-//     product.images.find((item) => item.isCover)?.url ||
-//     product.images[0]?.url ||
-//     "";
-//   const finalPrice = product.salePercentage
-//     ? Math.round(product.price - (product.price * product.salePercentage) / 100)
-//     : product.price;
-//   return {
-//     productId: String(product._id),
-//     title: product.title,
-//     brand: product.brand,
-//     image,
-//     finalPrice,
-//   };
-// }
-
-// async function getCartResponse(userId: string) {
-//   const cart = await CartModel.findOne({ user: userId }).populate(
-//     "items.product",
-//     "title brand price salePercentage images"
-//   );
-
-//   const cartItems = (cart?.items || []) as unknown as CartPreviewItem[];
-//   const items = cartItems.flatMap((cartItem) => {
-//     if (!cartItem.product) return [];
-//     return [
-//       {
-//         ...formatProduct(cartItem.product),
-//         quantity: cartItem.quantity,
-//         color: cartItem.color,
-//         size: cartItem.size,
-//       },
-//     ];
-//   });
-//   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
-//   return { items, totalQuantity };
-// }
-
-
-
+ 
 
 function formatProduct(product: ProductPreview) {
   const image = product.images.find((i) => i.isCover)?.url || product.images[0]?.url || "";
@@ -105,26 +51,18 @@ async function getCartResponse(userId: string) {
   return { items, totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0) };
 }
 
-// function isSameCartItem(item: any, productId: string, color?: string, size?: string) {
-//   return (
-//     String(item.product) === productId &&
-//     (item.color || "") === (color || "") &&
-//     (item.size || "") === (size || "")
-//   );
-// }
+ 
 
 // POST /api/customer/cart/items
 
 export async function POST(req: NextRequest) {
   await connectDB();
 
-  const auth = getAuthUser(req);
+ const auth = getAuthUser(req);
   if (auth.error) {
-    return NextResponse.json(
-      { status: "error", message: auth.error },
-      { status: auth.status }
-    );
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
   }
+
 
   try {
     const body = await req.json();
@@ -227,28 +165,19 @@ export async function POST(req: NextRequest) {
     // FIND OR CREATE CART
     // ===============================
     let cart = await CartModel.findOne({
-      user: auth.decoded.id,
+      user: auth.decoded!.id,
     });
 
     if (!cart) {
       cart = await CartModel.create({
-        user: auth.decoded.id,
+        user: auth.decoded!.id,
         items: [],
       });
     }
 
     // ===============================
     // FIND SAME VARIANT
-    // (same product + same color + same size)
-    // ===============================
-    // const itemIndex = cart.items.findIndex((item: any) =>
-    //   isSameCartItem(
-    //     item,
-    //     String(product._id),
-    //     color,
-    //     size
-    //   )
-    // );
+ 
 
     const itemIndex = cart.items.findIndex((item: any) => {
       return (
@@ -314,7 +243,7 @@ export async function POST(req: NextRequest) {
     // ===============================
     // RETURN UPDATED CART
     // ===============================
-    const data = await getCartResponse(auth.decoded.id);
+    const data = await getCartResponse(auth.decoded!.id);
 
 
     console.log("addtocart",data);

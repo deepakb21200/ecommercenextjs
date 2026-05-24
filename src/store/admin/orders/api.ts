@@ -3,28 +3,42 @@
 import type { AdminOrderStatus, AdminOrdersResponse, AdminUpdateOrderStatusResponse } from "@/components/admin/orders/types";
 
 const BASE_URL = "/api/admin";
+ 
 
-// export async function extractAdminOrders(): Promise<AdminOrdersResponse> {
-//   const res = await fetch(`${BASE_URL}/orders`, {
+// export async function extractAdminOrders(search = ""): Promise<AdminOrdersResponse> {
+//   const query = search.trim()
+//     ? `?search=${encodeURIComponent(search.trim())}`
+//     : "";
+
+//   const res = await fetch(`${BASE_URL}/orders${query}`, {
 //     credentials: "include",
 //   });
 
 //   if (!res.ok) throw new Error("Failed to fetch orders");
-
 //   return res.json();
 // }
 
 
-export async function extractAdminOrders(search = ""): Promise<AdminOrdersResponse> {
+export async function extractAdminOrders(
+  search = "",
+  signal?: AbortSignal
+) {
   const query = search.trim()
     ? `?search=${encodeURIComponent(search.trim())}`
     : "";
 
-  const res = await fetch(`${BASE_URL}/orders${query}`, {
-    credentials: "include",
-  });
+  const res = await fetch(
+    `/api/admin/orders${query}`,
+    {
+      credentials: "include",
+      signal,
+    }
+  );
 
-  if (!res.ok) throw new Error("Failed to fetch orders");
+  if (!res.ok) {
+    throw new Error("Failed to fetch");
+  }
+
   return res.json();
 }
 

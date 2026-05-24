@@ -1,15 +1,23 @@
 // /api/admin/categories/[id]/route.ts
-import { NextResponse } from "next/server";
+
+import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/connectDB";
 import { CategoryModel } from "@/models/Category";
 import { deleteFromCloudinary, uploadSingleBufferToCloudinary } from "@/utils/cloudinary";
+import { requireAdmin } from "@/lib/auth";
 
 // ✅ UPDATE category
 export async function PUT(
-  req: Request,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   await connectDB();
+
+  const auth = requireAdmin(req);
+  if (auth.error) {
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
+  }
+
 
   try {
     const { id } = await params;
@@ -86,10 +94,16 @@ export async function PUT(
 
 // ✅ DELETE category + Cloudinary image
 export async function DELETE(
-  req: Request,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   await connectDB();
+
+    const auth = requireAdmin(req);
+  if (auth.error) {
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
+  }
+
 
   try {
     const { id } = await params;

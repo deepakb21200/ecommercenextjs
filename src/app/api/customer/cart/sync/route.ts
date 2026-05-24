@@ -1,23 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+ 
 import { connectDB } from "@/lib/connectDB";
 import { CartItem, CartModel } from "@/models/Cart";
 import { ProductModel } from "@/models/Product";
+import { getAuthUser } from "@/lib/auth";
  
-//ye chatgpthka ha 
-// 👇 तुम्हारा auth function
-function getAuthUser(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
-  if (!token) return { error: "Unauthorized", status: 401 };
-
-  try {
-    const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
-    return { decoded };
-  } catch {
-    return { error: "Invalid token", status: 401 };
-  }
-}
-
+ 
 // helper
 function isSameCartItem(
   item: any,
@@ -37,15 +25,13 @@ function isSameCartItem(
 export async function POST(req: NextRequest) {
   await connectDB();
 
-  const auth = getAuthUser(req);
-  if ("error" in auth) {
-    return NextResponse.json(
-      { message: auth.error },
-      { status: auth.status }
-    );
+ const auth = getAuthUser(req);
+  if (auth.error) {
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
   }
 
-  const userId = auth.decoded.id;
+
+  const userId = auth.decoded!.id;
 
   console.log(userId ,"sdfs", typeof userId,auth.decoded);
 

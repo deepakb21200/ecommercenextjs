@@ -12,9 +12,9 @@ export async function getAdminBanners(): Promise<AdminBannersResponse> {
     credentials: "include",
   });
 
-  // if (!res.ok) throw new Error("Failed to fetch banners");
- 
-
+  if (!res.ok) {
+    throw new Error("Failed to fetch banners");
+  }
 
   return res.json();
 }
@@ -47,7 +47,7 @@ export async function deleteAdminBanner(id: string) {
   const data = await res.json().catch(() => null);
 
   if (!res.ok) {
-    console.error("Backend Error:", data); // 👈 yaha actual error aayega
+    console.error("Backend Error:", data);  
     throw new Error(data?.message || "Failed to delete banner");
   }
 

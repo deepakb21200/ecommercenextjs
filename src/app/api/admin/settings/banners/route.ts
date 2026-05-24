@@ -1,32 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
- 
- 
 import { uploadManyBuffersToCloudinary } from "@/utils/cloudinary";
 import { Banner } from "@/models/Banner";
 import { connectDB } from "@/lib/connectDB";
+import { requireAdmin } from "@/lib/auth";
  
 
-function requireAdmin(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
-  if (!token) return { error: "Unauthorized", status: 401 };
-  try {
-    const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
-    if (decoded.role !== "admin") return { error: "Admin access only", status: 403 };
-    return { decoded };
-  } catch {
-    return { error: "Invalid token", status: 401 };
-  }
-}
 
 const BANNER_FOLDER = "ecommerce-monster-video/banners";
 
 export async function GET(req: NextRequest) {
   await connectDB();
 
-  // const auth = requireAdmin(req);
-  // if (auth.error) return NextResponse.json({ message: auth.error }, { status: auth.status });
-
+  const auth = requireAdmin(req);
+  if (auth.error) {
+    return NextResponse.json({ message: auth.error }, { status: auth.status });
+  }
   const items = await Banner.find().sort({ createdAt: -1 });
 
   console.log("Get req called");
@@ -73,7 +61,7 @@ export async function POST(req: NextRequest) {
     uploaded.map((img) => ({
       imageUrl:      img.url,
       imagePublicId: img.publicId,
-      createdBy:     auth.decoded.id,
+      createdBy:     auth.decoded!.id,
     }))
   );
 
