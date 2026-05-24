@@ -120,7 +120,7 @@ export const useAdminProductsStore = create<AdminProductsStore>((set, get) => ({
     // ✅ Pehle wali pending request cancel karo
 
     // products empty karo
-    set({ products: [] });
+
 
     if (abortController) {
       abortController.abort();
@@ -128,7 +128,11 @@ export const useAdminProductsStore = create<AdminProductsStore>((set, get) => ({
     abortController = new AbortController();
 
     try {
-      set({ loading: true });
+      set({
+        loading: true,
+        error: "",
+        
+      });
 
 
 
@@ -150,7 +154,7 @@ export const useAdminProductsStore = create<AdminProductsStore>((set, get) => ({
       // // manually error throw
       // throw new Error("Failed to fetch");
 
-        
+
 
 
       if (!res.ok) throw new Error("Failed to fetch");
@@ -164,14 +168,15 @@ export const useAdminProductsStore = create<AdminProductsStore>((set, get) => ({
 
 
       set({ products: Array.isArray(data) ? data : [] });
-    } catch (err: unknown) {
-      // AbortError ignore karo — yeh intentional cancel hai
-      set({
-        error: "Something went wrong",
-      });
+    }
+
+    catch (err: unknown) {
       if (err instanceof Error && err.name === "AbortError") return;
 
-      set({ products: [] });
+      set({
+        error: "Failed to fetch products",
+        products: [],
+      });
     } finally {
       set({ loading: false });
     }
