@@ -27,7 +27,8 @@ export function StoreHome() {
 
  
     // Full screen — header/footer ke upar
-  if (loading) return <HomeLoader />
+  // if (loading) return <HomeLoader />
+    if (loading) return <Commonloader/>
 
   return (
     <>

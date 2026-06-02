@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
   await connectDB();
 
 
-    const auth = requireAdmin(req);
+  const auth = requireAdmin(req);
   if (auth.error) {
     return NextResponse.json({ message: auth.error }, { status: auth.status });
   }
@@ -29,8 +29,8 @@ export async function POST(req: NextRequest) {
   const coverImagePublicId = String(formData.get("coverImagePublicId") || "").trim();
 
   // Colors — JSON parse
- const colors = JSON.parse((formData.get("colors") as string) || "[]");
-  
+  const colors = JSON.parse((formData.get("colors") as string) || "[]");
+
   // Validations
   if (!title) return NextResponse.json({ message: "Title is required" }, { status: 400 });
   if (!description) return NextResponse.json({ message: "Description is required" }, { status: 400 });
@@ -85,8 +85,7 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   await connectDB();
 
-  
-    const auth = requireAdmin(req);
+  const auth = requireAdmin(req);
   if (auth.error) {
     return NextResponse.json({ message: auth.error }, { status: auth.status });
   }
@@ -103,14 +102,4 @@ export async function GET(req: NextRequest) {
   return NextResponse.json(products);
 }
 
-
-  // const token = req.cookies.get("token")?.value;
-  // if (!token) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-
-  // let decoded: any;
-  // try {
-  //   decoded = jwt.verify(token, process.env.JWT_KEY!);
-  // } catch {
-  //   return NextResponse.json({ message: "Invalid token" }, { status: 401 });
-  // }
 

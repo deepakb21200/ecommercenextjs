@@ -86,14 +86,8 @@ export const useAdminDashboardLiteStore =
     fetchDashboard: async () => {
       try {
         set({ loading: true });
-
         const response = await getAdminDashboardLite();
-
-
-
-        set({
-          stats: response ?? fallbackStats,
-        });
+        set({  stats: response ?? fallbackStats, error: "" });
       } catch {
         set({
           stats: fallbackStats,

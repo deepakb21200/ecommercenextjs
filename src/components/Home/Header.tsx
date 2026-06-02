@@ -20,6 +20,7 @@ const NAV_ITEMS = ["Home", "Shop", "Men", "Women", "Kids"];
 function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+    const [mounted, setMounted] = useState(false); // ← add karo
 
   const { user, logout } = useAuthStore();
   const isSignedIn = Boolean(user);
@@ -35,6 +36,11 @@ function Header() {
   if (!isSignedIn) { clearWishlist(); clearProfile(); return; }
   void loadWishlist();
 }, [isSignedIn]);
+
+
+ useEffect(() => {
+    setMounted(true); // ← client pe mount hone ke baad
+  }, []);
 
   return (
     <>
@@ -82,7 +88,9 @@ function Header() {
           </button>
 
           {/* Signed in — desktop only icons */}
-          {isSignedIn && (
+      
+
+             {mounted && isSignedIn && (
             <div className="hidden md:flex items-center gap-1">
               <button onClick={openProfile} className="flex h-10 w-10 items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3eee6]">
                 <FaUser size={15} />
@@ -101,8 +109,10 @@ function Header() {
             </div>
           )}
 
+
           {/* Sign in — desktop only */}
-          {!isSignedIn && (
+    
+           {mounted && !isSignedIn && (
             <Link
               href="/login"
               className="hidden md:block rounded-full bg-[#24998a] px-5 py-2 text-[13px] font-medium text-white transition hover:bg-[#1f8276]"
@@ -216,7 +226,8 @@ function Header() {
 
           {/* User actions */}
           <div className="flex flex-col gap-3 px-4 py-4">
-            {isSignedIn ? (
+            {/* {isSignedIn ? ( */}
+              {mounted && isSignedIn ? (
               <>
                 <button
                   onClick={() => { openProfile(); setMobileOpen(false); }}
@@ -253,15 +264,16 @@ function Header() {
                   Logout
                 </button>
               </>
-            ) : (
-              <Link
-                href="/login"
-                onClick={() => setMobileOpen(false)}
-                className="rounded-xl bg-[#24998a] px-4 py-3 text-center text-sm font-medium text-white"
-              >
-                Sign In
-              </Link>
-            )}
+            ) :  
+             mounted && !isSignedIn ? (
+                 <Link href="/login" onClick={() => setMobileOpen(false)}
+                 className="rounded-xl bg-[#24998a] px-4 py-3 text-center text-sm font-medium text-white">Signin</Link>
+             ):null
+
+      
+            
+            
+            }
           </div>
         </div>
       </div>
@@ -284,3 +296,43 @@ export default Header;
 
 
 
+    {/* {isSignedIn && (
+            <div className="hidden md:flex items-center gap-1">
+              <button onClick={openProfile} className="flex h-10 w-10 items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3eee6]">
+                <FaUser size={15} />
+              </button>
+              <button onClick={openOrders} className="flex h-10 w-10 items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3eee6]">
+                <FaClipboardList size={15} />
+              </button>
+              <button onClick={() => setWishlistOpen(true)} className="relative flex h-10 w-10 items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3eee6]">
+                <FaHeart size={15} />
+                {wishlistItems.length > 0 && (
+                  <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-[#f97316] text-[9px] font-bold text-white">
+                    {wishlistItems.length}
+                  </span>
+                )}
+              </button>
+            </div>
+          )} */}
+
+
+
+
+
+
+
+      {/* {!isSignedIn && (
+            <Link
+              href="/login"
+              className="hidden md:block rounded-full bg-[#24998a] px-5 py-2 text-[13px] font-medium text-white transition hover:bg-[#1f8276]"
+            >
+              Sign In
+            </Link>
+          )} */}
+ // <Link
+              //   href="/login"
+              //   onClick={() => setMobileOpen(false)}
+              //   className="rounded-xl bg-[#24998a] px-4 py-3 text-center text-sm font-medium text-white"
+              // >
+              //   Sign In
+              // </Link>

@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import CustomerProductDetailsGallery from "@/components/Home/products/details/Customerproductdetailsgallery";
 import CustomerProductDetailsSummary from "@/components/Home/products/details/Customerproductdetailssummary";
-
 import { useAuthStore } from "@/components/user/store/api";
 import { useCustomerProductDetailsStore } from "@/store/home/products/store";
 import { useCustomerWishlistStore } from "@/store/home/wishlist/store";
@@ -20,10 +19,9 @@ function CollectionDetails() {
 
   // const isSignedIn = Boolean(user)
   console.log("s");
-  
-  
-  
-  const { loadProduct, clear, data, toggleWishlist, addToCart } = useCustomerProductDetailsStore((state) => state);
+
+  const { loadProduct, clear, data, toggleWishlist, addToCart } = useCustomerProductDetailsStore((state) => state)
+
 
   const wishlistItems = useCustomerWishlistStore((state) => state.items);
   const product = data?.product ?? null;
@@ -35,8 +33,8 @@ function CollectionDetails() {
 
     loadProduct(id);
 
-   
-    
+
+
 
 
     return () => { clear(); };
@@ -59,7 +57,7 @@ function CollectionDetails() {
 
   }, [data, wishlistItems])
 
-  if (!product) return <HomeLoader/>
+  if (!product) return <HomeLoader />
 
   return (
     <div className="min-h-screen" style={{ background: "hsl(40,33%,98%)" }}>
@@ -125,7 +123,7 @@ function CollectionDetails() {
           <CustomerProductDetailsGallery product={product} />
           <CustomerProductDetailsSummary
             product={product}
-            toggleWishlist={() => toggleWishlist( isWishlistActive)}
+            toggleWishlist={() => toggleWishlist(isWishlistActive)}
             isWishlistActive={isWishlistActive}
             onAddToCart={() => addToCart()}
           />
@@ -151,7 +149,7 @@ function CollectionDetails() {
                 Related Products
               </h2>
             </div>
-      
+
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {relatedProducts.map((item) => (
 

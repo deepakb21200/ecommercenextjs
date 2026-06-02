@@ -132,14 +132,13 @@ function AdminProducts() {
 
           item={Number(products.length)}
 
+
+
           refreshAll={async () => {
-            if (search !== "") {
-              skipNextSearch.current = true;
-              setSearch("")
-            }
+            skipNextSearch.current = true;
+            setSearch("");
+            await refreshAll("");
 
-
-            await refreshAll(search)
 
           }}
 

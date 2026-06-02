@@ -150,7 +150,10 @@ const refreshAll = useCallback(async () => {
 
 
 
-
+const handleRefresh = () => {
+  setSearch("");
+  refreshAll();
+};
 
 
 
@@ -181,10 +184,11 @@ const refreshAll = useCallback(async () => {
           placeholder="Search promos..."
           primaryButtonLabel="Add Promo"
           onPrimaryButtonClick={openCreateDialog}
-          item={Number(promos.length)}
+          // item={Number(promos.length)}
+            item={filteredPromos.length}
           sectionLabel="Promotions Control"
           heading="Promo Controls"
-          refreshAll={refreshAll}
+          refreshAll={handleRefresh}
 
           error={error}
         />

@@ -284,7 +284,7 @@ import {
   FaLayerGroup,
   FaRupeeSign,
   FaShoppingCart,
-  FaUndo,
+
 } from "react-icons/fa";
 
 import {
@@ -293,7 +293,7 @@ import {
 } from "react-icons/hi2";
 
 import { formatPrice } from "@/config/constants";
- 
+
 
 import { fallbackStats, useAdminDashboardLiteStore } from "@/app/admin/store";
 import { AdminHero } from "@/utils/AdminHero";
@@ -358,17 +358,14 @@ export default function AdminDashboard() {
   useEffect(() => {
     return () => {
       useAdminDashboardLiteStore.setState({
-      
-
-         stats: fallbackStats ,loading: true, error: "", hasLoaded: false,
-
+        stats: fallbackStats, loading: true, error: "", hasLoaded: false,
       });
     };
   }, []);
 
 
 
- 
+
   return (
     <div className=" bg-[#060816]    ">
 
@@ -430,16 +427,16 @@ export default function AdminDashboard() {
 
         {
           loading &&
-           <div className="flex flex-col items-center justify-center  ">
-        <div className="h-10  w-10 animate-spin rounded-full border-2 border-zinc-700 border-t-fuchsia-500" />
-        <p className="text-sm mt-2 text-zinc-500">Loading products...</p>
-      </div>
+          <div className="flex flex-col items-center justify-center  ">
+            <div className="h-10  w-10 animate-spin rounded-full border-2 border-zinc-700 border-t-fuchsia-500" />
+            <p className="text-sm mt-2 text-zinc-500">Loading products...</p>
+          </div>
         }
 
         {/* STATS GRID */}
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4 ">
 
-          { hasLoaded &&statsItems.map((item) => {
+          {hasLoaded && statsItems.map((item) => {
             const Icon = item.icon;
 
             const value = stats[item.key];

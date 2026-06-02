@@ -1,10 +1,10 @@
 import { FiHeart, FiShoppingBag } from "react-icons/fi";
-import { CustomerProduct,   } from "../types";
+import { CustomerProduct, } from "../types";
 import { extractSalePrice } from "../productListShared";
 import { formatPrice } from "@/config/constants";
 import CustomerProductOptionsGroup from "./Customerproductoptionsgroup";
 import { useCustomerProductDetailsStore } from "@/store/home/products/store";
- 
+
 
 
 type CustomerProductDetailsSummaryProps = {
@@ -16,15 +16,15 @@ type CustomerProductDetailsSummaryProps = {
 
 function CustomerProductDetailsSummary({
   product,
-  toggleWishlist, 
+  toggleWishlist,
   isWishlistActive,
-  onAddToCart}: CustomerProductDetailsSummaryProps) {
+  onAddToCart }: CustomerProductDetailsSummaryProps) {
 
 
-    // console.log("pro", product);
-    
-    
-  const { selectedColor,selectedSize, setSelectedColor, setSelectedSize} = useCustomerProductDetailsStore((state) => state);
+  // console.log("pro", product);
+
+
+  const { selectedColor, selectedSize, setSelectedColor, setSelectedSize } = useCustomerProductDetailsStore((state) => state);
   const salePrice = extractSalePrice(product);
   const hasSale = product.salePercentage > 0;
 
@@ -98,8 +98,8 @@ function CustomerProductDetailsSummary({
       {/* ── Size options ── */}
       {product.sizes.length ? (
         <CustomerProductOptionsGroup
-          values={product.sizes}
-          selectedValue={selectedSize}
+          values={product.sizes} 
+           selectedValue={selectedSize}
           onSelect={setSelectedSize}
           variant="size"
         />
@@ -110,7 +110,7 @@ function CustomerProductDetailsSummary({
 
       {/* ── Action buttons ── */}
       <div className="flex flex-col gap-3 sm:flex-row">
-        <button  type="button"   disabled={product.stock < 1} onClick={() =>onAddToCart()}
+        <button type="button" disabled={product.stock < 1} onClick={() => onAddToCart()}
           className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-neutral-900
            dark:bg-neutral-100 px-6 py-3 text-sm font-medium text-white dark:text-neutral-900 transition
             hover:bg-neutral-700 dark:hover:bg-neutral-300 disabled:opacity-40 disabled:cursor-not-allowed">
@@ -118,7 +118,7 @@ function CustomerProductDetailsSummary({
           Add to Cart
         </button>
 
-  
+
 
         <button
           type="button"

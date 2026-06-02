@@ -20,12 +20,21 @@ export default function LoginPage() {
     username: "",
     password: "",
   });
-  
- 
-  
-console.log("ok");
+
+
+
+  console.log("ok");
 
   const handleSubmit = async () => {
+    if (!form.username.trim()) {
+      setError("Username is required");
+      return;
+    }
+
+    if (!form.password.trim()) {
+      setError("Password is required");
+      return;
+    }
     setError("");
     setLoading(true);
     try {

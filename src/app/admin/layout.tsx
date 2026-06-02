@@ -5,7 +5,7 @@ import { UserMenu } from "@/components/admin/UserMenu";
 import { HiOutlineSparkles } from "react-icons/hi2"
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="     bg-[#070B14] text-white min-h-screen ">
+    <div className="bg-[#070B14] text-white min-h-screen ">
     
       <div className="flex  h-full ">
         <AdminSidebar />
