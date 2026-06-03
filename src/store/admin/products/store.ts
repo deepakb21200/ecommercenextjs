@@ -121,16 +121,12 @@ export const useAdminProductsStore = create<AdminProductsStore>((set, get) => ({
 
 
 
-//  await new Promise((resolve) =>
-//     setTimeout(resolve, 3000)
-//   );
+// //  await new Promise((resolve) =>
+// //     setTimeout(resolve, 3000)
+// //   );
 
-//   // manually error throw
-//   throw new Error("Failed to fetch");
-
-
+// //   // manually error throw
+// //   throw new Error("Failed to fetch");
 
 
-
-
-
+ 

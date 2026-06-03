@@ -7,8 +7,6 @@ import { OrderModel } from "@/models/Order";
 import { requireAdmin } from "@/lib/auth";
 
 
-
-
 export async function GET(req: NextRequest) {
   await connectDB();
 
@@ -38,6 +36,5 @@ export async function GET(req: NextRequest) {
     totalCategories,
     totalSales: salesRows[0]?.totalSales || 0,
     totalOrders,
-
   });
 }

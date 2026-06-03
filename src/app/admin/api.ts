@@ -7,7 +7,7 @@ export type AdminDashboardLite = {
   totalCategories: number;
   totalSales: number;
   totalOrders: number;
-  totalReturnedOrders: number;
+ 
 };
 
 
