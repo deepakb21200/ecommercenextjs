@@ -15,7 +15,8 @@ import CustomerWishlistDialog from "./wishlist/CustomerWishList";
 import CustomerProfileDialog from "./profile/CustomerProfileDialog";
 import CustomerOrdersDialog from "./orders/CustomerOrdersDiaolog";
 
-const NAV_ITEMS = ["Home", "Shop", "Men", "Women", "Kids"];
+// const NAV_ITEMS = ["Home", "Shop", "Men", "Women", "Kids"];
+const NAV_ITEMS = ["Home", "Shop"];
 
 function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -65,7 +66,7 @@ function Header() {
           {NAV_ITEMS.map((item) => (
             <Link
               key={item}
-              href="/"
+              href="/shop"
               className="rounded-lg px-4 py-2 text-[13px] font-medium text-[#6b7280] transition hover:bg-[#f3eee6] hover:text-[#222831]"
             >
               {item}
@@ -80,12 +81,12 @@ function Header() {
         <div className="flex items-center gap-1">
 
           {/* Search */}
-          <button
+          {/* <button
             onClick={() => setSearchOpen(true)}
             className="flex h-10 w-10 items-center justify-center rounded-full text-[#6b7280] transition hover:bg-[#f3eee6]"
           >
             <FaSearch size={15} />
-          </button>
+          </button> */}
 
           {/* Signed in — desktop only icons */}
       

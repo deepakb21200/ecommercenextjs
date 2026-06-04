@@ -107,7 +107,7 @@ if (loading) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
      
-          <div className="w-full max-w-5xl h-[43vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border-4 border-red-400">
+          <div className="w-full max-w-5xl h-[43vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden  ">
 
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-2 border-b border-gray-100 shrink-0">

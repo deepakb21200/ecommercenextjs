@@ -18,14 +18,115 @@ type Category = {
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
+// const CATEGORIES: Category[] = [
+//   { label: "All",      value: "all"      },
+//   { label: "Orders",   value: "orders"   },
+//   { label: "Shipping", value: "shipping" },
+//   { label: "Returns",  value: "returns"  },
+//   { label: "Payment",  value: "payment"  },
+//   { label: "Account",  value: "account"  },
+// ];
+
+
+
+
 const CATEGORIES: Category[] = [
-  { label: "All",      value: "all"      },
-  { label: "Orders",   value: "orders"   },
+  { label: "All", value: "all" },
+  { label: "Orders", value: "orders" },
   { label: "Shipping", value: "shipping" },
-  { label: "Returns",  value: "returns"  },
-  { label: "Payment",  value: "payment"  },
-  { label: "Account",  value: "account"  },
+ 
+  { label: "Payment", value: "payment" },
 ];
+
+// const FAQS: FaqItem[] = [
+//   {
+//     cat: "orders",
+//     q: "How do I track my order?",
+//     a: "Once your order is shipped, you will receive an email with a tracking link. You can also view order status from the My Orders section in your profile.",
+//   },
+//   {
+//     cat: "orders",
+//     q: "Can I cancel or modify my order?",
+//     a: "Orders can be cancelled within 1 hour of placement if payment is still pending. Once shipped, cancellations are not possible — but you may return the item after delivery.",
+//   },
+//   {
+//     cat: "orders",
+//     q: "What happens if my item is out of stock after I order?",
+//     a: "In rare cases where stock changes after checkout, we will notify you via email and issue a full refund to your original payment method within 3–5 business days.",
+//   },
+//   {
+//     cat: "shipping",
+//     q: "How long does delivery take?",
+//     a: "Standard delivery takes 3–6 business days depending on your location. We offer express delivery (1–2 days) in select cities at an additional charge.",
+//   },
+//   {
+//     cat: "shipping",
+//     q: "Is there free shipping?",
+//     a: "Yes! We offer free standard shipping on all orders above ₹999. Orders below this amount have a flat shipping fee of ₹79.",
+//   },
+//   {
+//     cat: "shipping",
+//     q: "Do you ship internationally?",
+//     a: "Currently we ship only within India. We are working on international shipping and will announce it soon — sign up for our newsletter to stay updated.",
+//   },
+//   {
+//     cat: "returns",
+//     q: "What is your return policy?",
+//     a: "We offer a 7-day return window from the date of delivery for all delivered orders. Items must be unused, unwashed, and in original packaging with tags intact.",
+//   },
+//   {
+//     cat: "returns",
+//     q: "How do I initiate a return?",
+//     a: "Go to My Orders in your profile, select the delivered order, and click Return. Our team will arrange a pickup within 2 business days. Refunds are processed in 5–7 working days.",
+//   },
+//   {
+//     cat: "returns",
+//     q: "Are there items that cannot be returned?",
+//     a: "Innerwear, swimwear, and items marked as Final Sale are non-returnable for hygiene and safety reasons. This is clearly indicated on the product page.",
+//   },
+//   {
+//     cat: "payment",
+//     q: "What payment methods do you accept?",
+//     a: "We accept all major credit and debit cards, UPI, net banking, and popular wallets. All payments are securely processed via Stripe.",
+//   },
+//   {
+//     cat: "payment",
+//     q: "Is my payment information safe?",
+//     a: "Yes. We never store your card details. All transactions are encrypted and handled by Stripe, which is PCI-DSS Level 1 certified — the highest level of payment security.",
+//   },
+//   {
+//     cat: "payment",
+//     q: "Can I use a promo code?",
+//     a: "Absolutely! Enter your promo code in the cart before checkout. Codes are case-insensitive and can only be applied once per order. Some codes may have a minimum order value.",
+//   },
+//   {
+//     cat: "account",
+//     q: "Do I need an account to shop?",
+//     a: "You can browse and add items to cart as a guest. However, an account is required to checkout, track orders, save addresses, and earn reward points.",
+//   },
+//   {
+//     cat: "account",
+//     q: "How do reward points work?",
+//     a: "You earn points equal to the order value (in ₹) when you return an item. Points can be used to offset future purchases — 1 point = ₹1 discount.",
+//   },
+//   {
+//     cat: "account",
+//     q: "How do I reset my password?",
+//     a: "Click Forgot Password on the login page and enter your registered email. You will receive a reset link valid for 30 minutes.",
+//   },
+// ];
+
+
+
+
+
+
+
+
+
+
+
+// ─── Single FAQ Item ──────────────────────────────────────────────────────────
 
 const FAQS: FaqItem[] = [
   {
@@ -33,79 +134,48 @@ const FAQS: FaqItem[] = [
     q: "How do I track my order?",
     a: "Once your order is shipped, you will receive an email with a tracking link. You can also view order status from the My Orders section in your profile.",
   },
-  {
-    cat: "orders",
-    q: "Can I cancel or modify my order?",
-    a: "Orders can be cancelled within 1 hour of placement if payment is still pending. Once shipped, cancellations are not possible — but you may return the item after delivery.",
-  },
+
   {
     cat: "orders",
     q: "What happens if my item is out of stock after I order?",
     a: "In rare cases where stock changes after checkout, we will notify you via email and issue a full refund to your original payment method within 3–5 business days.",
   },
+
   {
     cat: "shipping",
     q: "How long does delivery take?",
     a: "Standard delivery takes 3–6 business days depending on your location. We offer express delivery (1–2 days) in select cities at an additional charge.",
   },
+
   {
     cat: "shipping",
     q: "Is there free shipping?",
     a: "Yes! We offer free standard shipping on all orders above ₹999. Orders below this amount have a flat shipping fee of ₹79.",
   },
+
   {
     cat: "shipping",
     q: "Do you ship internationally?",
-    a: "Currently we ship only within India. We are working on international shipping and will announce it soon — sign up for our newsletter to stay updated.",
+    a: "Currently we ship only within India. We are working on international shipping and will announce it soon.",
   },
-  {
-    cat: "returns",
-    q: "What is your return policy?",
-    a: "We offer a 7-day return window from the date of delivery for all delivered orders. Items must be unused, unwashed, and in original packaging with tags intact.",
-  },
-  {
-    cat: "returns",
-    q: "How do I initiate a return?",
-    a: "Go to My Orders in your profile, select the delivered order, and click Return. Our team will arrange a pickup within 2 business days. Refunds are processed in 5–7 working days.",
-  },
-  {
-    cat: "returns",
-    q: "Are there items that cannot be returned?",
-    a: "Innerwear, swimwear, and items marked as Final Sale are non-returnable for hygiene and safety reasons. This is clearly indicated on the product page.",
-  },
+
+ 
+
   {
     cat: "payment",
     q: "What payment methods do you accept?",
-    a: "We accept all major credit and debit cards, UPI, net banking, and popular wallets. All payments are securely processed via Stripe.",
+    a: "We accept all major credit and debit cards, UPI, net banking, and popular wallets. All payments are securely processed through trusted payment providers.",
   },
+
   {
     cat: "payment",
     q: "Is my payment information safe?",
-    a: "Yes. We never store your card details. All transactions are encrypted and handled by Stripe, which is PCI-DSS Level 1 certified — the highest level of payment security.",
-  },
-  {
-    cat: "payment",
-    q: "Can I use a promo code?",
-    a: "Absolutely! Enter your promo code in the cart before checkout. Codes are case-insensitive and can only be applied once per order. Some codes may have a minimum order value.",
-  },
-  {
-    cat: "account",
-    q: "Do I need an account to shop?",
-    a: "You can browse and add items to cart as a guest. However, an account is required to checkout, track orders, save addresses, and earn reward points.",
-  },
-  {
-    cat: "account",
-    q: "How do reward points work?",
-    a: "You earn points equal to the order value (in ₹) when you return an item. Points can be used to offset future purchases — 1 point = ₹1 discount.",
-  },
-  {
-    cat: "account",
-    q: "How do I reset my password?",
-    a: "Click Forgot Password on the login page and enter your registered email. You will receive a reset link valid for 30 minutes.",
+    a: "Yes. We never store your card details. All transactions are encrypted and processed through secure PCI-compliant payment gateways.",
   },
 ];
 
-// ─── Single FAQ Item ──────────────────────────────────────────────────────────
+
+
 
 function FaqRow({ item, index }: { item: FaqItem; index: number }) {
   const [open, setOpen] = useState(false);
