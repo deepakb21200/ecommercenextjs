@@ -499,7 +499,7 @@ function AdminProducts() {
       useAdminProductsStore.setState({
         products: [],
         categories: [],
-        // loading: false,
+ 
           loading: true,
         error: "",
         hasLoaded: false,

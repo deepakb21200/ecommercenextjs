@@ -174,7 +174,7 @@ export default function AdminToolbar({
                         {/* Refresh button */}
                         {refreshAll && (
                             <button type="button" onClick={refreshAll}
-                                title="Refresh" className="inline-flex h-8 w-8 items-center justify-center rounded-lg border
+                                title="Refresh" className="inline-flex h-8 w-8 items-center cursor-pointer justify-center rounded-lg border
                                  border-emerald-400/20 bg-emerald-500/10 text-emerald-300 transition-colors
                                   hover:bg-emerald-500/20 hover:text-white">
                                 <RiRefreshLine className="text-base" />
@@ -221,7 +221,7 @@ export default function AdminToolbar({
                             {extraAction && (
                                 <button
                                     onClick={extraAction.onClick}
-                                    className="flex h-14 items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-5 text-sm font-medium text-zinc-300 transition-all duration-300 hover:bg-white/10 hover:text-white"
+                                    className="flex cursor-pointer h-14 items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-5 text-sm font-medium text-zinc-300 transition-all duration-300 hover:bg-white/10 hover:text-white"
                                 >
                                     <extraAction.icon className="text-lg" />
                                     {extraAction.label}
@@ -231,7 +231,7 @@ export default function AdminToolbar({
                             {/* Primary Button */}
                             <button
                                 onClick={handlePrimaryClick}
-                                className="flex h-14 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-cyan-500 px-6 text-sm font-semibold text-white shadow-xl shadow-violet-500/20 transition-all duration-300 hover:scale-[1.02]"
+                                className="flex cursor-pointer cursor-pointer h-14 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-cyan-500 px-6 text-sm font-semibold text-white shadow-xl shadow-violet-500/20 transition-all duration-300 hover:scale-[1.02]"
                             >
                                 <PrimaryIcon className="text-lg" />
                                 {primaryButtonLabel}

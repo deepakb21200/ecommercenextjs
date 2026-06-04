@@ -9,6 +9,7 @@ import {
   RiUserLine, RiMapPinLine, RiAddLine, RiPencilLine,
   RiDeleteBin6Line, RiCheckboxCircleLine, RiCloseLine,
 } from "react-icons/ri";
+import { useRouter } from "next/navigation";
 
 const emptyForm: CustomerAddressFormValues = {
   fullName: "", address: "", state: "", postalCode: "", isDefault: false,
@@ -20,7 +21,7 @@ function CustomerProfileDialog() {
   const { isOpen, closeProfile, items, loading, addAddress, editAddress, removeAddress } =
     useCustomerProfileStore();
   const { user } = useAuthStore();
-
+  const router = useRouter();
   const [mode, setMode] = useState<FormMode>("none");
   const [editingId, setEditingId] = useState("");
   const [form, setForm] = useState<CustomerAddressFormValues>(emptyForm);
@@ -72,9 +73,12 @@ function CustomerProfileDialog() {
   };
 
   const showForm = mode !== "none";
-
+ const logout = useAuthStore((s) => s.logout);
   if (!isOpen) return null;
 
+
+
+  
   if (loading) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
@@ -84,6 +88,13 @@ function CustomerProfileDialog() {
       </div>
     );
   }
+
+
+    const handleLogout = async () => {
+    await logout();
+    router.push("/login");
+  };
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
@@ -95,12 +106,20 @@ function CustomerProfileDialog() {
             <RiUserLine className="text-gray-700 text-lg" />
             <h2 className="text-base font-semibold text-gray-900">Profile</h2>
           </div>
-          <button
+        <div className="flex items-center gap-2 ">
+              <button
+                  onClick={handleLogout}
+                  className="inline-flex cursor-pointer items-center gap-1.5 h-8 px-3 text-xs font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                >
+                  <RiAddLine className="text-sm" /> Logout
+                </button>
+            <button
             onClick={closeProfile}
-            className="h-8 w-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-700 transition-colors"
+            className="h-8 w-8 flex cursor-pointer items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-700 transition-colors"
           >
             <RiCloseLine className="text-lg" />
           </button>
+        </div>
         </div>
 
         {/* Body */}
@@ -129,7 +148,7 @@ function CustomerProfileDialog() {
                 </div>
                 <button
                   onClick={startAdd}
-                  className="inline-flex items-center gap-1.5 h-8 px-3 text-xs font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                  className="inline-flex cursor-pointer items-center gap-1.5 h-8 px-3 text-xs font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition-colors"
                 >
                   <RiAddLine className="text-sm" /> Add Address
                 </button>

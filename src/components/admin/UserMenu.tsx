@@ -159,7 +159,7 @@ export function UserMenu() {
         </div>
         <div className="hidden text-left sm:block">
           <p className="text-sm font-medium text-white">Admin</p>
-          <p className="text-xs text-zinc-400">Super Admin</p>
+          {/* <p className="text-xs text-zinc-400">Super Admin</p> */}
         </div>
       </button>
 
@@ -170,10 +170,10 @@ export function UserMenu() {
             <p className="mt-1 text-xs text-zinc-400">Manage your store easily</p>
           </div>
           <div className="p-2">
-            <button className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm text-zinc-300 transition-all hover:bg-white/5 hover:text-white">
+            {/* <button className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm text-zinc-300 transition-all hover:bg-white/5 hover:text-white">
               <HiOutlineUser className="text-lg" />
               Profile
-            </button>
+            </button> */}
             <button
               onClick={() => void handleLogout()}
               className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm text-red-400 transition-all hover:bg-red-500/10"

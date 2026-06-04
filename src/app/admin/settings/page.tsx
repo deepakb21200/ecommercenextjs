@@ -163,7 +163,7 @@ export default function AdminSettings() {
               </div>
               <button
                 onClick={() => void fetchBanners()}
-                className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-zinc-300 transition-all hover:bg-white/[0.05]"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-zinc-300 transition-all hover:bg-white/[0.05]"
               >
                 <RiRefreshLine className={loading ? "animate-spin" : ""} />
                 Refresh
