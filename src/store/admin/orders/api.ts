@@ -1,6 +1,6 @@
 // store/admin/orders/api.ts
 
-import type { AdminOrderStatus, AdminOrdersResponse, AdminUpdateOrderStatusResponse } from "@/components/admin/orders/types";
+import type { AdminOrderStatus, AdminUpdateOrderStatusResponse } from "@/components/admin/orders/types";
 
 const BASE_URL = "/api/admin";
  

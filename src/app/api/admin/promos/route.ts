@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
- 
 import { PromoModel } from "@/models/Promo";
 import { connectDB } from "@/lib/connectDB";
 import { requireAdmin } from "@/lib/auth";

@@ -36,10 +36,7 @@ async function getAllPromos() {
   return promos.map((p) => p.toObject());
 }
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   await connectDB();
 
   const auth = requireAdmin(req);
@@ -57,7 +54,12 @@ export async function PATCH(
   const existing = await PromoModel.findOne({ code: parsed.data!.code, _id: { $ne: promo._id } });
   if (existing) return NextResponse.json({ message: "Promo code already exists" }, { status: 400 });
 
-  Object.assign(promo, parsed.data);
+  // Object.assign(promo, parsed.data);
+  promo.code = parsed.data!.code;
+  promo.percentage = parsed.data!.percentage;
+  promo.minimumOrderValue = parsed.data!.minimumOrderValue;
+  promo.startsAt = parsed.data!.startsAt;
+  promo.endsAt = parsed.data!.endsAt;
   await promo.save();
 
   return NextResponse.json({ items: await getAllPromos() });
