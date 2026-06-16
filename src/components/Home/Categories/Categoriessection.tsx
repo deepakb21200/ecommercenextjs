@@ -122,6 +122,7 @@ type Props = {
 };
 export function CategoriesSection({ categories }: Props) {
   if (!categories.length) return null;
+  console.log("Rendering CategoriesSection with categories:", categories);
   return (
     <section>
       {/* Header */}
@@ -138,7 +139,8 @@ export function CategoriesSection({ categories }: Props) {
         {categories.slice(0, 4).map((cat) => (
           <Link
             key={cat._id}
-            href={`/shop?category=${cat._id}`}
+            // href={`/shop?category=${cat._id}`}
+            href={`/shop?category=${cat.name.toLowerCase().replace(/\s+/g, "-")}`}
             className="group flex flex-col gap-4 rounded-[14px] border-[1.5px] border-[hsl(40,20%,88%)] bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[hsl(174,62%,78%)] hover:shadow-[0_4px_16px_hsla(174,62%,38%,0.1)]"
           >
             {/* Icon */}
