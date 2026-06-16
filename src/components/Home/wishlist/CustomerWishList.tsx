@@ -39,7 +39,7 @@ export default function CustomerWishlistDialog() {
           </div>
           <button
             onClick={() => setOpen(false)}
-            className="h-8 w-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-700 transition-colors"
+            className="h-8 w-8 flex cursor-pointer items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-700 transition-colors"
           >
             <RiCloseLine className="text-lg" />
           </button>

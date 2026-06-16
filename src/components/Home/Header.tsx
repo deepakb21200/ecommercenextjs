@@ -16,7 +16,11 @@ import CustomerProfileDialog from "./profile/CustomerProfileDialog";
 import CustomerOrdersDialog from "./orders/CustomerOrdersDiaolog";
 
 // const NAV_ITEMS = ["Home", "Shop", "Men", "Women", "Kids"];
-const NAV_ITEMS = ["Home", "Shop"];
+// const NAV_ITEMS = ["Home", "Shop"];
+const NAV_ITEMS = [
+  { name: "Home", href: "/" },
+  { name: "Shop", href: "/shop" },
+];
 
 function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -62,7 +66,7 @@ function Header() {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden items-center gap-1 lg:flex">
+        {/* <nav className="hidden items-center gap-1 lg:flex">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item}
@@ -75,7 +79,21 @@ function Header() {
           <Link href="/" className="rounded-lg px-4 py-2 text-[13px] font-semibold text-[#f97316]">
             Sale 🔥
           </Link>
-        </nav>
+        </nav> */}
+
+        <nav className="hidden items-center gap-1 lg:flex">
+  {NAV_ITEMS.map((item) => (
+    <Link
+     key={`${item.name}-${item.href}`}
+      href={item.href}
+      className="rounded-lg px-4 py-2 text-[13px] font-medium text-[#6b7280] transition hover:bg-[#f3eee6] hover:text-[#222831]"
+    >
+      {item.name}
+    </Link>
+  ))}
+
+ 
+</nav>
 
         {/* Actions */}
         <div className="flex items-center gap-1">
@@ -206,7 +224,7 @@ function Header() {
 
           {/* Nav links */}
           <div className="flex flex-col px-4 py-2">
-            {NAV_ITEMS.map((item) => (
+            {/* {NAV_ITEMS.map((item) => (
               <Link
                 key={item}
                 href="/"
@@ -215,14 +233,30 @@ function Header() {
               >
                 {item}
               </Link>
-            ))}
-            <Link
+            ))} */}
+
+
+                    <nav className="hidden items-center gap-1 lg:flex">
+  {NAV_ITEMS.map((item) => (
+    <Link
+     key={`${item.name}-${item.href}`}
+      href={item.href}
+      className="rounded-lg px-4 py-2 text-[13px] font-medium text-[#6b7280] transition hover:bg-[#f3eee6] hover:text-[#222831]"
+    >
+      {item.name}
+    </Link>
+  ))}
+
+ 
+</nav>
+
+            {/* <Link
               href="/"
               onClick={() => setMobileOpen(false)}
               className="border-b border-[#f1ece5] py-4 text-[15px] font-semibold text-[#f97316]"
             >
               Sale 🔥
-            </Link>
+            </Link> */}
           </div>
 
           {/* User actions */}

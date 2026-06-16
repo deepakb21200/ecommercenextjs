@@ -71,7 +71,7 @@ function CustomerCartAndCheckoutDrawer() {
               </div>
               <button
                 onClick={() => setOpen(false)}
-                className="h-8 w-8 flex items-center justify-center rounded-full hover:bg-[hsl(40,20%,92%)] text-[hsl(220,10%,45%)] transition-colors"
+                className="h-8 w-8 flex items-center cursor-pointer justify-center rounded-full hover:bg-[hsl(40,20%,92%)] text-[hsl(220,10%,45%)] transition-colors"
               >
                 <RiCloseLine className="text-lg" />
               </button>

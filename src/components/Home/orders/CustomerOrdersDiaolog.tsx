@@ -118,14 +118,14 @@ if (loading) {
           <div className="flex items-center gap-2">
             <button
               onClick={() => void loadOrders()}
-              className="inline-flex items-center gap-1.5 h-8 px-3 text-xs font-medium border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
+              className="inline-flex cursor-pointer items-center gap-1.5 h-8 px-3 text-xs font-medium border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
             >
               <RiRefreshLine className={loading ? "animate-spin" : ""} />
               Refresh
             </button>
             <button
               onClick={closeOrders}
-              className="h-8 w-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 transition-colors"
+              className="h-8 w-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 transition-colors cursor-pointer"
             >
               <RiCloseLine className="text-lg" />
             </button>

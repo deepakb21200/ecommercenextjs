@@ -80,7 +80,7 @@ export default function AdminItemCard({
        
           <button
             onClick={onEdit}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-zinc-300 hover:bg-violet-500/10 hover:text-violet-300"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-zinc-300 hover:bg-violet-500/10 hover:text-violet-300"
           >
             <HiOutlinePencilSquare className="text-sm" />
             Edit
@@ -91,7 +91,7 @@ export default function AdminItemCard({
           <button
             onClick={onDelete}
             disabled={isDeleting}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-zinc-300 hover:bg-red-500/10 hover:text-red-400 disabled:opacity-50"
+            className="inline-flex  cursor-pointer items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-zinc-300 hover:bg-red-500/10 hover:text-red-400 disabled:opacity-50"
           >
        
               <HiOutlineTrash className="text-sm" />

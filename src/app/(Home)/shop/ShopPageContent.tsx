@@ -137,6 +137,15 @@ export default function ShopPage() {
 
         brands: searchParams.getAll("brand"),
     }));
+
+
+//     {sort: "newest",  onSale: false,  categories: [],  sizes: [],  colors: [],  brands: [] }
+
+// shop?sort=price_asc&category=mens-clothing&size=M&size=L&brand=Nike&color=dark-blue&color=light-green
+
+// { sort: "price_asc",  onSale: false,  categories: ["mens clothing"],   sizes: ["M", "L"],  colors: ["dark blue", "light green"],
+//    brands: ["Nike"] }
+
     const [products, setProducts] = useState<Product[]>([]);//done
 
 
@@ -549,7 +558,6 @@ export default function ShopPage() {
                                 </div>)
                                 :
                                 !loading && !error && products?.length === 0
-
                                     ? (
                                         <div className="flex flex-col items-center justify-center gap-4 py-28">
                                             <div className="flex h-20 w-20 items-center justify-center rounded-3xl" style={{ background: "hsl(174,62%,38%,0.08)" }}>
