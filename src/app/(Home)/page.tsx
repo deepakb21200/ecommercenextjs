@@ -11,7 +11,7 @@ function page() {
     <>
   
       <StoreHome/>
-      <Categories/>
+      {/* <Categories/> */}
 
 
     </>
