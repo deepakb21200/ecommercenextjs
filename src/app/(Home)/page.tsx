@@ -1,5 +1,5 @@
  
-import Categories from '@/components/Home/Categories/Categories'
+//  import Categories from '@/components/Home/Categories/Categories'
 import { StoreHome } from '@/components/Home/Home'
 
  

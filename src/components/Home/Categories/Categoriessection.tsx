@@ -117,10 +117,12 @@ type CategoryItem = {
   _id: string;
   name: string;
 };
+
+
 type Props = {
   categories: CategoryItem[];
 };
-export function Shop by Category({ categories }: Props) {
+export function CategoriesSection({ categories }: Props) {
   if (!categories.length) return null;
   console.log("Rendering CategoriesSection with categories:", categories);
   return (
